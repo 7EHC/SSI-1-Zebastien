@@ -172,6 +172,9 @@ if((filterAnnActive.value.totalPages) === defaultPage.value){
 </script>
  
 <template>
+  <div class="Header">
+    <h1>SIT Announcement System (SAS)</h1>
+  </div>
 <div class="allContents">
     <h4 class="timeZone">Date/Time shown in Timezone: {{ timeZone }}<br><br>
       <b v-if="activeClose===false" >Category:
@@ -347,6 +350,11 @@ button{
 }
 .butPage:hover{
 background-color: lightgray;
+}
+.Header {
+  display: flex;
+  justify-content: center;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 </style>

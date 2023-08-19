@@ -51,7 +51,9 @@ onMounted(async () => {
 </script>
 
 <template>
-
+<div class="Header">
+    <h1>SIT Announcement System (SAS)</h1>
+  </div>
   <!-- Delete Confirmation---------------------------------------------------------------------------- -->
   <div class="popup">
   <Teleport to="body">
@@ -246,5 +248,10 @@ button{
   border: 0px;
   border-radius: 30%;
   font-weight: bold;
+}
+.Header {
+  display: flex;
+  justify-content: center;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 </style>

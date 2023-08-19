@@ -5,6 +5,8 @@ import AddAnnouncement from "../components/AddAnnouncement.vue"
 import EditAnnouncement from "../components/EditAnnouncement.vue"
 import User from "../components/User.vue"
 import UserView from "../components/UserView.vue"
+import SasUser from "../components/SasUser.vue"
+import SasAddUser from "../components/SasAddUser.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +44,16 @@ const router = createRouter({
       path: '/announcement',
       name: 'User',
       component: User,
+    },
+    {
+      path: '/admin/user',
+      name: 'SasUser',
+      component: SasUser
+    },
+    {
+      path: '/admin/user/add',
+      name: 'SasAddUser',
+      component: SasAddUser
     },
   ],
 });

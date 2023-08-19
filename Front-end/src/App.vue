@@ -5,9 +5,9 @@ import { RouterView } from "vue-router";
 
 <template>
   <!-- <Announcement /> -->
-  <div class="Header">
+  <!-- <div class="Header">
     <h1>SIT Announcement System (SAS)</h1>
-  </div>
+  </div> -->
   <RouterView />
 </template>
 
