@@ -1,10 +1,16 @@
 <script setup>
 import { ref,onMounted } from "vue"
-
+import { useRoute } from "vue-router"
+import { getUserById } from "../composable/fetch"
+import { changeTime } from "../composable/changeTime";
+//Test
 const ogData = ref({})
+const { params } = useRoute()
 
 onMounted(async()=>{
-    ogData
+    console.log(params.id)
+    ogData.value = await getUserById(params.id)
+    console.log(ogData.value)
 })
 </script>
  
@@ -29,10 +35,9 @@ onMounted(async()=>{
         <b>Username</b>
         <input
           class="ann-username"
-          v-model.trim="newUsername"
+          v-model.trim="ogData.username"
           type="text"
           maxlength="45"
-          placeholder="Enter less than 45 characters"
           v-on:input="hasDataChanged"
         />
       </div>
@@ -40,10 +45,9 @@ onMounted(async()=>{
         <b>Name</b>
         <input
           class="ann-name"
-          v-model.trim="newName"
+          v-model.trim="ogData.name"
           type="text"
           maxlength="45"
-          placeholder="Enter less than 100 characters"
           v-on:input="hasDataChanged"
         />
       </div>
@@ -51,19 +55,22 @@ onMounted(async()=>{
         <b>Email</b>
         <input
           class="ann-email"
-          v-model.trim="newEmail"
+          v-model.trim="ogData.email"
           type="text"
           maxlength="45"
-          placeholder="Enter less than 150 characters"
           v-on:input="hasDataChanged"
         />
     </div>
     <div class="div-form">
         <b>Role</b><br>
-        <select name="roleName" class="ann-role" v-model.trim="newRole" v-on:change="hasDataChanged">
+        <select name="roleName" class="ann-role" v-model.trim="ogData.role" v-on:change="hasDataChanged">
           <option id="1" value="announcer" selected >announcer</option>
           <option id="2" value="admin" >admin</option>
         </select>
+    </div>
+    <div class="div-form">
+        <b>Created On <span style="font-weight: normal;">{{ changeTime(ogData.createdOn) }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          Updated On <span style="font-weight: normal;">{{ changeTime(ogData.updatedOn) }}</span></b>
     </div>
     <div class="ann-div-button">
         <button class="ann-button" type="submit" @click="submit" :disabled="disSave">Save</button>
