@@ -4,7 +4,7 @@ import { getAnnouncement } from "../composable/fetch";
 import { changeTime } from "../composable/changeTime"
 import { useRouter } from "vue-router";
 // import  DeletePopup  from "./DeletePopup.vue"
-import AddAnnouncement from "./AddAnnouncement.vue"
+// import AddAnnouncement from "./AddAnnouncement.vue"
 // import { useRoute, useRouter } from "vue-router";
 
 const announcement = ref([]);
@@ -16,9 +16,9 @@ const API_ROOT = import.meta.env.VITE_ROOT_API
 
 const deleteAnn = async (annID) => {
     try {
-        const res = await fetch(`${API_ROOT}/${annID}`, { method: 'DELETE' });
+        // const res = await fetch(`${API_ROOT}/api/announcements/${annID}`, { method: 'DELETE' });
         // const res = await fetch(`http://ip22ssi1.sit.kmutt.ac.th:8080/api/announcements/${annID}`, { method: 'DELETE' }) //Delete backend
-        // const res = await fetch(`http://localhost:8080/api/announcements/${annID}`, { method: 'DELETE' })
+        const res = await fetch(`http://localhost:8080/api/announcements/${annID}`, { method: 'DELETE' })
         if (res.ok) {
          changeConfirm()
          announcement.value = announcement.value.filter((acc) => acc.id !== annID) //Delete frontend
@@ -44,6 +44,7 @@ const changeConfirm = (id) => {
 
 onMounted(async () => {
   announcement.value = await getAnnouncement()
+  // console.log(announcement.value)
   if(!announcement.value) {
     announcement.value = []
   }
@@ -54,6 +55,8 @@ onMounted(async () => {
 <div class="Header">
     <h1>SIT Announcement System (SAS)</h1>
   </div>
+  <RouterLink :to="{name : 'SasUser'}"><button class="admin-back">Back to admin page</button></RouterLink>
+  <RouterLink :to="{name: 'User'}"><button class="admin-back">User</button></RouterLink>
   <!-- Delete Confirmation---------------------------------------------------------------------------- -->
   <div class="popup">
   <Teleport to="body">
@@ -73,6 +76,7 @@ onMounted(async () => {
 
 <!-- Main Content------------------------------------------------------------------------------------- -->
   <div class="allContents">
+    <!-- <RouterLink :to="{name : 'SasUser'}"><button>Back to admin page</button></RouterLink> -->
   <h4 class="timeZone">Date/Time shown in Timezone: {{ timeZone }}</h4>
   <div class="ann-button" id="addDiv">
    <RouterLink :to="{name: 'AddAnnouncement'}">
@@ -108,7 +112,7 @@ onMounted(async () => {
   <h4 class="NoAlert" v-if="announcement.length === 0">No Announcement</h4>
 </div>
 <!-- ------------------------------------------------------------------------------------------------- -->
-<RouterLink :to="{name: 'User'}">User</RouterLink>
+<!-- <RouterLink :to="{name: 'User'}">User</RouterLink> -->
 </template>
 
 <style scoped>
@@ -253,5 +257,12 @@ button{
   display: flex;
   justify-content: center;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+.admin-back{
+  width: 160px;
+}
+.admin-back:hover{
+  font-weight: bold;
+  background-color: lightgray;
 }
 </style>

@@ -7,6 +7,7 @@ import User from "../components/User.vue"
 import UserView from "../components/UserView.vue"
 import SasUser from "../components/SasUser.vue"
 import SasAddUser from "../components/SasAddUser.vue"
+import SasEditUser from "../components/SasEditUser.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,6 +55,11 @@ const router = createRouter({
       path: '/admin/user/add',
       name: 'SasAddUser',
       component: SasAddUser
+    },
+    {
+      path: '/admin/user/:id/edit',
+      name: 'SasEditUser',
+      component: SasEditUser
     },
   ],
 });

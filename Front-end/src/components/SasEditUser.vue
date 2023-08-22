@@ -1,102 +1,18 @@
 <script setup>
-import { ref, onMounted } from "vue"
-import { useRoute, useRouter } from "vue-router";
+import { ref,onMounted } from "vue"
 
-const router = useRouter()
-const newUserToSend = ref({})
-const newUsername = ref('')
-const newName = ref('')
-const newEmail = ref('')
-const newRole = ref('announcer')
-const newCreatedOn = ref('')
-const newUpdateOn = ref('')
-const cloneNewUser = ref({})
-const disSave = ref(true)
-
-const hasDataChanged= () =>{
-  newUserToSend.value = {
-    username:newUsername.value,
-    name:newName.value,
-    email:newEmail.value,
-    role:newRole.value,
-    createdOn:newCreatedOn.value,
-    updatedOn:newUpdateOn.value
-  }
-  if (JSON.stringify(cloneNewUser.value) === JSON.stringify(newUserToSend.value)) {
-    disSave.value = true
-    } else {
-      disSave.value = false
-    }
-}
-
-const addNewUser = async (newUserToSend) => {
-    if(newUsername.value.length === 0 || newName.value.length === 0 || newEmail.value.length === 0){
-        alert('There is an error: Please enter the required information!!')
-        }else try {
-        // checkUpdateAccount(newAccount)
-        // const res = await fetch(`${API_ROOT}`,{
-        const res = await fetch('http://localhost:8080/api/users', {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify(newUserToSend)
-        }) //Add account at backend
-        // method post. if it success, it will return status 201 / other methods return status 200
-        if (res.status === 200) {
-            // console.log('Okay')
-            const AddUser = await res.json() //keep info that added from backend
-            router.push('/admin/user')
-        } else if(res.status === 400 || res.status === 500){
-            throw new Error('Cannot add')
-        }
-    } catch (err) {
-        console.log(err)
-    }
-}
-const submit = () =>{
-  newCreatedOn.value = new Date().toISOString()
-  newUpdateOn.value = new Date().toISOString()
-  newUserToSend.value = {
-    username:newUsername.value,
-    name:newName.value,
-    email:newEmail.value,
-    role:newRole.value,
-    createdOn:newCreatedOn.value,
-    updatedOn:newUpdateOn.value
-  }
-  addNewUser(newUserToSend.value)
-}
+const ogData = ref({})
 
 onMounted(async()=>{
-  // newUserToSend.value = {
-  //   username:'',
-  //   name:'',
-  //   email:'',
-  //   role:'',
-  //   createdOn:'',
-  //   updatedOn:''
-  // }
-  newUserToSend.value = {
-    username:newUsername.value,
-    name:newName.value,
-    email:newEmail.value,
-    role:newRole.value,
-    createdOn:newCreatedOn.value,
-    updatedOn:newUpdateOn.value
-  }
-  // console.log(newUserToSend.value.role)
-
-  cloneNewUser.value = Object.assign({},newUserToSend.value)
-
-  // const currentTimeUTC = new Date().toISOString();
-  // console.log(currentTimeUTC)
+    ogData
 })
 </script>
-
+ 
 <template>
-  <div class="all">
+<div class="all">
 
     <div class="sidenav">
-      <div class="text-nav">
+    <div class="text-nav">
         <h1 class="ann-app-title">SAS</h1>
         <hr />
         <RouterLink :to="{name: 'Announcement'}"><button class="ann-menu">Announcement</button></RouterLink>
@@ -110,7 +26,7 @@ onMounted(async()=>{
       <h1>User Detail:</h1>
 
       <div>
-        <b>Username<span style="color: red;"> *</span></b>
+        <b>Username</b>
         <input
           class="ann-username"
           v-model.trim="newUsername"
@@ -121,7 +37,7 @@ onMounted(async()=>{
         />
       </div>
       <div class="div-form">
-        <b>Name<span style="color: red;"> *</span></b>
+        <b>Name</b>
         <input
           class="ann-name"
           v-model.trim="newName"
@@ -132,7 +48,7 @@ onMounted(async()=>{
         />
       </div>
     <div class="div-form">
-        <b>Email<span style="color: red;"> *</span></b>
+        <b>Email</b>
         <input
           class="ann-email"
           v-model.trim="newEmail"
@@ -158,9 +74,9 @@ onMounted(async()=>{
 
     </div>
 
-  </div>
+</div>
 </template>
-
+ 
 <style scoped>
 .sidenav {
   height: 100%;
