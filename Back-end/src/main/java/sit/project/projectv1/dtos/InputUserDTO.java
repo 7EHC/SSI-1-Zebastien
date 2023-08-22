@@ -11,7 +11,6 @@ import java.time.ZonedDateTime;
 
 @Getter
 @Setter
-
 public class InputUserDTO {
     @NotBlank
     @Size(min = 1, max = 45)

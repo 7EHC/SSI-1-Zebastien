@@ -31,6 +31,11 @@ public class UserController {
 
     @PostMapping
     public OutputUserDTO createUser(@Valid @RequestBody InputUserDTO userDTO) {
+
+        userDTO.getName().trim();
+        userDTO.getEmail().trim();
+        userDTO.getUsername().trim();
+
         User user = modelMapper.map(userDTO, User.class);
         user.setId(null);
         userService.createNewUser(user);
