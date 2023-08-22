@@ -25,7 +25,9 @@ public class UserController {
     private ListMapper listMapper;
 
     @GetMapping("")
-    private List<User> getAllUser(){return userService.getAllUsers();}
+    private List<User> getAllUser(){
+        return userService.getAllUsers();
+    }
 
     @PostMapping
     public OutputUserDTO createUser(@Valid @RequestBody InputUserDTO userDTO) {
