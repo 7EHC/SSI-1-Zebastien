@@ -8,8 +8,8 @@ const { params } = useRoute();
 const AnnDetail = ref([]);
 const router = useRouter()
 const updateAnn = ref({})
-let insertPubDate = ref()
-let insertCloseDate = ref()
+// let insertPubDate = ref()
+// let insertCloseDate = ref()
 
 const changeEdit = (editID) => {
   // router.push(`/admin/announcement/${params: id}/edit`)
