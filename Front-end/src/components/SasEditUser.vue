@@ -3,7 +3,7 @@ import { ref,onMounted } from "vue"
 import { useRoute } from "vue-router"
 import { getUserById } from "../composable/fetch"
 import { changeTime } from "../composable/changeTime";
-//Test
+
 const ogData = ref({})
 const { params } = useRoute()
 

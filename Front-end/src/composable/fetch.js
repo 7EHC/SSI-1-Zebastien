@@ -67,12 +67,25 @@ const getAnnouncement = async () => {
       const res = await fetch(`${API_ROOT}/api/users`);
       // const res = await fetch("http://localhost:8080/api/announcements");
       if(res.ok) {
-      const ann = await res.json();
-      return ann;
+      const user = await res.json();
+      return user;
+      }
+    } catch (error) {
+      console.log(`ERROR cannot read data: ${error}`);
+    }
+  };
+
+  const getUserById = async (id) => {
+    try {
+      // const res = await fetch(`${API_ROOT}/${id}`);
+      const res = await fetch(`http://localhost:8080/api/users/${id}`);
+      if(res.ok) {
+          const userView = await res.json()
+          return userView
       }
     } catch (error) {
       console.log(`ERROR cannot read data: ${error}`);
     }
   };
   
-  export { getAnnouncement, targetId, getPageAnn, getClosePageAnn, getAllUsers };
+  export { getAnnouncement, targetId, getPageAnn, getClosePageAnn, getAllUsers, getUserById };
