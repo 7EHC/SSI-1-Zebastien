@@ -1,6 +1,7 @@
 use mydb;
 use integrated;
 drop table users;
+truncate table users;
 create table users (
 	id int auto_increment primary key,
     username varchar(45) unique,

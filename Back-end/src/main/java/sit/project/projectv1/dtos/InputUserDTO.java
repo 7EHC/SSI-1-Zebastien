@@ -31,9 +31,6 @@ public class InputUserDTO {
         if (role == null) {
             return Role.announcer;
         }
-        return Role.valueOf(role);
+        return Role.valueOf(role.trim());
     }
-
-    private ZonedDateTime createdOn;
-    private ZonedDateTime updatedOn;
 }

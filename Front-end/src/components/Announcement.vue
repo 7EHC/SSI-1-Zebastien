@@ -55,8 +55,8 @@ onMounted(async () => {
 <div class="Header">
     <h1>SIT Announcement System (SAS)</h1>
   </div>
-  <RouterLink :to="{name : 'SasUser'}"><button class="admin-back">Back to admin page</button></RouterLink>
-  <RouterLink :to="{name: 'User'}"><button class="admin-back">User</button></RouterLink>
+  <!-- <RouterLink :to="{name : 'SasUser'}"><button class="admin-back">Back to admin page</button></RouterLink>
+  <RouterLink :to="{name: 'User'}"><button class="admin-back">User</button></RouterLink> -->
   <!-- Delete Confirmation---------------------------------------------------------------------------- -->
   <div class="popup">
   <Teleport to="body">
@@ -118,6 +118,7 @@ onMounted(async () => {
 <style scoped>
 .allContents {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  margin-left: 13%;
 }
 
 .timeZone {
@@ -255,6 +256,7 @@ button{
 }
 .Header {
   display: flex;
+  margin-left: 13%;
   justify-content: center;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }

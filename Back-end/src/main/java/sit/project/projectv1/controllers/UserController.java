@@ -11,6 +11,7 @@ import sit.project.projectv1.dtos.OutputAnnouncementDTO;
 import sit.project.projectv1.dtos.OutputUserDTO;
 import sit.project.projectv1.entities.Announcement;
 import sit.project.projectv1.entities.User;
+import sit.project.projectv1.enums.Role;
 import sit.project.projectv1.services.UserService;
 import sit.project.projectv1.utils.ListMapper;
 
@@ -35,6 +36,12 @@ public class UserController {
 
     @PostMapping
     public OutputUserDTO createUser(@Valid @RequestBody InputUserDTO userDTO) {
+
+        userDTO.setUsername(userDTO.getUsername().trim());
+        userDTO.setName(userDTO.getName().trim());
+        userDTO.setEmail(userDTO.getEmail().trim());
+//        userDTO.setRole(userDTO.getRole().toString().trim());
+
         User user = modelMapper.map(userDTO, User.class);
         user.setId(null);
         userService.createNewUser(user);
