@@ -153,8 +153,8 @@ const updateTestEditor = (event) => {
 .big {
   align-items: end;
   display: grid;
-  margin-left: 5%;
-  margin-right: 5%;
+  margin-left: 13%;
+  margin-right: 1%;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
 }

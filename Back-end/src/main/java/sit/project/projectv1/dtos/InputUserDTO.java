@@ -11,7 +11,6 @@ import java.time.ZonedDateTime;
 
 @Getter
 @Setter
-
 public class InputUserDTO {
     @NotBlank
     @Size(min = 1, max = 45)
@@ -32,9 +31,6 @@ public class InputUserDTO {
         if (role == null) {
             return Role.announcer;
         }
-        return Role.valueOf(role);
+        return Role.valueOf(role.trim());
     }
-
-    private ZonedDateTime createdOn;
-    private ZonedDateTime updatedOn;
 }

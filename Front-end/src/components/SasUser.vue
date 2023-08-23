@@ -50,18 +50,6 @@ onMounted(async () =>{
  
 <template>
 <div class="all">
-
-  <div class="sidenav">
-      <div class="text-nav">
-        <h1 class="ann-app-title">SAS</h1>
-        <hr />
-        <RouterLink :to="{name: 'Announcement'}"><button class="ann-menu">Announcement</button></RouterLink>
-        <hr />
-        <RouterLink :to="{name: 'SasUser'}"><button class="ann-menu">User</button></RouterLink>
-        <hr />
-      </div>
-    </div>
-
   <div class="popup">
   <Teleport to="body">
     <div class="modal" style="background-color: rgba(0, 0, 0, 0.3); width: 100%;" v-if="confirmDelete === true">
@@ -104,7 +92,7 @@ onMounted(async () =>{
 
                 <tr v-for="(usr, index) in user" :key="index" class="ann-item">
                   <td>{{ index + 1 }}</td>
-                  <td class="ann-usename">{{ usr.username }}</td>
+                  <td class="ann-username">{{ usr.username }}</td>
                   <td class="ann-name">{{ usr.name }}</td>
                   <td class="ann-email">{{ usr.email }}</td>
                   <td class="ann-role">{{ usr.role }}</td>
@@ -115,7 +103,7 @@ onMounted(async () =>{
                     <button class="ann-button" id="delete-button" @click="changeConfirm(usr.id)">delete</button>
                   </td>
                 </tr>
-            </table>
+            </table>  
         </div>
         
     </div>
@@ -124,19 +112,8 @@ onMounted(async () =>{
 </template>
  
 <style scoped>
-.sidenav {
-  height: 100%;
-  width: 200px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #e6e6e6;
-  /* overflow-x: hidden; */
-  /* padding-top: 10px; */
-}
 .ann-timezone,.bigTable{
-    padding-left: 12%;
+    padding-left: 13%;
 }
 .parent-container {
   display: flex;
@@ -184,13 +161,12 @@ td {
   font-weight: bold;
 }
 #addBut,#edit-button,#delete-button{
-  /* background-color: lightgreen; */
   width: 100px;
   height: 30px;
   border: 0px;
   border-radius: 6px;
   background-color: #e6e6e6;
-  font-weight: bold;
+  font-weight: normal;
 }
 #addBut:hover{
   background-color: mediumseagreen;
@@ -202,19 +178,6 @@ td {
 #addDiv{
   float: right;
   margin-bottom: 10px;
-}
-.ann-menu{
-    color: black;
-    text-decoration: none;
-    background-color: transparent;
-    border: 0;
-    font-size: 15px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    padding-left:0;
-}
-.ann-menu:hover{
-    font-weight: bold;
 }
 
 .deleteButPopup{
