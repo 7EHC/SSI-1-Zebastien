@@ -38,11 +38,10 @@ public class UserService {
     public User updateUser(Integer id, User user) {
         User usr = userRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User id " + id + " does not exist"));
-        user.setName(user.getName());
-        user.setUsername(user.getUsername());
-        user.setEmail(user.getEmail());
-        user.setRole(user.getRole());
-        user.setUpdatedOn(user.getUpdatedOn());
+        usr.setName(user.getName());
+        usr.setUsername(user.getUsername());
+        usr.setEmail(user.getEmail());
+        usr.setRole(user.getRole());
         return userRepository.saveAndFlush(usr);
     }
 }
