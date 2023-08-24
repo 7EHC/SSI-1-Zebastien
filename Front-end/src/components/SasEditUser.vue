@@ -1,17 +1,71 @@
 <script setup>
 import { ref,onMounted } from "vue"
-import { useRoute } from "vue-router"
+import { useRoute,useRouter } from "vue-router"
 import { getUserById } from "../composable/fetch"
 import { changeTime } from "../composable/changeTime";
 
 const ogData = ref({})
 const { params } = useRoute()
 const disSave = ref(true)
+const cloneOgData = ref({})
+const router = useRouter()
+const newData = ref({})
+
+const hasDataChanged= () =>{
+  if (JSON.stringify(cloneOgData.value) === JSON.stringify(ogData.value)) {
+      disSave.value = true
+    } else {
+      disSave.value = false
+    }
+    console.log(ogData.value.username)
+}
+
+const editUser = async (updateUser) => {
+    try {
+        // const res = await fetch(`${API_ROOT}/${params.id}`, {
+        const res = await fetch(`http://localhost:8080/api/users/${params.id}`, {
+            method: 'PUT', // put = replace all record, all field
+            // patch = edit some field
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(updateUser) //edit backend
+        })
+        // method put. if it success. it will return status 200
+        if (res.status === 200){
+            router.push('/admin/user')
+        } else if(res.status === 500 ){
+            throw new Error('Cannot edit')
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+const submit = ()=>{
+  const objToSent = {
+    username:ogData.value.username,
+    name:ogData.value.name,
+    email:ogData.value.email,
+    role:ogData.value.role
+  }
+
+  editUser(objToSent)
+}
 
 onMounted(async()=>{
     console.log(params.id)
     ogData.value = await getUserById(params.id)
-    console.log(ogData.value)
+    console.log(ogData.value.username)
+
+    newData.value = {
+    username:ogData.value.username,
+    name:ogData.value.name,
+    email:ogData.value.email,
+    role:ogData.value.role,
+    // createdOn:ogData.value.createdOn,
+    // updatedOn:ogData.value.updatedOn
+    }
+
+    cloneOgData.value = Object.assign({},ogData.value)
 })
 </script>
  
