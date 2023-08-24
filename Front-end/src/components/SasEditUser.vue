@@ -58,8 +58,8 @@ onMounted(async()=>{
         </select>
     </div>
     <div class="div-form">
-        <b>Created On <span style="font-weight: normal;">{{ changeTime(ogData.createdOn) }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          Updated On <span style="font-weight: normal;">{{ changeTime(ogData.updatedOn) }}</span></b>
+        <b>Created On <span class="ann-created-on" style="font-weight: normal;">{{ changeTime(ogData.createdOn) }}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          Updated On <span class="ann-updated-on" style="font-weight: normal;">{{ changeTime(ogData.updatedOn) }}</span></b>
     </div>
     <div class="ann-div-button">
         <button class="ann-button" type="submit" @click="submit" :disabled="disSave">Save</button>

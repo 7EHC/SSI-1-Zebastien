@@ -41,8 +41,10 @@ const goToEdit = (id) => {
 
 onMounted(async () =>{
   user.value = await getAllUsers()
+  user.value.sort((a, b) => a.role.localeCompare(b.role) || a.username.localeCompare(b.username));
+  return user.value
   // console.log(user.value)
-  if(user.value != user.value){
+  if(!user.value){
     user.value = []
   }
 })
@@ -65,11 +67,8 @@ onMounted(async () =>{
   </Teleport>
 </div>
 
-    
-
     <div class="parent-container">
         <h1 class="user-man">User Management</h1>
-        <!-- <h4 class="timeZone">Date/Time shown in Timezone: {{ timeZone }}</h4> -->
     </div>
     <div>
         <h4 class="ann-timezone">Date/Time shown in Timezone: {{ timeZone }}</h4>
@@ -105,13 +104,25 @@ onMounted(async () =>{
                 </tr>
             </table>  
         </div>
-        
     </div>
+    <h4 class="NoAlert" v-if="user.length === 0">No user</h4>
 </div>
 
 </template>
  
 <style scoped>
+.ann-timezone {
+  justify-content: start;
+  margin-bottom: -4%;
+  font-weight: lighter;
+  margin-top: 10px;
+}
+.NoAlert {
+  display: flex;
+  justify-content: center;
+  margin-top: 10%;
+  margin-left: 13%;
+}
 .ann-timezone,.bigTable{
     padding-left: 13%;
 }

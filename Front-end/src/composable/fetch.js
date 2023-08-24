@@ -65,7 +65,7 @@ const getAnnouncement = async () => {
   const getAllUsers = async () => {
     try {
       const res = await fetch(`${API_ROOT}/api/users`);
-      // const res = await fetch("http://localhost:8080/api/announcements");
+      // const res = await fetch("http://localhost:8080/api/users");
       if(res.ok) {
       const user = await res.json();
       return user;
