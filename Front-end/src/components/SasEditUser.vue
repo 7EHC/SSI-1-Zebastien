@@ -78,7 +78,7 @@ onMounted(async()=>{
         <b>Username</b>
         <input
           class="ann-username"
-          v-model.trim="ogData.username"
+          v-model="ogData.username"
           type="text"
           maxlength="45"
           v-on:input="hasDataChanged"
@@ -88,7 +88,7 @@ onMounted(async()=>{
         <b>Name</b>
         <input
           class="ann-name"
-          v-model.trim="ogData.name"
+          v-model="ogData.name"
           type="text"
           maxlength="45"
           v-on:input="hasDataChanged"
@@ -98,7 +98,7 @@ onMounted(async()=>{
         <b>Email</b>
         <input
           class="ann-email"
-          v-model.trim="ogData.email"
+          v-model="ogData.email"
           type="text"
           maxlength="45"
           v-on:input="hasDataChanged"
