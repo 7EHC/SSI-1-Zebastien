@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import sit.project.projectv1.enums.Role;
+
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 @Getter
@@ -30,9 +32,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(name ="createdOn")
+    @Column(name ="createdOn", insertable = false , updatable = false )
     private ZonedDateTime createdOn;
 
-    @Column(name ="updatedOn")
+    @Column(name ="updatedOn", insertable = false , updatable = false )
     private ZonedDateTime updatedOn;
 }

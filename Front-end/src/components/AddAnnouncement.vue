@@ -23,7 +23,7 @@ const addNewAnnouncement = async (newAnn) => {
         }
     try {
         // checkUpdateAccount(newAccount)
-        const res = await fetch(`${API_ROOT}`,{
+        const res = await fetch(`${API_ROOT}/announcements`,{
         // const res = await fetch('http://localhost:8080/api/announcements', {
             method: 'POST',
             headers: { 'content-type': 'application/json' },

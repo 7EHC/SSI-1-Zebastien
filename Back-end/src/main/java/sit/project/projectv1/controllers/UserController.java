@@ -4,6 +4,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sit.project.projectv1.dtos.AddAnnouncementDTO;
 import sit.project.projectv1.dtos.InputUserDTO;
@@ -34,18 +35,15 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @PostMapping
-    public OutputUserDTO createUser(@Valid @RequestBody InputUserDTO userDTO) {
-
+    @PostMapping("")
+    public User createUser(@RequestBody InputUserDTO userDTO) {
         userDTO.setUsername(userDTO.getUsername().trim());
         userDTO.setName(userDTO.getName().trim());
         userDTO.setEmail(userDTO.getEmail().trim());
-//        userDTO.setRole(userDTO.getRole().toString().trim());
 
         User user = modelMapper.map(userDTO, User.class);
         user.setId(null);
-        userService.createNewUser(user);
-        return modelMapper.map(user, OutputUserDTO.class);
+        return userService.createNewUser(user);
     }
 
     @DeleteMapping("/{id}")
@@ -59,10 +57,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public OutputUserDTO update(@PathVariable Integer id, @RequestBody InputUserDTO updateUser) {
+    public User update(@PathVariable Integer id, @RequestBody InputUserDTO updateUser) {
         User user = modelMapper.map(updateUser, User.class);
-        user.setId(id);
-        userService.updateUser(id, user);
-        return modelMapper.map(user, OutputUserDTO.class);
+        return userService.updateUser(id, user);
     }
 }
