@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import sit.project.projectv1.entities.Announcement;
 import sit.project.projectv1.entities.User;
 import sit.project.projectv1.repositories.UserRepository;
 import java.util.List;
@@ -24,7 +23,9 @@ public class UserService {
     }
 
     public User createNewUser(User user){
-        return userRepository.saveAndFlush(user);
+        User usr = userRepository.saveAndFlush(user);
+        userRepository.refresh(usr);
+        return usr;
     }
 
     public void deleteUser(Integer id) {
@@ -38,10 +39,13 @@ public class UserService {
     public User updateUser(Integer id, User user) {
         User usr = userRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User id " + id + " does not exist"));
-        usr.setName(user.getName());
-        usr.setUsername(user.getUsername());
-        usr.setEmail(user.getEmail());
+
+        usr.setName(user.getName().trim());
+        usr.setUsername(user.getUsername().trim());
+        usr.setEmail(user.getEmail().trim());
         usr.setRole(user.getRole());
-        return userRepository.saveAndFlush(usr);
+        User updateUsr =  userRepository.saveAndFlush(usr);
+        userRepository.refresh(updateUsr);
+        return updateUsr;
     }
 }

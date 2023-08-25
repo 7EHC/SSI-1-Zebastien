@@ -12,9 +12,9 @@ const idToDelete = ref()
 
 const deleteUser = async (id) => {
     try {
-        // const res = await fetch(`${API_ROOT}/api/announcements/${annID}`, { method: 'DELETE' });
         // const res = await fetch(`http://ip22ssi1.sit.kmutt.ac.th:8080/api/announcements/${annID}`, { method: 'DELETE' }) //Delete backend
-        const res = await fetch(`http://localhost:8080/api/users/${id}`, { method: 'DELETE' })
+        const res = await fetch(`${API_ROOT}/users/${annID}`, { method: 'DELETE' });
+        // const res = await fetch(`http://localhost:8080/api/users/${id}`, { method: 'DELETE' })
         if (res.ok) {
          changeConfirm()
          user.value = user.value.filter((usr) => usr.id !== id) //Delete frontend
@@ -42,7 +42,7 @@ const goToEdit = (id) => {
 onMounted(async () =>{
   user.value = await getAllUsers()
   user.value.sort((a, b) => a.role.localeCompare(b.role) || a.username.localeCompare(b.username));
-  return user.value
+  // return user.value
   // console.log(user.value)
   if(!user.value){
     user.value = []

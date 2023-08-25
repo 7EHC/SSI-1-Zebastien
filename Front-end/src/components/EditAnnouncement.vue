@@ -49,7 +49,7 @@ const hasDataChanged = ()=> {
 
 const modifyAccount = async (updateAccount) => {
     try {
-        const res = await fetch(`${API_ROOT}/${params.id}`, {
+        const res = await fetch(`${API_ROOT}/announcements/${params.id}`, {
         // const res = await fetch(`http://localhost:8080/api/announcements/${params.id}`, {
             method: 'PUT', // put = replace all record, all field
             // patch = edit some field

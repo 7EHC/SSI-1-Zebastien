@@ -16,9 +16,9 @@ const API_ROOT = import.meta.env.VITE_ROOT_API
 
 const deleteAnn = async (annID) => {
     try {
-        // const res = await fetch(`${API_ROOT}/api/announcements/${annID}`, { method: 'DELETE' });
+        const res = await fetch(`${API_ROOT}/announcements/${annID}`, { method: 'DELETE' });
         // const res = await fetch(`http://ip22ssi1.sit.kmutt.ac.th:8080/api/announcements/${annID}`, { method: 'DELETE' }) //Delete backend
-        const res = await fetch(`http://localhost:8080/api/announcements/${annID}`, { method: 'DELETE' })
+        // const res = await fetch(`http://localhost:8080/api/announcements/${annID}`, { method: 'DELETE' })
         if (res.ok) {
          changeConfirm()
          announcement.value = announcement.value.filter((acc) => acc.id !== annID) //Delete frontend

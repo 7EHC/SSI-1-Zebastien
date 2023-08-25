@@ -17,13 +17,13 @@ const hasDataChanged= () =>{
     } else {
       disSave.value = false
     }
-    console.log(ogData.value.username)
+    // console.log(ogData.value.username)
 }
 
 const editUser = async (updateUser) => {
     try {
-        // const res = await fetch(`${API_ROOT}/${params.id}`, {
-        const res = await fetch(`http://localhost:8080/api/users/${params.id}`, {
+        const res = await fetch(`${API_ROOT}/users/${params.id}`, {
+        // const res = await fetch(`http://localhost:8080/api/users/${params.id}`, {
             method: 'PUT', // put = replace all record, all field
             // patch = edit some field
             headers: { 'content-type': 'application/json' },
@@ -52,9 +52,9 @@ const submit = ()=>{
 }
 
 onMounted(async()=>{
-    console.log(params.id)
+    // console.log(params.id)
     ogData.value = await getUserById(params.id)
-    console.log(ogData.value.username)
+    // console.log(ogData.value.username)
 
     newData.value = {
     username:ogData.value.username,
