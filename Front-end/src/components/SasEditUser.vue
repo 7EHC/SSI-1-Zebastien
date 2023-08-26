@@ -10,6 +10,7 @@ const disSave = ref(true)
 const cloneOgData = ref({})
 const router = useRouter()
 const newData = ref({})
+const API_ROOT = import.meta.env.VITE_ROOT_API
 
 const hasDataChanged= () =>{
   if (JSON.stringify(cloneOgData.value) === JSON.stringify(ogData.value)) {
