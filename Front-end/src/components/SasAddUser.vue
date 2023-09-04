@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, onMounted, computed } from "vue"
 import { useRoute, useRouter } from "vue-router";
 
 const router = useRouter()
@@ -12,6 +12,10 @@ const newCreatedOn = ref('')
 const newUpdateOn = ref('')
 const cloneNewUser = ref({})
 const disSave = ref(true)
+const API_ROOT = import.meta.env.VITE_ROOT_API
+const validateUsernameMsg = ref('')
+const validateNameMsg = ref('')
+const validateEmailMsg = ref('')
 
 const hasDataChanged= () =>{
   newUserToSend.value = {
@@ -30,9 +34,7 @@ const hasDataChanged= () =>{
 }
 
 const addNewUser = async (newUserToSend) => {
-    if(newUsername.value.length === 0 || newName.value.length === 0 || newEmail.value.length === 0){
-        alert('There is an error: Please enter the required information!!')
-        }else try {
+        try {
         // checkUpdateAccount(newAccount)
         const res = await fetch(`${API_ROOT}/users`,{
         // const res = await fetch('http://localhost:8080/api/users', {
@@ -63,7 +65,39 @@ const submit = () =>{
     createdOn:newCreatedOn.value,
     updatedOn:newUpdateOn.value
   }
-  addNewUser(newUserToSend.value)
+
+  let allConditionsMet = true;
+
+  validateUsernameMsg.value = ''
+  if (newUsername.value.length > 45) {
+    validateUsernameMsg.value = 'Username size must be between 1 and 45.'
+    allConditionsMet = false;
+  } else if (newUsername.value.length === 0 || newUsername.value === null || newUsername.value === undefined) {
+    validateUsernameMsg.value = 'Username is required!'
+    allConditionsMet = false;
+  } 
+
+  validateNameMsg.value = ''
+  if (newName.value.length > 100) {
+    validateNameMsg.value = 'Name size must be between 1 and 100.'
+    allConditionsMet = false;
+  } else if (newName.value.length === 0 || newName.value === null || newName.value === undefined) {
+    validateNameMsg.value = 'Name is required!'
+    allConditionsMet = false;
+  }
+
+  validateEmailMsg.value = ''
+  if (newEmail.value.length > 150) {
+    validateEmailMsg.value = 'Email size must be between 1 and 150.'
+    allConditionsMet = false;
+  } else if (newEmail.value.length === 0  || newEmail.value === null || newEmail.value === undefined) {
+    validateEmailMsg.value = 'Email is required!'
+    allConditionsMet = false;
+  }
+
+  if (allConditionsMet) {
+    addNewUser(newUserToSend.value);
+  }
 }
 
 onMounted(async()=>{
@@ -87,9 +121,8 @@ onMounted(async()=>{
 
   cloneNewUser.value = Object.assign({},newUserToSend.value)
 
-  // const currentTimeUTC = new Date().toISOString();
-  // console.log(currentTimeUTC)
 })
+
 </script>
 
 <template>
@@ -103,17 +136,18 @@ onMounted(async()=>{
           class="ann-username"
           v-model.trim="newUsername"
           type="text"
-          maxlength="45"
           placeholder="Enter less than 45 characters"
           v-on:input="hasDataChanged"
         />
+        <p class="validateMsg" v-if=!newUsername>{{ validateUsernameMsg }}</p>
+        <p class="validateMsg" v-else=!newUsername>{{ validateUsernameMsg }}</p>
       </div>
       <!-- Change -------------------------------------- -->
       <div class="div-form">
         <b>Password<span style="color: red;"> *</span></b>
         <input
-          class="ann-name"
-          type="text"
+          class="ann-password"
+          type="password"
           placeholder="Enter 8-14 characters"
           maxlength="14"
           minlength="8"
@@ -122,8 +156,8 @@ onMounted(async()=>{
       <div class="div-form">
         <b>Confirm password<span style="color: red;"> *</span></b>
         <input
-          class="ann-name"
-          type="text"
+          class="ann-confirm-password"
+          type="password"
           placeholder="Enter match password"
           maxlength="14"
           minlength="8"
@@ -136,10 +170,11 @@ onMounted(async()=>{
           class="ann-name"
           v-model.trim="newName"
           type="text"
-          maxlength="45"
           placeholder="Enter less than 100 characters"
           v-on:input="hasDataChanged"
         />
+        <p class="validateMsg" v-if=!newName>{{ validateNameMsg }}</p>
+        <p class="validateMsg" v-else=!newName>{{ validateNameMsg }}</p>
       </div>
     <div class="div-form">
         <b>Email<span style="color: red;"> *</span></b>
@@ -147,10 +182,11 @@ onMounted(async()=>{
           class="ann-email"
           v-model.trim="newEmail"
           type="text"
-          maxlength="45"
           placeholder="Enter less than 150 characters"
           v-on:input="hasDataChanged"
         />
+        <p class="validateMsg" v-if=!newEmail>{{ validateEmailMsg }}</p>
+        <p class="validateMsg" v-else=!newEmail>{{ validateEmailMsg }}</p>
     </div>
     <div class="div-form">
         <b>Role</b><br>
@@ -172,6 +208,12 @@ onMounted(async()=>{
 </template>
 
 <style scoped>
+.validateMsg {
+  font-weight: normal;
+  font-size: small;
+  color: red;
+  padding-left: 5px;
+}
 .all {
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
@@ -190,7 +232,7 @@ onMounted(async()=>{
 .div-form,select{
     margin-top: 15px;
 }
-.ann-username,.ann-name,.ann-email {
+.ann-username,.ann-name,.ann-email, .ann-password, .ann-confirm-password{
   width: 98%;
   height: 36px;
   padding-left: 10px;

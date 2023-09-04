@@ -9,11 +9,11 @@ const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 const user = ref([])
 const confirmDelete = ref(false)
 const idToDelete = ref()
+const API_ROOT = import.meta.env.VITE_ROOT_API
 
 const deleteUser = async (id) => {
     try {
-        // const res = await fetch(`http://ip22ssi1.sit.kmutt.ac.th:8080/api/announcements/${annID}`, { method: 'DELETE' }) //Delete backend
-        const res = await fetch(`${API_ROOT}/users/${annID}`, { method: 'DELETE' });
+        const res = await fetch(`${API_ROOT}/users/${id}`, { method: 'DELETE' });
         // const res = await fetch(`http://localhost:8080/api/users/${id}`, { method: 'DELETE' })
         if (res.ok) {
          changeConfirm()
@@ -32,7 +32,7 @@ const changeConfirm = (id) => {
   confirmDelete.value = !confirmDelete.value
   idToDelete.value = id
   // console.log(confirmDelete.value)
-  console.log(idToDelete.value)
+  // console.log(idToDelete.value)
 }
 
 const goToEdit = (id) => {
