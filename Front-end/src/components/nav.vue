@@ -16,6 +16,10 @@ import { RouterLink } from "vue-router";
           ><button class="ann-menu">User</button></RouterLink
         >
         <hr />
+        <RouterLink :to="{ name: 'Match' }"
+          ><button class="ann-menu">Match Password</button></RouterLink
+        >
+        <hr />
       </div>
     </div>
   </div>
