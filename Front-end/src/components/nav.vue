@@ -8,17 +8,20 @@ import { RouterLink } from "vue-router";
       <div class="text-nav">
         <h1 class="ann-app-title">SAS</h1>
         <hr />
-        <RouterLink :to="{ name: 'Announcement' }"
+        <!-- <RouterLink :to="{ name: 'Announcement' }"
           ><button class="ann-menu">Announcement</button></RouterLink
-        >
+        > -->
+        <RouterLink :to="{name: 'Announcement'}" class="ann-menu">Announcement</RouterLink>
         <hr />
-        <RouterLink :to="{ name: 'SasUser' }"
+        <!-- <RouterLink :to="{ name: 'SasUser' }"
           ><button class="ann-menu">User</button></RouterLink
-        >
+        > -->
+        <RouterLink :to="{name: 'SasUser'}" class="ann-menu">User</RouterLink>
         <hr />
-        <RouterLink :to="{ name: 'Match' }"
+        <!-- <RouterLink :to="{ name: 'Match' }"
           ><button class="ann-menu">Match Password</button></RouterLink
-        >
+        > -->
+        <RouterLink :to="{name: 'Match'}" class="ann-menu">Match Password</RouterLink>
         <hr />
       </div>
     </div>
@@ -28,6 +31,8 @@ import { RouterLink } from "vue-router";
 <style scoped>
 hr {
   opacity: 35%;
+  margin-top: 7%;
+  margin-bottom: 7%;
 }
 .all{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -54,7 +59,7 @@ hr {
   left: 0;
   /* background-color: #e6e6e6; */
   background-color: whitesmoke;
-  box-shadow: 2px 0px 2px lightgray ;
+  box-shadow: 2px 0px 4px lightgray ;
   /* overflow-x: hidden; */
   /* padding-top: 10px; */
 }
