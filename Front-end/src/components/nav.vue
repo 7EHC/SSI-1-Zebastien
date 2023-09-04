@@ -16,12 +16,19 @@ import { RouterLink } from "vue-router";
           ><button class="ann-menu">User</button></RouterLink
         >
         <hr />
+        <RouterLink :to="{ name: 'Match' }"
+          ><button class="ann-menu">Match Password</button></RouterLink
+        >
+        <hr />
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+hr {
+  opacity: 35%;
+}
 .all{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
@@ -45,7 +52,9 @@ import { RouterLink } from "vue-router";
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #e6e6e6;
+  /* background-color: #e6e6e6; */
+  background-color: whitesmoke;
+  box-shadow: 2px 0px 4px lightgray ;
   /* overflow-x: hidden; */
   /* padding-top: 10px; */
 }

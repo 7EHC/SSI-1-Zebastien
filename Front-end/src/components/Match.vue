@@ -6,7 +6,7 @@ const matchedShow = ref('default')
 
 
 const switchShow= ()=> {
-    matchedShow.value = ['green' , 'red',null]
+    matchedShow.value = ['green', 'red', null]
     const randomIndex = Math.floor(Math.random() * matchedShow.value.length);
     return matchedShow.value = matchedShow.value[randomIndex]
     // console.log(matchedShow.value)
