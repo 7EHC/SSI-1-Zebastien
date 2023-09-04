@@ -3,7 +3,7 @@ const API_ROOT = import.meta.env.VITE_ROOT_API
 
 const getAnnouncement = async () => {
     try {
-      const res = await fetch(`${API_ROOT}`);
+      const res = await fetch(`${API_ROOT}/announcements`);
       // const res = await fetch("http://localhost:8080/api/announcements");
       if(res.ok) {
       const ann = await res.json();
@@ -19,7 +19,7 @@ const getAnnouncement = async () => {
       category = 0
     }
     try {
-      const res = await fetch(`${API_ROOT}/pages?page=${page}&mode=active`);
+      const res = await fetch(`${API_ROOT}/announcements/pages?page=${page}&mode=active`);
       // const res = await fetch(`http://localhost:8080/api/announcements/pages?page=${page}&mode=active&category=${category}`);
       if(res.ok) {
       const ann = await res.json();
@@ -38,7 +38,7 @@ const getAnnouncement = async () => {
       page = 0
     }
     try {
-      const res = await fetch(`${API_ROOT}/pages?page=${page}&mode=close`);
+      const res = await fetch(`${API_ROOT}/announcements/pages?page=${page}&mode=close`);
       // const res = await fetch(`http://localhost:8080/api/announcements/pages?page=${page}&mode=close&category=${category}`);
       if(res.ok) {
       const ann = await res.json();
@@ -51,7 +51,7 @@ const getAnnouncement = async () => {
   
   const targetId = async (id) => {
     try {
-      const res = await fetch(`${API_ROOT}/${id}`);
+      const res = await fetch(`${API_ROOT}/announcements/${id}`);
       // const res = await fetch(`http://localhost:8080/api/announcements/${id}`);
       if(res.ok) {
           const annDe = await res.json()
@@ -64,7 +64,7 @@ const getAnnouncement = async () => {
 
   const getAllUsers = async () => {
     try {
-      const res = await fetch(`${API_ROOT}/api/users`);
+      const res = await fetch(`${API_ROOT}/users`);
       // const res = await fetch("http://localhost:8080/api/users");
       if(res.ok) {
       const user = await res.json();
@@ -77,7 +77,7 @@ const getAnnouncement = async () => {
 
   const getUserById = async (id) => {
     try {
-      const res = await fetch(`${API_ROOT}/${id}`);
+      const res = await fetch(`${API_ROOT}/users/${id}`);
       // const res = await fetch(`http://localhost:8080/api/users/${id}`);
       if(res.ok) {
           const userView = await res.json()
