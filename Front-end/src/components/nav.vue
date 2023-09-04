@@ -54,7 +54,7 @@ hr {
   left: 0;
   /* background-color: #e6e6e6; */
   background-color: whitesmoke;
-  box-shadow: 2px 0px 4px lightgray ;
+  box-shadow: 2px 0px 2px lightgray ;
   /* overflow-x: hidden; */
   /* padding-top: 10px; */
 }
