@@ -120,6 +120,28 @@ onMounted(async()=>{
           v-on:input="hasDataChanged"
         />
       </div>
+      <!-- Change -------------------------------------- -->
+      <div class="div-form">
+        <b>Password<span style="color: red;"> *</span></b>
+        <input
+          class="ann-name"
+          type="text"
+          placeholder="Enter 8-14 characters"
+          maxlength="14"
+          minlength="8"
+        />
+      </div>
+      <div class="div-form">
+        <b>Confirm password<span style="color: red;"> *</span></b>
+        <input
+          class="ann-name"
+          type="text"
+          placeholder="Enter match password"
+          maxlength="14"
+          minlength="8"
+        />
+      </div>
+      <!-- --------------------------------------------- -->
       <div class="div-form">
         <b>Name<span style="color: red;"> *</span></b>
         <input
