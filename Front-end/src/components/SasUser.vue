@@ -121,10 +121,10 @@ onMounted(async () =>{
   display: flex;
   justify-content: center;
   margin-top: 10%;
-  margin-left: 13%;
+  margin-left: 13.5%;
 }
 .ann-timezone,.bigTable{
-    padding-left: 13%;
+    padding-left: 13.5%;
 }
 .parent-container {
   display: flex;
