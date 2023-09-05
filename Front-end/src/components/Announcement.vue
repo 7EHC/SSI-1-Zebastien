@@ -118,7 +118,7 @@ onMounted(async () => {
 <style scoped>
 .allContents {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-  margin-left: 13%;
+  margin-left: 13.5%;
 }
 
 .timeZone {

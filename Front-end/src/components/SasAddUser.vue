@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from "vue"
 import { useRoute, useRouter } from "vue-router";
 
+const API_ROOT = import.meta.env.VITE_ROOT_API
 const router = useRouter()
 const newUserToSend = ref({})
 const newUsername = ref('')
@@ -12,7 +13,6 @@ const newCreatedOn = ref('')
 const newUpdateOn = ref('')
 const cloneNewUser = ref({})
 const disSave = ref(true)
-const API_ROOT = import.meta.env.VITE_ROOT_API
 const validateUsernameMsg = ref('')
 const validateNameMsg = ref('')
 const validateEmailMsg = ref('')
@@ -66,33 +66,37 @@ const submit = () =>{
     updatedOn:newUpdateOn.value
   }
 
-  let allConditionsMet = true;
+  let allConditionsMet = true
 
   validateUsernameMsg.value = ''
   if (newUsername.value.length > 45) {
     validateUsernameMsg.value = 'Username size must be between 1 and 45.'
-    allConditionsMet = false;
+    allConditionsMet = false
   } else if (newUsername.value.length === 0 || newUsername.value === null || newUsername.value === undefined) {
     validateUsernameMsg.value = 'Username is required!'
-    allConditionsMet = false;
+    allConditionsMet = false
   } 
 
   validateNameMsg.value = ''
   if (newName.value.length > 100) {
     validateNameMsg.value = 'Name size must be between 1 and 100.'
-    allConditionsMet = false;
+    allConditionsMet = false
   } else if (newName.value.length === 0 || newName.value === null || newName.value === undefined) {
     validateNameMsg.value = 'Name is required!'
-    allConditionsMet = false;
+    allConditionsMet = false
   }
 
   validateEmailMsg.value = ''
+  const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i
   if (newEmail.value.length > 150) {
     validateEmailMsg.value = 'Email size must be between 1 and 150.'
-    allConditionsMet = false;
+    allConditionsMet = false
   } else if (newEmail.value.length === 0  || newEmail.value === null || newEmail.value === undefined) {
     validateEmailMsg.value = 'Email is required!'
-    allConditionsMet = false;
+    allConditionsMet = false
+  } else if (!regex.test(newEmail.value)) {
+    validateEmailMsg.value = 'Email is invalid.'
+    allConditionsMet = false
   }
 
   if (allConditionsMet) {
