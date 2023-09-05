@@ -60,7 +60,7 @@ const addNewUser = async (newUserToSend) => {
 const submit = async() =>{
   existData.value = await getAllUsers()
 
-  existUsername.value = existData.value.map(user => user.username);
+  existUsername.value = existData.value.map(user => user.username.toLowerCase());
   console.log(existUsername.value);
 
   newCreatedOn.value = new Date().toISOString()
