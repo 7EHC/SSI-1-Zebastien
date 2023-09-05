@@ -49,7 +49,7 @@ const editUser = async (updateUser) => {
 const submit = async() => {
   existData.value = await getAllUsers()
 
-  existUsername.value = existData.value.map(user => user.username);
+  existUsername.value = existData.value.map(user => user.username.toLowerCase());
   // console.log(existUsername.value);
 
   const objToSent = {
