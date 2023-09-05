@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from "vue"
 import { useRoute, useRouter } from "vue-router";
+import { getAllUsers } from "../composable/fetch";
 
 const API_ROOT = import.meta.env.VITE_ROOT_API
 const router = useRouter()
@@ -16,6 +17,8 @@ const disSave = ref(true)
 const validateUsernameMsg = ref('')
 const validateNameMsg = ref('')
 const validateEmailMsg = ref('')
+const existData = ref({})
+const existUsername = ref([])
 
 const hasDataChanged= () =>{
   newUserToSend.value = {
@@ -54,7 +57,12 @@ const addNewUser = async (newUserToSend) => {
         console.log(err)
     }
 }
-const submit = () =>{
+const submit = async() =>{
+  existData.value = await getAllUsers()
+
+  existUsername.value = existData.value.map(user => user.username);
+  console.log(existUsername.value);
+
   newCreatedOn.value = new Date().toISOString()
   newUpdateOn.value = new Date().toISOString()
   newUserToSend.value = {
@@ -75,7 +83,10 @@ const submit = () =>{
   } else if (newUsername.value.length === 0 || newUsername.value === null || newUsername.value === undefined) {
     validateUsernameMsg.value = 'Username is required!'
     allConditionsMet = false
-  } 
+  } else if (existUsername.value.includes(newUsername.value)) {
+    validateUsernameMsg.value = 'Username is not unique.'
+    allConditionsMet = false
+  }
 
   validateNameMsg.value = ''
   if (newName.value.length > 100) {

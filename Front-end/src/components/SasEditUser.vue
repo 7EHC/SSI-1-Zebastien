@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { getUserById } from "../composable/fetch";
+import { getUserById, getAllUsers } from "../composable/fetch";
 import { changeTime } from "../composable/changeTime";
 
 const API_ROOT = import.meta.env.VITE_ROOT_API;
@@ -14,6 +14,8 @@ const newData = ref({});
 const validateUsernameMsg = ref('')
 const validateNameMsg = ref('')
 const validateEmailMsg = ref('')
+const existData = ref({})
+const existUsername = ref([])
 
 const hasDataChanged = () => {
   if (JSON.stringify(cloneOgData.value) === JSON.stringify(ogData.value)) {
@@ -44,7 +46,12 @@ const editUser = async (updateUser) => {
   }
 };
 
-const submit = () => {
+const submit = async() => {
+  existData.value = await getAllUsers()
+
+  existUsername.value = existData.value.map(user => user.username);
+  // console.log(existUsername.value);
+
   const objToSent = {
     username: ogData.value.username,
     name: ogData.value.name,
@@ -55,7 +62,7 @@ const submit = () => {
   let allConditionsMet = true;
 
   validateUsernameMsg.value = "";
-  if (ogData.value.username.length > 45) {
+  if (ogData.value.username.length > 45 ) {
     validateUsernameMsg.value = "Username size must be between 1 and 45.";
     allConditionsMet = false;
   } else if (
@@ -66,6 +73,9 @@ const submit = () => {
   ) {
     validateUsernameMsg.value = "Username is required!";
     allConditionsMet = false;
+  } else if (existUsername.value.includes(ogData.value.username)) {
+    validateUsernameMsg.value = 'Username is not unique.'
+    allConditionsMet = false
   }
 
   validateNameMsg.value = "";
