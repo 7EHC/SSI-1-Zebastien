@@ -98,7 +98,7 @@ const validation = () => {
     validateCfPwMsg.value = "Please confirm the password!";
     allConditionsMet.value = false;
   } else if (cfPassword.value !== newPassword.value) {
-    validateCfPwMsg.value = "The password is not matched! Please try again.";
+    validateCfPwMsg.value = "The password is not matched!";
     allConditionsMet.value = false;
   } else if (cfPassword.value === newPassword.value) {
     allConditionsMet.value = true;
