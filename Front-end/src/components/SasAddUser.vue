@@ -123,16 +123,18 @@ const submit = async () => {
   validateNameMsg.value = "";
   validateEmailMsg.value = "";
 
+  validation();
+
   for (let i = 0; i < existData.value.length; i++) {
-    if (newUsername.value.length > 45) {
-      validateUsernameMsg.value = "Username size must be between 1 and 45.";
-      allConditionsMet.value = false;
-    } else if (
+    if (
       newUsername.value.length === 0 ||
       newUsername.value === null ||
       newUsername.value === undefined
     ) {
       validateUsernameMsg.value = "Username is required!";
+      allConditionsMet.value = false;
+    } else if (newUsername.value.length > 45) {
+      validateUsernameMsg.value = "Username size must be between 1 and 45.";
       allConditionsMet.value = false;
     } else if (
       existData.value[i].username.toLowerCase() ===
@@ -140,8 +142,6 @@ const submit = async () => {
     ) {
       validateUsernameMsg.value = "Username is not unique.";
       allConditionsMet.value = false;
-    } else if (newUsername.value) {
-      allConditionsMet.value = true;
     }
 
     if (newName.value.length > 100) {
@@ -159,8 +159,6 @@ const submit = async () => {
     ) {
       validateNameMsg.value = "Name is not unique.";
       allConditionsMet.value = false;
-    } else if (newName.value) {
-      allConditionsMet.value = true;
     }
 
     const regexEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i;
@@ -182,16 +180,13 @@ const submit = async () => {
     ) {
       validateEmailMsg.value = "Email is not unique.";
       allConditionsMet.value = false;
-    } else if (newEmail.value) {
-      allConditionsMet.value = true;
     }
-
-    validation();
   }
   if (allConditionsMet.value) {
     addNewUser(newUserToSend.value);
   }
 };
+
 onMounted(async () => {
   newUserToSend.value = {
     username: newUsername.value,
