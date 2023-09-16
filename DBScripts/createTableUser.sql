@@ -1,10 +1,13 @@
-use mydb;
-
+-- use mydb;
+use integrated;
+truncate table users;
+drop table users;
 SET @@global.time_zone = '+00:00';
 SET @@session.time_zone = "+00:00";
 create table users (
 	id int auto_increment primary key,
     username varchar(45) unique,
+    password varchar(100) not null default 'Sasadmin22*',
     name varchar(100) unique,
     email varchar(150) unique,
     role enum('admin', 'announcer') not null default 'announcer',

@@ -64,46 +64,99 @@ const addNewUser = async (newUserToSend) => {
   }
 };
 
-const validation = () => {
+const validatePassword = () => {
   validatePwMsg.value = "";
   validateCfPwMsg.value = "";
 
   const regexPw =
     /^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*_-]).+$/;
 
-  if (
-    (newPassword.value.length > 0 && newPassword.value.length < 8) ||
-    newPassword.value.length > 14
-  ) {
-    validatePwMsg.value = "Password size must be between 8 and 14.";
-    allConditionsMet.value = false;
-  } else if (
+    if (
     newPassword.value.length === 0 ||
     newPassword.value === null ||
-    newPassword.value === undefined
+    newPassword.value === undefined ||
+    newPassword.value.includes(' ')
   ) {
-    validatePwMsg.value = "Password is required!";
+    validatePwMsg.value = "Please fill out this field.";
+    allConditionsMet.value = false;
+  } else if (
+    newPassword.value.length > 0 && newPassword.value.length < 8 ||
+    newPassword.value.length > 14 || newPassword.value.length > 0 && newPassword.value.includes(' ')
+  ) {
+    validatePwMsg.value = "Password size must be between 8 and 14";
     allConditionsMet.value = false;
   } else if (!regexPw.test(newPassword.value)) {
-    validatePwMsg.value =
-      "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and without whitespace.";
+    validatePwMsg.value = "must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters"
+      // "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and without whitespace.";
+    allConditionsMet.value = false;
+  } else if (cfPassword.value !== newPassword.value) {
+    validatePwMsg.value = "The password DOES NOT match";
     allConditionsMet.value = false;
   }
 
   if (
     cfPassword.value.length === 0 ||
     cfPassword.value === null ||
-    cfPassword.value === undefined
+    cfPassword.value === undefined ||
+    cfPassword.value.includes(' ')
   ) {
-    validateCfPwMsg.value = "Please confirm the password!";
+    validateCfPwMsg.value = "Please fill out this field.";
     allConditionsMet.value = false;
-  } else if (cfPassword.value !== newPassword.value) {
-    validateCfPwMsg.value = "The password is not matched!";
+  } else if (
+    cfPassword.value.length > 0 && cfPassword.value.length < 8 ||
+    cfPassword.value.length > 14
+  ) {
+    validateCfPwMsg.value = "Confirm password size must be between 8 and 14";
     allConditionsMet.value = false;
-  } else if (cfPassword.value === newPassword.value) {
+  } else if (!regexPw.test(cfPassword.value)) {
+    validateCfPwMsg.value = "Confirm password must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters"
+    allConditionsMet.value = false;
+  } 
+  // else if (cfPassword.value !== newPassword.value) {
+  //   validateCfPwMsg.value = "The password DOES NOT match";
+  //   allConditionsMet.value = false;
+  // } 
+  else if (cfPassword.value === newPassword.value) {
     allConditionsMet.value = true;
   }
 };
+
+function validateEmail(email) {
+    if(email.length === 0){
+      allConditionsMet.value = false
+      return validateEmailMsg.value = 'Please fill out this field.'
+    }
+
+    // Additional format checks
+    let atIndex = email.indexOf('@');
+
+    if (atIndex === 0) {
+        // email starts with '@'
+        allConditionsMet.value = false
+        return validateEmailMsg.value = "Please enter a part followed by '@'."
+    }
+
+    if (atIndex === email.length - 1) {
+        // email ends with '@'
+        allConditionsMet.value = false
+        return validateEmailMsg.value = "Please enter a part following '@'."
+    }
+
+    let parts = email.split('@');
+    if (parts.length <= 1) {
+        // not in format 'xxxx@xxxx'
+        allConditionsMet.value = false
+        return validateEmailMsg.value = "Please include an '@' in the email address."
+    }
+
+    else if (parts.length > 2) {
+        // more than one '@' after the first one
+        allConditionsMet.value = false
+        return validateEmailMsg.value = "A part following '@' should not contain the symbol '@'."
+    }
+    // allConditionsMet.value = true
+    return validateEmailMsg.value = ''
+}
 
 const submit = async () => {
   existData.value = await getAllUsers();
@@ -123,7 +176,8 @@ const submit = async () => {
   validateNameMsg.value = "";
   validateEmailMsg.value = "";
 
-  validation();
+  validatePassword();
+  validateEmail(newEmail.value)
 
   for (let i = 0; i < existData.value.length; i++) {
     if (
@@ -131,7 +185,7 @@ const submit = async () => {
       newUsername.value === null ||
       newUsername.value === undefined
     ) {
-      validateUsernameMsg.value = "Username is required!";
+      validateUsernameMsg.value = "Please fill out this field.";
       allConditionsMet.value = false;
     } else if (newUsername.value.length > 45) {
       validateUsernameMsg.value = "Username size must be between 1 and 45.";
@@ -140,7 +194,7 @@ const submit = async () => {
       existData.value[i].username.toLowerCase() ===
       newUsername.value.toLowerCase()
     ) {
-      validateUsernameMsg.value = "Username is not unique.";
+      validateUsernameMsg.value = "does not unique.";
       allConditionsMet.value = false;
     }
 
@@ -157,28 +211,14 @@ const submit = async () => {
     } else if (
       existData.value[i].name.toLowerCase() === newName.value.toLowerCase()
     ) {
-      validateNameMsg.value = "Name is not unique.";
+      validateNameMsg.value = "does not unique.";
       allConditionsMet.value = false;
     }
 
-    const regexEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i;
-    if (newEmail.value.length > 150) {
-      validateEmailMsg.value = "Email size must be between 1 and 150.";
-      allConditionsMet.value = false;
-    } else if (
-      newEmail.value.length === 0 ||
-      newEmail.value === null ||
-      newEmail.value === undefined
-    ) {
-      validateEmailMsg.value = "Email is required!";
-      allConditionsMet.value = false;
-    } else if (!regexEmail.test(newEmail.value)) {
-      validateEmailMsg.value = "Email is invalid.";
-      allConditionsMet.value = false;
-    } else if (
+    if (
       existData.value[i].email.toLowerCase() === newEmail.value.toLowerCase()
     ) {
-      validateEmailMsg.value = "Email is not unique.";
+      validateEmailMsg.value = "does not unique.";
       allConditionsMet.value = false;
     }
   }
@@ -210,41 +250,42 @@ onMounted(async () => {
       <div>
         <b>Username<span style="color: red"> *</span></b>
         <input
-          class="ann-username"
-          v-model.trim="newUsername"
-          type="text"
-          placeholder="Enter less than 45 characters"
-          v-on:input="hasDataChanged"
+        class="ann-username"
+        v-model.trim="newUsername"
+        type="text"
+        placeholder="Enter less than 45 characters"
+        v-on:input="hasDataChanged"
+        maxlength="45"
+        required
         />
-        <p class="validateMsg" v-if="!newUsername">{{ validateUsernameMsg }}</p>
-        <p class="validateMsg" v-else="!newUsername">
-          {{ validateUsernameMsg }}
-        </p>
+        <p class="ann-error-username">{{ validateUsernameMsg }}</p>
       </div>
       <!-- Change -------------------------------------- -->
       <div class="div-form">
         <b>Password<span style="color: red"> *</span></b>
         <input
           class="ann-password"
-          v-model="newPassword"
           type="password"
+          v-model.trim="newPassword"
           placeholder="Enter 8-14 characters"
-          v-on:input="validation"
+          v-on:input="validatePassword"
+          maxlength="14"
+          required
         />
-        <p class="validateMsg" v-if="!newPassword">{{ validatePwMsg }}</p>
-        <p class="validateMsg" v-else="!newPassword">{{ validatePwMsg }}</p>
+        <p class="ann-error-password">{{ validatePwMsg }}</p>
       </div>
       <div class="div-form">
         <b>Confirm password<span style="color: red"> *</span></b>
         <input
           class="ann-confirm-password"
-          v-model="cfPassword"
           type="password"
+          v-model.trim="cfPassword"
           placeholder="Enter match password"
-          v-on:input="validation"
+          v-on:input="validatePassword"
+          maxlength="14"
+          required
         />
-        <p class="validateMsg" v-if="!cfPassword">{{ validateCfPwMsg }}</p>
-        <p class="validateMsg" v-else="!cfPassword">{{ validateCfPwMsg }}</p>
+        <p class="ann-error-confirm-password">{{ validateCfPwMsg }}</p>
       </div>
       <!-- --------------------------------------------- -->
       <div class="div-form">
@@ -255,21 +296,23 @@ onMounted(async () => {
           type="text"
           placeholder="Enter less than 100 characters"
           v-on:input="hasDataChanged"
+          maxlength="100"
+          required
         />
-        <p class="validateMsg" v-if="!newName">{{ validateNameMsg }}</p>
-        <p class="validateMsg" v-else="!newName">{{ validateNameMsg }}</p>
+        <p class="ann-error-name">{{ validateNameMsg }}</p>
       </div>
       <div class="div-form">
         <b>Email<span style="color: red"> *</span></b>
         <input
           class="ann-email"
           v-model.trim="newEmail"
-          type="text"
+          type="email"
           placeholder="Enter less than 150 characters"
-          v-on:input="hasDataChanged"
+          v-on:input="validateEmail(newEmail)"
+          maxlength="150"
+          required
         />
-        <p class="validateMsg" v-if="!newEmail">{{ validateEmailMsg }}</p>
-        <p class="validateMsg" v-else="!newEmail">{{ validateEmailMsg }}</p>
+        <p class="ann-error-email">{{ validateEmailMsg }}</p>
       </div>
       <div class="div-form">
         <b>Role</b><br />
@@ -301,7 +344,11 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.validateMsg {
+.ann-error-username,
+.ann-error-name,
+.ann-error-email,
+.ann-error-password,
+.ann-error-confirm-password {
   font-weight: normal;
   font-size: small;
   color: red;
