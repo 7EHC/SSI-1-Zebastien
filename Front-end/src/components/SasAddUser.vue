@@ -32,6 +32,7 @@ const hasDataChanged = () => {
     role: newRole.value,
     createdOn: newCreatedOn.value,
     updatedOn: newUpdateOn.value,
+    password: newPassword.value
   };
   if (
     JSON.stringify(cloneNewUser.value) === JSON.stringify(newUserToSend.value)
@@ -170,6 +171,7 @@ const submit = async () => {
     role: newRole.value,
     createdOn: newCreatedOn.value,
     updatedOn: newUpdateOn.value,
+    password: newPassword.value
   };
 
   validateUsernameMsg.value = "";
@@ -235,6 +237,7 @@ onMounted(async () => {
     role: newRole.value,
     createdOn: newCreatedOn.value,
     updatedOn: newUpdateOn.value,
+    password: newPassword.value
   };
   // console.log(newUserToSend.value.role)
 
