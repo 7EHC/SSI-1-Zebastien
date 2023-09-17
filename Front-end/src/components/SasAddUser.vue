@@ -70,7 +70,7 @@ const validatePassword = () => {
   validateCfPwMsg.value = "";
 
   const regexPw =
-    /^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*_-]).+$/;
+    /^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@+?;:/`#$%^&*_-]).+$/;
 
     if (
     newPassword.value.length === 0 ||
