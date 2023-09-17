@@ -1,9 +1,45 @@
 <script setup>
-import{ref} from"vue"
+import{ref, onMounted} from"vue"
 // import { hash } from "argon2";
 
 const matchedShow = ref('default')
+const usernamePassword = ref({})
+const username = ref('')
+const password = ref('')
 
+const submit = () =>{
+    usernamePassword.value = {
+        username: username.value,
+        password: password.value
+    }
+
+    matchPassword(usernamePassword.value)
+    // console.log(usernamePassword.value)
+}
+
+const matchPassword = async (input) => {
+  try {
+    // const res = await fetch(`${API_ROOT}/users`, {
+      const res = await fetch('http://localhost:8080/api/users/match', {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(input),
+    })
+    if (res.status === 200) {
+    //   console.log('Okay')
+    //   const AddUser = await res.json(); //keep info that added from backend
+        matchedShow.value = 'green'
+    //   router.push("/admin/user");
+    } else if (res.status === 401) {
+    //   console.log('password not match')
+        matchedShow.value = 'red'
+    }else if(res.status === 404){
+        matchedShow.value = 'else'
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 const switchShow= ()=> {
     matchedShow.value = ['green', 'red', null]
@@ -12,6 +48,13 @@ const switchShow= ()=> {
     // console.log(matchedShow.value)
 
 }
+
+onMounted(async() => {
+matchPassword.value = {
+    username: username.value,
+    password: password.value
+}
+})
 </script>
  
 <template>
@@ -34,6 +77,7 @@ const switchShow= ()=> {
         <b>Username</b>
         <input
           class="ann-username"
+          v-model="username"
           type="text"
           maxlength="45"
         />
@@ -42,12 +86,14 @@ const switchShow= ()=> {
         <b>Password</b>
         <input
           class="ann-username"
+          v-model="password"
           type="password"
-          maxlength="45"
+          minlength="8"
+          maxlength="14"
         />
       </div>
       <div class="ann-div-button">
-        <button class="ann-button" @click="switchShow">Match or not</button>
+        <button class="ann-button" @click="submit">Match or not</button>
       </div>
     </div>
 </div>
