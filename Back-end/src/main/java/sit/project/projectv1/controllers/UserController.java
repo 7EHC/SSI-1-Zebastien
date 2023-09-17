@@ -6,10 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sit.project.projectv1.dtos.AddAnnouncementDTO;
-import sit.project.projectv1.dtos.InputUserDTO;
-import sit.project.projectv1.dtos.OutputAnnouncementDTO;
-import sit.project.projectv1.dtos.OutputUserDTO;
+import sit.project.projectv1.dtos.*;
 import sit.project.projectv1.entities.Announcement;
 import sit.project.projectv1.entities.User;
 import sit.project.projectv1.enums.Role;
@@ -60,5 +57,10 @@ public class UserController {
     public User update(@PathVariable Integer id, @RequestBody InputUserDTO updateUser) {
         User user = modelMapper.map(updateUser, User.class);
         return userService.updateUser(id, user);
+    }
+
+    @PostMapping("/match")
+    public Boolean matchPassword(@RequestBody InputUserLoginDTO inputUserLoginDTO){
+        return userService.matchPassword(inputUserLoginDTO);
     }
 }

@@ -2,8 +2,11 @@ package sit.project.projectv1.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import sit.project.projectv1.dtos.InputUserDTO;
+import sit.project.projectv1.dtos.InputUserLoginDTO;
 import sit.project.projectv1.entities.User;
 import sit.project.projectv1.repositories.UserRepository;
 import java.util.List;
@@ -12,6 +15,8 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private Argon2PasswordEncoder argon2;
 
     public List<User> getAllUsers(){
         return userRepository.findAll();
@@ -23,6 +28,8 @@ public class UserService {
     }
 
     public User createNewUser(User user){
+        String hashedCode = argon2.encode(user.getPassword());
+        user.setPassword(hashedCode);
         User usr = userRepository.saveAndFlush(user);
         userRepository.refresh(usr);
         return usr;
@@ -47,5 +54,17 @@ public class UserService {
         User updateUsr =  userRepository.saveAndFlush(usr);
         userRepository.refresh(updateUsr);
         return updateUsr;
+    }
+
+    public Boolean matchPassword(InputUserLoginDTO input){
+        if(userRepository.existsByUsername(input.getUsername())){
+            String inputPassword = input.getPassword();
+            String existPassword = userRepository.findByUsername(input.getUsername()).getPassword();
+            if(argon2.matches(inputPassword,existPassword) == true){
+                return argon2.matches(inputPassword,existPassword);
+            }
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 }
