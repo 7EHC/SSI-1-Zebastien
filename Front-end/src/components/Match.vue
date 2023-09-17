@@ -60,16 +60,16 @@ matchPassword.value = {
 <template>
 <div class="all">
     <div class="matchText" v-if="matchedShow === 'default'">
-        <p class="text">Match Password</p>
+        <p class="ann-message">Match Password</p>
     </div>
     <div class="matchTextGreen" v-else-if="matchedShow === 'green'">
-        <p class="text">Password Matched</p>
+        <p class="ann-message">Password Matched</p>
     </div>
     <div class="matchTextRed" v-else-if="matchedShow === 'red'">
-        <p class="text">Password NOT Matched</p>
+        <p class="ann-message">Password NOT Matched</p>
     </div>
     <div class="matchTextNo" v-else>
-        <p class="text">The specified username DOES NOT exist</p>
+        <p class="ann-message">The specified username DOES NOT exist</p>
     </div>
     <div class="form">
         <h2>Match password</h2>
@@ -85,7 +85,7 @@ matchPassword.value = {
         <div class="div-form">
         <b>Password</b>
         <input
-          class="ann-username"
+          class="ann-password"
           v-model="password"
           type="password"
           minlength="8"
@@ -150,7 +150,7 @@ matchPassword.value = {
     font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
 }
-.text{
+.ann-message{
     font-size: 20px;
 }
 .form {
