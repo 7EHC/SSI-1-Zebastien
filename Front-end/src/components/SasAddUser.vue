@@ -32,6 +32,7 @@ const hasDataChanged = () => {
     role: newRole.value,
     createdOn: newCreatedOn.value,
     updatedOn: newUpdateOn.value,
+    password: newPassword.value
   };
   if (
     JSON.stringify(cloneNewUser.value) === JSON.stringify(newUserToSend.value)
@@ -170,11 +171,12 @@ const submit = async () => {
     role: newRole.value,
     createdOn: newCreatedOn.value,
     updatedOn: newUpdateOn.value,
+    password: newPassword.value
   };
 
   validateUsernameMsg.value = "";
   validateNameMsg.value = "";
-  validateEmailMsg.value = "";
+  // validateEmailMsg.value = "";
 
   validatePassword();
   validateEmail(newEmail.value)
@@ -235,6 +237,7 @@ onMounted(async () => {
     role: newRole.value,
     createdOn: newCreatedOn.value,
     updatedOn: newUpdateOn.value,
+    password: newPassword.value
   };
   // console.log(newUserToSend.value.role)
 
@@ -246,7 +249,6 @@ onMounted(async () => {
   <div class="all">
     <div class="form">
       <h1>User Detail:</h1>
-
       <div>
         <b>Username<span style="color: red"> *</span></b>
         <input
@@ -268,7 +270,7 @@ onMounted(async () => {
           type="password"
           v-model.trim="newPassword"
           placeholder="Enter 8-14 characters"
-          v-on:input="validatePassword"
+          v-on:input="validatePassword, hasDataChanged(Event)"
           maxlength="14"
           required
         />
@@ -308,7 +310,7 @@ onMounted(async () => {
           v-model.trim="newEmail"
           type="email"
           placeholder="Enter less than 150 characters"
-          v-on:input="validateEmail(newEmail)"
+          v-on:input="validateEmail(newEmail), hasDataChanged(Event)"
           maxlength="150"
           required
         />

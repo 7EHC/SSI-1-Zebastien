@@ -1,6 +1,7 @@
 package sit.project.projectv1.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,9 +24,9 @@ public class UserService {
     }
 
     public User createNewUser(User user){
-        User usr = userRepository.saveAndFlush(user);
-        userRepository.refresh(usr);
-        return usr;
+            User usr = userRepository.saveAndFlush(user);
+            userRepository.refresh(usr);
+            return usr;
     }
 
     public void deleteUser(Integer id) {
