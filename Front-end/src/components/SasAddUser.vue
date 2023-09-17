@@ -68,7 +68,6 @@ const addNewUser = async (newUserToSend) => {
 const validatePassword = () => {
   validatePwMsg.value = "";
   validateCfPwMsg.value = "";
-
   const regexPw =
     /^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@+?;:/`#$%^&*_-]).+$/;
 
@@ -88,9 +87,8 @@ const validatePassword = () => {
     allConditionsMet.value = false;
   } else if (!regexPw.test(newPassword.value)) {
     validatePwMsg.value = "must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters"
-      // "Password must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and without whitespace.";
     allConditionsMet.value = false;
-  } else if (cfPassword.value !== newPassword.value) {
+  } else if (cfPassword.value !== newPassword.value && cfPassword.value.length > 0) {
     validatePwMsg.value = "The password DOES NOT match";
     allConditionsMet.value = false;
   }
@@ -113,10 +111,6 @@ const validatePassword = () => {
     validateCfPwMsg.value = "Confirm password must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters"
     allConditionsMet.value = false;
   } 
-  // else if (cfPassword.value !== newPassword.value) {
-  //   validateCfPwMsg.value = "The password DOES NOT match";
-  //   allConditionsMet.value = false;
-  // } 
   else if (cfPassword.value === newPassword.value) {
     allConditionsMet.value = true;
   }
@@ -176,7 +170,7 @@ const submit = async () => {
 
   validateUsernameMsg.value = "";
   validateNameMsg.value = "";
-  validateEmailMsg.value = "";
+  // validateEmailMsg.value = "";
 
   validatePassword();
   validateEmail(newEmail.value)
@@ -249,7 +243,6 @@ onMounted(async () => {
   <div class="all">
     <div class="form">
       <h1>User Detail:</h1>
-
       <div>
         <b>Username<span style="color: red"> *</span></b>
         <input
@@ -271,7 +264,7 @@ onMounted(async () => {
           type="password"
           v-model.trim="newPassword"
           placeholder="Enter 8-14 characters"
-          v-on:input="validatePassword"
+          v-on:input="validatePassword(Event), hasDataChanged(Event)"
           maxlength="14"
           required
         />
@@ -311,7 +304,7 @@ onMounted(async () => {
           v-model.trim="newEmail"
           type="email"
           placeholder="Enter less than 150 characters"
-          v-on:input="validateEmail(newEmail)"
+          v-on:input="validateEmail(newEmail, Event), hasDataChanged(Event)"
           maxlength="150"
           required
         />
