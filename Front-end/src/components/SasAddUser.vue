@@ -23,6 +23,7 @@ const validateNameMsg = ref("");
 const validateEmailMsg = ref("");
 const existData = ref({});
 const allConditionsMet = ref(true);
+const notMatch = ref('')
 
 const hasDataChanged = () => {
   newUserToSend.value = {
@@ -65,56 +66,56 @@ const addNewUser = async (newUserToSend) => {
   }
 };
 
-const validatePassword = () => {
-  validatePwMsg.value = "";
-  validateCfPwMsg.value = "";
-  const regexPw =
-    /^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@+?;:/`#$%^&*_-]).+$/;
+// const validatePassword = () => {
+//   validatePwMsg.value = "";
+//   validateCfPwMsg.value = "";
+//   const regexPw =
+//     /^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@+?;:/`#$%^&*_-]).+$/;
 
-    if (
-    newPassword.value.length === 0 ||
-    newPassword.value === null ||
-    newPassword.value === undefined ||
-    newPassword.value.includes(' ')
-  ) {
-    validatePwMsg.value = "Please fill out this field.";
-    allConditionsMet.value = false;
-  } else if (
-    newPassword.value.length > 0 && newPassword.value.length < 8 ||
-    newPassword.value.length > 14 || newPassword.value.length > 0 && newPassword.value.includes(' ')
-  ) {
-    validatePwMsg.value = "Password size must be between 8 and 14";
-    allConditionsMet.value = false;
-  } else if (!regexPw.test(newPassword.value)) {
-    validatePwMsg.value = "must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters"
-    allConditionsMet.value = false;
-  } else if (cfPassword.value !== newPassword.value && cfPassword.value.length > 0) {
-    validatePwMsg.value = "The password DOES NOT match";
-    allConditionsMet.value = false;
-  }
+//     if (
+//     newPassword.value.length === 0 ||
+//     newPassword.value === null ||
+//     newPassword.value === undefined ||
+//     newPassword.value.includes(' ')
+//   ) {
+//     validatePwMsg.value = "Please fill out this field.";
+//     allConditionsMet.value = false;
+//   } else if (
+//     newPassword.value.length > 0 && newPassword.value.length < 8 ||
+//     newPassword.value.length > 14 || newPassword.value.length > 0 && newPassword.value.includes(' ')
+//   ) {
+//     validatePwMsg.value = "Password size must be between 8 and 14";
+//     allConditionsMet.value = false;
+//   } else if (!regexPw.test(newPassword.value)) {
+//     validatePwMsg.value = "must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters"
+//     allConditionsMet.value = false;
+//   } else if (cfPassword.value !== newPassword.value && cfPassword.value.length > 0) {
+//     notMatch.value = "The password DOES NOT match";
+//     allConditionsMet.value = false;
+//   }
 
-  if (
-    cfPassword.value.length === 0 ||
-    cfPassword.value === null ||
-    cfPassword.value === undefined ||
-    cfPassword.value.includes(' ')
-  ) {
-    validateCfPwMsg.value = "Please fill out this field.";
-    allConditionsMet.value = false;
-  } else if (
-    cfPassword.value.length > 0 && cfPassword.value.length < 8 ||
-    cfPassword.value.length > 14
-  ) {
-    validateCfPwMsg.value = "Confirm password size must be between 8 and 14";
-    allConditionsMet.value = false;
-  } else if (!regexPw.test(cfPassword.value)) {
-    validateCfPwMsg.value = "Confirm password must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters"
-    allConditionsMet.value = false;
-  } 
-  else if (cfPassword.value === newPassword.value) {
-    allConditionsMet.value = true;
-  }
-};
+//   if (
+//     cfPassword.value.length === 0 ||
+//     cfPassword.value === null ||
+//     cfPassword.value === undefined ||
+//     cfPassword.value.includes(' ')
+//   ) {
+//     validateCfPwMsg.value = "Please fill out this field.";
+//     allConditionsMet.value = false;
+//   } else if (
+//     cfPassword.value.length > 0 && cfPassword.value.length < 8 ||
+//     cfPassword.value.length > 14
+//   ) {
+//     validateCfPwMsg.value = "Confirm password size must be between 8 and 14";
+//     allConditionsMet.value = false;
+//   } else if (!regexPw.test(cfPassword.value)) {
+//     validateCfPwMsg.value = "Confirm password must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters"
+//     allConditionsMet.value = false;
+//   } 
+//   else if (cfPassword.value === newPassword.value) {
+//     allConditionsMet.value = true;
+//   }
+// };
 
 function validateEmail(email) {
     if(email.length === 0){
@@ -149,7 +150,7 @@ function validateEmail(email) {
         allConditionsMet.value = false
         return validateEmailMsg.value = "A part following '@' should not contain the symbol '@'."
     }
-    // allConditionsMet.value = true
+    allConditionsMet.value = true
     return validateEmailMsg.value = ''
 }
 
@@ -172,7 +173,7 @@ const submit = async () => {
   validateNameMsg.value = "";
   // validateEmailMsg.value = "";
 
-  validatePassword();
+  // validatePassword();
   validateEmail(newEmail.value)
 
   for (let i = 0; i < existData.value.length; i++) {
@@ -264,14 +265,14 @@ onMounted(async () => {
           type="password"
           v-model.trim="newPassword"
           placeholder="Enter 8-14 characters"
-          v-on:input="validatePassword(Event), hasDataChanged(Event)"
+          v-on:input="hasDataChanged"
           maxlength="14"
           required
         />
         <p class="ann-error-password">{{ validatePwMsg }}</p>
       </div>
       <div class="div-form">
-        <b>Confirm password<span style="color: red"> *</span></b>
+        <b>Confirm password<span style="color: red"> *</span><span class="ann-error-password">{{ notMatch }}</span></b>
         <input
           class="ann-confirm-password"
           type="password"
