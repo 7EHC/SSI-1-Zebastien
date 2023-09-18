@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import sit.project.projectv1.exceptions.UserUniqueValidator;
 import sit.project.projectv1.repositories.UserRepository;
-import sit.project.projectv1.services.UserService;
 import sit.project.projectv1.utils.ListMapper;
 
 @Configuration
