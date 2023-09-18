@@ -23,7 +23,8 @@ const validateNameMsg = ref("");
 const validateEmailMsg = ref("");
 const existData = ref({});
 const allConditionsMet = ref(true);
-const notMatch = ref('')
+const notMatch = ref("");
+const errorMsg = ref([]);
 
 const hasDataChanged = () => {
   newUserToSend.value = {
@@ -33,7 +34,7 @@ const hasDataChanged = () => {
     role: newRole.value,
     createdOn: newCreatedOn.value,
     updatedOn: newUpdateOn.value,
-    password: newPassword.value
+    password: newPassword.value,
   };
   if (
     JSON.stringify(cloneNewUser.value) === JSON.stringify(newUserToSend.value)
@@ -59,12 +60,22 @@ const addNewUser = async (newUserToSend) => {
       const AddUser = await res.json(); //keep info that added from backend
       router.push("/admin/user");
     } else if (res.status === 400 || res.status === 500) {
-      throw new Error("Cannot add");
+      const error = await res.json();
+      errorMsg.value = error.detail;
+      
+      for (let index = 0; index < errorMsg.value.length; index++) {
+        if (errorMsg.value[i].field === "username") {
+          validateUsernameMsg.value = errorMsg.value[i].errorMessage;
+
+        }
+      }
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 };
+
+const validateMsg = (err) => {};
 
 // const validatePassword = () => {
 //   validatePwMsg.value = "";
@@ -111,48 +122,48 @@ const addNewUser = async (newUserToSend) => {
 //   } else if (!regexPw.test(cfPassword.value)) {
 //     validateCfPwMsg.value = "Confirm password must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters"
 //     allConditionsMet.value = false;
-//   } 
+//   }
 //   else if (cfPassword.value === newPassword.value) {
 //     allConditionsMet.value = true;
 //   }
 // };
 
-function validateEmail(email) {
-    if(email.length === 0){
-      allConditionsMet.value = false
-      return validateEmailMsg.value = 'Please fill out this field.'
-    }
+// function validateEmail(email) {
+//     if(email.length === 0){
+//       allConditionsMet.value = false
+//       return validateEmailMsg.value = 'Please fill out this field.'
+//     }
 
-    // Additional format checks
-    let atIndex = email.indexOf('@');
+//     // Additional format checks
+//     let atIndex = email.indexOf('@');
 
-    if (atIndex === 0) {
-        // email starts with '@'
-        allConditionsMet.value = false
-        return validateEmailMsg.value = "Please enter a part followed by '@'."
-    }
+//     if (atIndex === 0) {
+//         // email starts with '@'
+//         allConditionsMet.value = false
+//         return validateEmailMsg.value = "Please enter a part followed by '@'."
+//     }
 
-    if (atIndex === email.length - 1) {
-        // email ends with '@'
-        allConditionsMet.value = false
-        return validateEmailMsg.value = "Please enter a part following '@'."
-    }
+//     if (atIndex === email.length - 1) {
+//         // email ends with '@'
+//         allConditionsMet.value = false
+//         return validateEmailMsg.value = "Please enter a part following '@'."
+//     }
 
-    let parts = email.split('@');
-    if (parts.length <= 1) {
-        // not in format 'xxxx@xxxx'
-        allConditionsMet.value = false
-        return validateEmailMsg.value = "Please include an '@' in the email address."
-    }
+//     let parts = email.split('@');
+//     if (parts.length <= 1) {
+//         // not in format 'xxxx@xxxx'
+//         allConditionsMet.value = false
+//         return validateEmailMsg.value = "Please include an '@' in the email address."
+//     }
 
-    else if (parts.length > 2) {
-        // more than one '@' after the first one
-        allConditionsMet.value = false
-        return validateEmailMsg.value = "A part following '@' should not contain the symbol '@'."
-    }
-    allConditionsMet.value = true
-    return validateEmailMsg.value = ''
-}
+//     else if (parts.length > 2) {
+//         // more than one '@' after the first one
+//         allConditionsMet.value = false
+//         return validateEmailMsg.value = "A part following '@' should not contain the symbol '@'."
+//     }
+//     allConditionsMet.value = true
+//     return validateEmailMsg.value = ''
+// }
 
 const submit = async () => {
   existData.value = await getAllUsers();
@@ -166,62 +177,62 @@ const submit = async () => {
     role: newRole.value,
     createdOn: newCreatedOn.value,
     updatedOn: newUpdateOn.value,
-    password: newPassword.value
+    password: newPassword.value,
   };
 
-  validateUsernameMsg.value = "";
-  validateNameMsg.value = "";
+  addNewUser(newUserToSend.value);
+  // validateUsernameMsg.value = "";
+  // validateNameMsg.value = "";
   // validateEmailMsg.value = "";
 
   // validatePassword();
-  validateEmail(newEmail.value)
+  // validateEmail(newEmail.value)
 
-  for (let i = 0; i < existData.value.length; i++) {
-    if (
-      newUsername.value.length === 0 ||
-      newUsername.value === null ||
-      newUsername.value === undefined
-    ) {
-      validateUsernameMsg.value = "Please fill out this field.";
-      allConditionsMet.value = false;
-    } else if (newUsername.value.length > 45) {
-      validateUsernameMsg.value = "Username size must be between 1 and 45.";
-      allConditionsMet.value = false;
-    } else if (
-      existData.value[i].username.toLowerCase() ===
-      newUsername.value.toLowerCase()
-    ) {
-      validateUsernameMsg.value = "does not unique.";
-      allConditionsMet.value = false;
-    }
+  // for (let i = 0; i < existData.value.length; i++) {
+  //   if (
+  //     newUsername.value.length === 0 ||
+  //     newUsername.value === null ||
+  //     newUsername.value === undefined
+  //   ) {
+  //     validateUsernameMsg.value = "Please fill out this field.";
+  //     allConditionsMet.value = false;
+  //   } else if (newUsername.value.length > 45) {
+  //     validateUsernameMsg.value = "Username size must be between 1 and 45.";
+  //     allConditionsMet.value = false;
+  //   } else if (
+  //     existData.value[i].username.toLowerCase() ===
+  //     newUsername.value.toLowerCase()
+  //   ) {
+  //     validateUsernameMsg.value = "does not unique.";
+  //     allConditionsMet.value = false;
+  //   }
 
-    if (newName.value.length > 100) {
-      validateNameMsg.value = "Name size must be between 1 and 100.";
-      allConditionsMet.value = false;
-    } else if (
-      newName.value.length === 0 ||
-      newName.value === null ||
-      newName.value === undefined
-    ) {
-      validateNameMsg.value = "Name is required!";
-      allConditionsMet.value = false;
-    } else if (
-      existData.value[i].name.toLowerCase() === newName.value.toLowerCase()
-    ) {
-      validateNameMsg.value = "does not unique.";
-      allConditionsMet.value = false;
-    }
+  //   if (newName.value.length > 100) {
+  //     validateNameMsg.value = "Name size must be between 1 and 100.";
+  //     allConditionsMet.value = false;
+  //   } else if (
+  //     newName.value.length === 0 ||
+  //     newName.value === null ||
+  //     newName.value === undefined
+  //   ) {
+  //     validateNameMsg.value = "Name is required!";
+  //     allConditionsMet.value = false;
+  //   } else if (
+  //     existData.value[i].name.toLowerCase() === newName.value.toLowerCase()
+  //   ) {
+  //     validateNameMsg.value = "does not unique.";
+  //     allConditionsMet.value = false;
+  //   }
 
-    if (
-      existData.value[i].email.toLowerCase() === newEmail.value.toLowerCase()
-    ) {
-      validateEmailMsg.value = "does not unique.";
-      allConditionsMet.value = false;
-    }
-  }
-  if (allConditionsMet.value) {
-    addNewUser(newUserToSend.value);
-  }
+  //   if (
+  //     existData.value[i].email.toLowerCase() === newEmail.value.toLowerCase()
+  //   ) {
+  //     validateEmailMsg.value = "does not unique.";
+  //     allConditionsMet.value = false;
+  //   }
+  // }
+  // if (allConditionsMet.value) {
+  // }
 };
 
 onMounted(async () => {
@@ -232,7 +243,7 @@ onMounted(async () => {
     role: newRole.value,
     createdOn: newCreatedOn.value,
     updatedOn: newUpdateOn.value,
-    password: newPassword.value
+    password: newPassword.value,
   };
   // console.log(newUserToSend.value.role)
 
@@ -247,13 +258,13 @@ onMounted(async () => {
       <div>
         <b>Username<span style="color: red"> *</span></b>
         <input
-        class="ann-username"
-        v-model.trim="newUsername"
-        type="text"
-        placeholder="Enter less than 45 characters"
-        v-on:input="hasDataChanged"
-        maxlength="45"
-        required
+          class="ann-username"
+          v-model.trim="newUsername"
+          type="text"
+          placeholder="Enter less than 45 characters"
+          v-on:input="hasDataChanged"
+          maxlength="45"
+          required
         />
         <p class="ann-error-username">{{ validateUsernameMsg }}</p>
       </div>
@@ -272,7 +283,10 @@ onMounted(async () => {
         <p class="ann-error-password">{{ validatePwMsg }}</p>
       </div>
       <div class="div-form">
-        <b>Confirm password<span style="color: red"> *</span><span class="ann-error-password">{{ notMatch }}</span></b>
+        <b
+          >Confirm password<span style="color: red"> *</span
+          ><span class="ann-error-password">{{ notMatch }}</span></b
+        >
         <input
           class="ann-confirm-password"
           type="password"
@@ -305,7 +319,7 @@ onMounted(async () => {
           v-model.trim="newEmail"
           type="email"
           placeholder="Enter less than 150 characters"
-          v-on:input="validateEmail(newEmail, Event), hasDataChanged(Event)"
+          v-on:input="hasDataChanged"
           maxlength="150"
           required
         />
