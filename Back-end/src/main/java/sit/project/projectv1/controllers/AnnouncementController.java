@@ -3,7 +3,13 @@ package sit.project.projectv1.controllers;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+import sit.project.projectv1.advice.ErrorResponse;
 import sit.project.projectv1.dtos.*;
 import sit.project.projectv1.entities.Announcement;
 import sit.project.projectv1.enums.Mode;
@@ -72,5 +78,15 @@ public class AnnouncementController {
         announcement.setAnnouncementCategory(categoryService.getCategory(updateAnnouncement.getCategoryId()));
         announcementService.updateAnnouncement(announcementID, announcement);
         return modelMapper.map(announcement, OutputAnnouncementDTO.class);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {
+        ErrorResponse er = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Entity attributes validation failed!", request.getDescription(false));
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            er.addValidationError(error.getField(), error.getDefaultMessage());
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(er);
     }
 }

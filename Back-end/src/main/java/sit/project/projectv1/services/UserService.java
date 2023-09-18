@@ -1,12 +1,11 @@
 package sit.project.projectv1.services;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import sit.project.projectv1.dtos.InputUserDTO;
 import sit.project.projectv1.dtos.InputUserLoginDTO;
 import sit.project.projectv1.entities.User;
 import sit.project.projectv1.repositories.UserRepository;
@@ -44,10 +43,9 @@ public class UserService {
         }
     }
 
-    public User updateUser(Integer id, User user) {
+    public User updateUser(Integer id,  User user) {
         User usr = userRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User id " + id + " does not exist"));
-
         usr.setName(user.getName().trim());
         usr.setUsername(user.getUsername().trim());
         usr.setEmail(user.getEmail().trim());
@@ -56,6 +54,7 @@ public class UserService {
         userRepository.refresh(updateUsr);
         return updateUsr;
     }
+
 
     public Boolean matchPassword(InputUserLoginDTO input){
         if(userRepository.existsByUsername(input.getUsername())){
@@ -68,4 +67,4 @@ public class UserService {
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
-}
+    }

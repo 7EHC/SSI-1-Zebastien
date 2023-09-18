@@ -1,37 +1,41 @@
 package sit.project.projectv1.dtos;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import sit.project.projectv1.enums.Role;
 import sit.project.projectv1.exceptions.EnumSizeLimit;
+import sit.project.projectv1.exceptions.UserUnique;
 
 import java.time.ZonedDateTime;
 
 @Getter
 @Setter
 public class InputUserDTO {
-    @NotBlank
+
+    @NotNull@NotBlank
+    @UserUnique(username = true)
     @Size(min = 1, max = 45)
     private String username;
 
-    @NotBlank
-    @Size(min = 8,max = 14, message = "size must be between 8 and 14")
-    @Pattern(message = "must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters",
-            regexp = "^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,14}$")
-    private String password;
-
-    @NotBlank
+    @NotNull@NotBlank
+    @UserUnique(name = true)
     @Size(min = 1, max = 100)
     private String name;
 
-    @NotBlank
-    @Size(min = 1, max = 100)
+    @NotNull@NotBlank
+    @UserUnique(email = true)
     @Email(message = "Email should be valid", regexp = "^[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)@[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)$")
+    @Size(min = 1, max = 150)
     private String email;
+
+    @NotBlank
+    @Pattern(message = "must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters",
+             regexp = "^(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&*-]).{8,14}$")
+    @Size(min = 8,max = 14, message = "size must be between 8 and 14")
+    private String password;
+
 
     @EnumSizeLimit(targetClassType = Role.class, message = "must be either 'announcer' or 'admin'")
     private String role;

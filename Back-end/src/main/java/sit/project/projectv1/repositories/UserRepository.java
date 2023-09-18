@@ -7,7 +7,13 @@ import sit.project.projectv1.entities.User;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Integer>, EntityRepository<User> {
+        boolean existsByUsername(String username);
+        boolean existsByName(String name);
+        boolean existsByEmail(String email);
+        User findByUsername(String username);
 
-    boolean existsByUsername(String username);
-    User findByUsername(String username);
-}
+
+
+
+    }
+
