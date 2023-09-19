@@ -2,6 +2,7 @@
 import{ref, onMounted} from"vue"
 // import { hash } from "argon2";
 
+const API_ROOT = import.meta.env.VITE_ROOT_API;
 const matchedShow = ref('default')
 const usernamePassword = ref({})
 const username = ref('')
@@ -19,8 +20,8 @@ const submit = () =>{
 
 const matchPassword = async (input) => {
   try {
-    // const res = await fetch(`${API_ROOT}/users`, {
-      const res = await fetch('http://localhost:8080/api/users/match', {
+    const res = await fetch(`${API_ROOT}/users/match`, {
+    //   const res = await fetch('http://localhost:8080/api/users/match', {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(input),

@@ -55,7 +55,6 @@ public class UserService {
         return updateUsr;
     }
 
-
     public Boolean matchPassword(InputUserLoginDTO input){
         if(userRepository.existsByUsername(input.getUsername())){
             String inputPassword = input.getPassword();
