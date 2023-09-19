@@ -16,6 +16,7 @@ const validateNameMsg = ref("");
 const validateEmailMsg = ref("");
 const existData = ref({});
 const allConditionsMet = ref(true);
+const errorMsg = ref([]);
 
 const hasDataChanged = () => {
   if (JSON.stringify(cloneOgData.value) === JSON.stringify(ogData.value)) {
@@ -38,50 +39,89 @@ const editUser = async (updateUser) => {
     // method put. if it success. it will return status 200
     if (res.status === 200) {
       router.push("/admin/user");
-    } else if (res.status === 500) {
-      throw new Error("Cannot edit");
+    } else if (res.status === 400 || res.status === 500) {
+      const error = await res.json();
+      errorMsg.value = error.detail;
+      console.log(errorMsg.value);
+      validateUsernameMsg.value = "";
+      validateNameMsg.value = "";
+      validateEmailMsg.value = "";
+      for (const err of errorMsg.value) {
+        if (err.errorMessage === "does not unique") {
+          switch (err.field) {
+            case "username":
+              if (newData.value.username !== ogData.value.username) {
+                validateUsernameMsg.value = err.errorMessage;
+              }
+              break;
+            case "name":
+              if (newData.value.name !== ogData.value.name) {
+                validateNameMsg.value = err.errorMessage;
+              }
+              break;
+            case "email":
+              if (newData.value.email !== ogData.value.email) {
+                validateEmailMsg.value = err.errorMessage;
+              }
+              break;
+          }
+        } else if (err.errorMessage === "must not be blank") {
+          switch (err.field) {
+            case "username":
+              validateUsernameMsg.value = err.errorMessage;
+              break;
+            case "name":
+              validateNameMsg.value = err.errorMessage;
+              break;
+            case "email":
+              validateEmailMsg.value = err.errorMessage;
+              break;
+          }
+        } else if (
+          ogData.value.email.length > 0 &&
+          err.errorMessage.includes("valid")
+        ) {
+          validateEmailMsg.value = err.errorMessage;
+        }
+      }
     }
+    //   for (const err of errorMsg.value) {
+    //     if (err.errorMessage === "does not unique") {
+    //       switch (err.field) {
+    //         case "username":
+    //           validateUsernameMsg.value = err.errorMessage;
+    //           break;
+    //         case "name":
+    //           validateNameMsg.value = err.errorMessage;
+    //           break;
+    //         case "email":
+    //           validateEmailMsg.value = err.errorMessage;
+    //           break;
+    //       }
+    //     } else if (err.errorMessage === "must not be blank") {
+    //       switch (err.field) {
+    //         case "username":
+    //           validateUsernameMsg.value = err.errorMessage;
+    //           break;
+    //         case "name":
+    //           validateNameMsg.value = err.errorMessage;
+    //           break;
+    //         case "email":
+    //           validateEmailMsg.value = err.errorMessage;
+    //           break;
+    //       }
+    //     } else if (
+    //       ogData.value.email.length > 0 &&
+    //       err.errorMessage.includes("valid")
+    //     ) {
+    //       validateEmailMsg.value = err.errorMessage;
+    //     }
+    //   }
+    // }
   } catch (err) {
     console.log(err);
   }
 };
-
-function validateEmail(email) {
-
-  if (email.length === 0) {
-    allConditionsMet.value = false;
-    return (validateEmailMsg.value = "Please fill out this field.");
-  }
-  validateEmailMsg.value = ''
-  // Additional format checks
-  let atIndex = email.indexOf("@");
-
-  if (atIndex === 0) {
-    // email starts with '@'
-    allConditionsMet.value = false;
-    return (validateEmailMsg.value = "Please enter a part followed by '@'.");
-  }
-
-  if (atIndex === email.length - 1) {
-    // email ends with '@'
-    allConditionsMet.value = false;
-    return (validateEmailMsg.value = "Please enter a part following '@'.");
-  }
-
-  let parts = email.split("@");
-  if (parts.length !== 2 || parts[0] === "" || parts[1] === "") {
-    // not in format 'xxxx@xxxx'
-    allConditionsMet.value = false;
-    validateEmailMsg.value =
-      "Please include an '@' in the email address."
-  } else if (parts[1].includes("@")) {
-    // more than one '@' after the first one
-    allConditionsMet.value = false;
-    return validateEmailMsg.value =
-      "A part following '@' should not contain the symbol '@'.";
-  } 
-  allConditionsMet.value = true
-}
 
 const submit = async () => {
   existData.value = await getAllUsers();
@@ -92,66 +132,30 @@ const submit = async () => {
     email: ogData.value.email,
     role: ogData.value.role,
   };
+  // console.log(objToSent);
 
-  validateUsernameMsg.value = "";
-  validateNameMsg.value = "";
+  // for (let i = 0; i < existData.value.length; i++) {
+  //   if (existData.value[i] === ogData.value) {
+  //     console.log(objToSent[i])
+  //   }
+  //   if (existData.value[i].username === ogData.value.username) {
+  //     objToSent.username = ogData.value.username;
+  //   }
 
-  validateEmail(ogData.value.email);
+  //   if (existData.value[i].name === ogData.value.name) {
+  //     objToSent.name = ogData.value.name;
+  //   }
 
-  for (let i = 0; i < existData.value.length; i++) {
-    if (
-      newData.value.username.toLowerCase() !==
-      ogData.value.username.toLowerCase()
-    ) {
-      if (
-        ogData.value.username.length === 0 ||
-        ogData.value.username === null ||
-        ogData.value.username === undefined
-      ) {
-        validateUsernameMsg.value = "Please fill out this field.";
-        allConditionsMet.value = false;
-      } else if (
-        existData.value[i].username.toLowerCase() ===
-        ogData.value.username.toLowerCase()
-      ) {
-        allConditionsMet.value = false;
-        validateUsernameMsg.value = "does not unique";
-      }
-    }
+  //   if (existData.value[i].email === ogData.value.email) {
+  //     objToSent.email = ogData.value.email;
+  //   }
 
-    if (newData.value.name.toLowerCase() !== ogData.value.name.toLowerCase()) {
-      if (
-        ogData.value.name.length === 0 ||
-        ogData.value.name === null ||
-        ogData.value.name === undefined
-      ) {
-        validateNameMsg.value = "Please fill out this field.";
-        allConditionsMet.value = false;
-      } else if (
-        existData.value[i].name.toLowerCase() ===
-        ogData.value.name.toLowerCase()
-      ) {
-        allConditionsMet.value = false;
-        validateNameMsg.value = "does not unique";
-      }
-    }
-
-    if (
-      newData.value.email.toLowerCase() !== ogData.value.email.toLowerCase()
-    ) {
-      if (
-        existData.value[i].email.toLowerCase() ===
-        ogData.value.email.toLowerCase()
-      ) {
-        allConditionsMet.value = false;
-        validateEmailMsg.value = "does not unique";
-      }
-    }
-  }
-  if (allConditionsMet.value) {
-    allConditionsMet.value = true
-    editUser(objToSent);
-  }
+  //   if (existData.value[i].role !== ogData.value.role) {
+  //     objToSent.role = ogData.value.role;
+  //   }
+  // }
+  // console.log(objToSent);
+  editUser(objToSent);
 };
 
 onMounted(async () => {
@@ -207,7 +211,7 @@ onMounted(async () => {
           class="ann-email"
           v-model.trim="ogData.email"
           type="email"
-          v-on:input="validateEmail(ogData.email), hasDataChanged(Event)"
+          v-on:input="hasDataChanged"
           maxlength="150"
           required
         />
