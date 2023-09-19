@@ -1,6 +1,5 @@
 package sit.project.projectv1.dtos;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,11 +7,9 @@ import sit.project.projectv1.enums.Role;
 import sit.project.projectv1.exceptions.EnumSizeLimit;
 import sit.project.projectv1.exceptions.UserUnique;
 
-import java.time.ZonedDateTime;
-
 @Getter
 @Setter
-public class InputUserDTO {
+public class putUserDTO {
 
     @NotNull@NotBlank
     @UserUnique(username = true)
@@ -29,13 +26,6 @@ public class InputUserDTO {
     @Email(message = "Email should be valid")
     @Size(min = 1, max = 150)
     private String email;
-
-    @NotBlank
-    @Pattern(message = "must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters",
-             regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[#?_!@$%^&*=+-]).*$")
-    @Size(min = 8,max = 14, message = "size must be between 8 and 14")
-    private String password;
-
 
     @EnumSizeLimit(targetClassType = Role.class, message = "must be either 'announcer' or 'admin'")
     private String role;

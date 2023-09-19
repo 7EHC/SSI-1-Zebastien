@@ -59,7 +59,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User update(@PathVariable Integer id, @RequestBody @Valid InputUserDTO updateUser) {
+    public User update(@PathVariable Integer id, @RequestBody @Valid putUserDTO updateUser) {
         User user = modelMapper.map(updateUser, User.class);
         return userService.updateUser(id, user);
     }
