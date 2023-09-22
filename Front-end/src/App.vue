@@ -3,10 +3,10 @@ import { computed, ref } from "vue";
 import navBar from "./components/nav.vue";
 import { RouterView } from "vue-router";
 
-const barShow = ref(true)
+const barShow = ref(false)
 const checkUrl = computed(() => {
-  if(window.location.pathname === '/announcement'){
-    barShow.value = false
+  if(window.location.pathname.includes('/admin')){
+    barShow.value = true
   }
   return barShow.value
 })
