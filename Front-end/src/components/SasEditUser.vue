@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getUserById, getAllUsers } from "../composable/fetch";
 import { changeTime } from "../composable/changeTime";
+import navBar from "./nav.vue";
 
 const API_ROOT = import.meta.env.VITE_ROOT_API;
 const ogData = ref({});
@@ -178,6 +179,7 @@ onMounted(async () => {
 
 <template>
   <div class="all">
+    <navBar/>
     <div class="form">
       <h1>User Detail:</h1>
 

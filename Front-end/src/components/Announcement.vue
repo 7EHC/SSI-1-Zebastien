@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import { getAnnouncement } from "../composable/fetch";
 import { changeTime } from "../composable/changeTime"
 import { useRouter } from "vue-router";
+import navBar from "./nav.vue";
 // import  DeletePopup  from "./DeletePopup.vue"
 // import AddAnnouncement from "./AddAnnouncement.vue"
 // import { useRoute, useRouter } from "vue-router";
@@ -52,6 +53,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <navBar/>
 <div class="Header">
     <h1>SIT Announcement System (SAS)</h1>
   </div>

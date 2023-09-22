@@ -2,6 +2,7 @@
 import { useRoute, useRouter } from "vue-router";
 import { ref,onMounted } from "vue"
 import {getAnnouncement} from "../composable/fetch"
+import navBar from "./nav.vue";
 
 const API_ROOT = import.meta.env.VITE_ROOT_API
 const router = useRouter()
@@ -90,6 +91,7 @@ const updateTestEditor = (event) => {
 </script>
 
 <template>
+  <navBar/>
   <div class="big">
     <h2>Add Announcement Detail ::</h2>
 
