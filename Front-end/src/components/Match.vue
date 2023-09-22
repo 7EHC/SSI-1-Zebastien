@@ -1,6 +1,7 @@
 <script setup>
 import{ref, onMounted} from"vue"
 // import { hash } from "argon2";
+import navBar from "./nav.vue";
 
 const API_ROOT = import.meta.env.VITE_ROOT_API;
 const matchedShow = ref('default')
@@ -60,6 +61,7 @@ matchPassword.value = {
  
 <template>
 <div class="all">
+    <navBar/>
     <div class="matchText" v-if="matchedShow === 'default'">
         <p class="ann-message">Match Password</p>
     </div>

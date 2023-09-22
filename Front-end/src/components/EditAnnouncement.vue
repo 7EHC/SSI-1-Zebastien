@@ -2,6 +2,7 @@
 import { RouterLink, useRoute,useRouter } from "vue-router";
 import { targetId } from "../composable/fetch";
 import { onMounted,ref } from "vue";
+import navBar from "./nav.vue";
 
 const announceById = ref([])
 const router = useRouter()
@@ -132,6 +133,7 @@ cloneNewData.value = Object.assign({},newData.value)
 </script>
 
 <template>
+  <navBar/>
 <div class="edit">
     <h2>Announcement Detail ::</h2>
     <table>

@@ -3,6 +3,7 @@ import { useRoute, useRouter } from "vue-router";
 import { ref,onMounted } from "vue"
 import { getAllUsers } from "../composable/fetch"
 import { changeTime } from "../composable/changeTime"
+import navBar from "./nav.vue";
 
 const router = useRouter()
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -52,6 +53,7 @@ onMounted(async () =>{
  
 <template>
 <div class="all">
+  <navBar/>
   <div class="popup">
   <Teleport to="body">
     <div class="modal" style="background-color: rgba(0, 0, 0, 0.3); width: 100%;" v-if="confirmDelete === true">

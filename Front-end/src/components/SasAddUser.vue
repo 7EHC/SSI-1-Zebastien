@@ -2,6 +2,7 @@
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getAllUsers } from "../composable/fetch";
+import navBar from "./nav.vue";
 
 const API_ROOT = import.meta.env.VITE_ROOT_API;
 const router = useRouter();
@@ -252,6 +253,7 @@ onMounted(async () => {
 
 <template>
   <div class="all">
+    <navBar/>
     <div class="form">
       <h1>User Detail:</h1>
       <div>

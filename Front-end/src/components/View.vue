@@ -3,6 +3,7 @@ import { targetId } from "../composable/fetch";
 import { onMounted, ref } from "vue";
 import { changeTime } from "../composable/changeTime";
 import { useRoute, useRouter,RouterLink} from "vue-router";
+import navBar from "./nav.vue";
 
 const { params } = useRoute();
 const AnnDetail = ref([]);
@@ -39,6 +40,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <navBar/>
   <div class="big">
     <h2>Announcement Detail ::</h2>
     <table class="ann-item">
