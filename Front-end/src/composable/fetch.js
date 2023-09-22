@@ -19,7 +19,7 @@ const getAnnouncement = async () => {
       category = 0
     }
     try {
-      const res = await fetch(`${API_ROOT}/announcements/pages?page=${page}&mode=active`);
+      const res = await fetch(`${API_ROOT}/announcements/pages?page=${page}&mode=active&category=${category}`);
       // const res = await fetch(`http://localhost:8080/api/announcements/pages?page=${page}&mode=active&category=${category}`);
       if(res.ok) {
       const ann = await res.json();
@@ -38,7 +38,7 @@ const getAnnouncement = async () => {
       page = 0
     }
     try {
-      const res = await fetch(`${API_ROOT}/announcements/pages?page=${page}&mode=close`);
+      const res = await fetch(`${API_ROOT}/announcements/pages?page=${page}&mode=close&category=${category}`);
       // const res = await fetch(`http://localhost:8080/api/announcements/pages?page=${page}&mode=close&category=${category}`);
       if(res.ok) {
       const ann = await res.json();
