@@ -23,6 +23,7 @@ import { RouterLink } from "vue-router";
         > -->
         <RouterLink :to="{name: 'Match'}" class="ann-menu">Match Password</RouterLink>
         <hr />
+        <RouterLink :to="{name: 'Login'}" style="position: absolute;bottom: 20px; border-top: 1px solid lightgray;width: 85%;" class="ann-menu">Sign-Out</RouterLink>
       </div>
     </div>
   </div>
@@ -47,6 +48,7 @@ hr {
     margin-bottom: 5px;
     padding-left:0;
 }
+
 .ann-menu:hover{
     font-weight: bold;
 }

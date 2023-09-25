@@ -9,6 +9,7 @@ import SasUser from "../components/SasUser.vue"
 import SasAddUser from "../components/SasAddUser.vue"
 import SasEditUser from "../components/SasEditUser.vue"
 import Match from "../components/Match.vue"
+import Login from "../components/Login.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -67,6 +68,11 @@ const router = createRouter({
       name: 'Match',
       component: Match
     },
+    {
+      path: '/admin/login',
+      name: 'Login',
+      component: Login
+    }
   ],
 });
 
