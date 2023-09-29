@@ -44,7 +44,7 @@ const API_ROOT = import.meta.env.VITE_ROOT_API
 // }
 const login = async (input) => {
   try {
-    const res = await fetch(`${API_ROOT}/users/token`, {
+    const res = await fetch(`${API_ROOT}/token`, {
     // const res = await fetch('http://localhost:8080/api/users/token', {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -52,31 +52,14 @@ const login = async (input) => {
     });
 
     if (res.status === 200) {
-      // const jwtToken = await res.text();
 
-      // Store the JWT token in local storage
-      // localStorage.setItem('jwtToken', jwtToken);
-
-      // console.log(jwtToken);
       const response = await res.json(); // Parse the response as JSON
 
       // Store the access token and refresh token in local storage
-      localStorage.setItem('accessToken', response.access_token);
-      localStorage.setItem('refreshToken', response.refresh_token);
+      localStorage.setItem('accessToken', response.token);
+      localStorage.setItem('refreshToken', response.refreshToken);
 
       loginStatus.value = 'green';
-
-      // Set timeout for token expiration
-      // setTimeout(function() {
-      //   localStorage.removeItem('jwtToken'); // Remove token from local storage
-      //   alert('Session timeout');
-      //   router.push("/login"); // Redirect to login page
-      // }, 30 * 60 * 1000); // 30 minutes in milliseconds
-
-      // Set timeout for refreshing token after 23 hours
-      // setTimeout(function() {
-      //   refreshAccessToken();
-      // }, 23 * 60 * 60 * 1000); // 23 hours in milliseconds
 
       // Redirect after 1.5 seconds
       setTimeout(function() {
