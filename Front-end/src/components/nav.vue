@@ -1,5 +1,13 @@
 <script setup>
-import { RouterLink } from "vue-router";
+import { RouterLink,useRouter } from "vue-router";
+
+const router = useRouter()
+const signout = () => {
+  localStorage.removeItem('accessToken'); // Remove the JWT token from local storage
+  localStorage.removeItem('refreshToken');
+  // Redirect to the login page or any other desired destination
+  router.push("/login");
+}
 </script>
 
 <template>
@@ -23,7 +31,10 @@ import { RouterLink } from "vue-router";
         > -->
         <RouterLink :to="{name: 'Match'}" class="ann-menu">Match Password</RouterLink>
         <hr />
-        <RouterLink :to="{name: 'Login'}" style="position: absolute;bottom: 20px; border-top: 1px solid lightgray;width: 85%;" class="ann-menu">Sign-Out</RouterLink>
+        <!-- <RouterLink :to="{name: 'Login'}" style="position: absolute;bottom: 20px;border-top: 2px solid lightgray;width: 85%;" class="ann-menu">Sign-Out</RouterLink> -->
+        <button class="ann-menu" style="position: absolute;bottom: 20px;border-top: 2px solid lightgray;width: 85%; padding-top: 10px;"
+          @click="signout">
+        SIGN OUT</button>
       </div>
     </div>
   </div>
@@ -48,7 +59,6 @@ hr {
     margin-bottom: 5px;
     padding-left:0;
 }
-
 .ann-menu:hover{
     font-weight: bold;
 }

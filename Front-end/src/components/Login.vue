@@ -7,35 +7,100 @@ const loginObj = ref({})
 const username = ref('')
 const password =ref('')
 const router = useRouter()
+const API_ROOT = import.meta.env.VITE_ROOT_API
 
+// const login = async (input) => {
+//   try {
+//     // const res = await fetch(`${API_ROOT}/users/match`, {
+//       const res = await fetch('http://localhost:8080/api/users/token', {
+//       method: "POST",
+//       headers: { "content-type": "application/json" },
+//       body: JSON.stringify(input),
+//     })
+//     if (res.status === 200) {
+//         // Get the token text from the response
+//         const jwtToken = await res.text();
+
+//         // Store the JWT token in local storage
+//         localStorage.setItem('jwtToken', jwtToken);
+
+//         console.log(jwtToken);
+
+//         loginStatus.value = 'green';
+
+//         // Redirect after 1.5 seconds
+//         setTimeout(function() {
+//             router.push("/admin/user");
+//         }, 1500);
+//     } else if (res.status === 401) {
+//     //   console.log('password not match')
+//         loginStatus.value = 'red'
+//     }else if(res.status === 404){
+//         loginStatus.value = 'else'
+//     }
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
 const login = async (input) => {
   try {
-    // const res = await fetch(`${API_ROOT}/users/match`, {
-      const res = await fetch('http://localhost:8080/api/users/token', {
+    const res = await fetch(`${API_ROOT}/users/token`, {
+    // const res = await fetch('http://localhost:8080/api/users/token', {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(input),
-    })
+    });
+
     if (res.status === 200) {
-        // Get the token text from the response
-        const jwtToken = await res.text();
+      // const jwtToken = await res.text();
 
-        // Store the JWT token in local storage
-        // localStorage.setItem('jwtToken', jwtToken);
+      // Store the JWT token in local storage
+      // localStorage.setItem('jwtToken', jwtToken);
 
-        console.log(jwtToken);
+      // console.log(jwtToken);
+      const response = await res.json(); // Parse the response as JSON
 
-        loginStatus.value = 'green';
+      // Store the access token and refresh token in local storage
+      localStorage.setItem('accessToken', response.access_token);
+      localStorage.setItem('refreshToken', response.refresh_token);
 
-        // Redirect after 1.5 seconds
-        // setTimeout(function() {
-        //     router.push("/admin/user");
-        // }, 1500);
+      loginStatus.value = 'green';
+
+      // Set timeout for token expiration
+      // setTimeout(function() {
+      //   localStorage.removeItem('jwtToken'); // Remove token from local storage
+      //   alert('Session timeout');
+      //   router.push("/login"); // Redirect to login page
+      // }, 30 * 60 * 1000); // 30 minutes in milliseconds
+
+      // Set timeout for refreshing token after 23 hours
+      // setTimeout(function() {
+      //   refreshAccessToken();
+      // }, 23 * 60 * 60 * 1000); // 23 hours in milliseconds
+
+      // Redirect after 1.5 seconds
+      setTimeout(function() {
+        router.push("/admin/user");
+      }, 1500);
+
+
+      // Set timeout for access token expiration to 30 minutes
+      setTimeout(function() {
+        localStorage.removeItem('accessToken'); // Remove access token from local storage
+        alert('Access token has expired');
+      }, 30 * 60 * 1000); // 30 minutes in milliseconds
+
+      // Set timeout for refresh token expiration to 24 hours
+      setTimeout(function() {
+        localStorage.removeItem('refreshToken'); // Remove refresh token from local storage
+        alert('Refresh token has expired');
+        router.push("/login"); // Redirect to login page
+      }, 24 * 60 * 60 * 1000); // 24 hours in milliseconds
+
     } else if (res.status === 401) {
-    //   console.log('password not match')
-        loginStatus.value = 'red'
-    }else if(res.status === 404){
-        loginStatus.value = 'else'
+      loginStatus.value = 'red';
+    } else if (res.status === 404) {
+      loginStatus.value = 'else';
     }
   } catch (err) {
     console.log(err);
@@ -49,6 +114,36 @@ const submit = ()=>{
 }
 
 login(loginObj.value)
+}
+
+const refreshAccessToken = async () => {
+  try {
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    const res = await fetch('http://localhost:8080/api/users/refresh', {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    if (res.status === 200) {
+      const newAccessToken = await res.text();
+
+      // Update the access token in local storage
+      localStorage.setItem('jwtToken', newAccessToken);
+
+      // Schedule the next token refresh after 23 hours
+      setTimeout(function() {
+        refreshAccessToken();
+      }, 23 * 60 * 60 * 1000); // 23 hours in milliseconds
+    } else {
+      // Handle error (e.g., redirect to login)
+      alert('Error refreshing token');
+      router.push("/login");
+    }
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 onMounted(async() =>{
@@ -74,7 +169,7 @@ loginObj.value = {
         <p class="ann-message">Username DOES NOT exist</p>
     </div>
     <div class="form">
-        <h2>SAS Login</h2>
+        <h2>Match password</h2>
         <div class="div-form">
         <b>Username</b>
         <input
@@ -102,9 +197,6 @@ loginObj.value = {
 </template>
  
 <style scoped>
-h2 {
-  text-align: center;
-}
 .matchText{
     margin-left: 37%;
     margin-top: 5%;
