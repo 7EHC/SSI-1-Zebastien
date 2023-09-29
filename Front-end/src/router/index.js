@@ -69,7 +69,7 @@ const router = createRouter({
       component: Match
     },
     {
-      path: '/admin/login',
+      path: '/login',
       name: 'Login',
       component: Login
     }
