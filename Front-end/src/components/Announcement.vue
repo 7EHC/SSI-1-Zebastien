@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { getAnnouncement } from "../composable/fetch";
+import { getAnnouncement, reqAccessToken } from "../composable/fetch";
 import { changeTime } from "../composable/changeTime";
 import { useRouter } from "vue-router";
 import navBar from "./nav.vue";
@@ -37,6 +37,13 @@ const deleteAnn = async (annID) => {
       announcement.value = announcement.value.filter((acc) => acc.id !== annID); //Delete frontend
       // console.log(announcement.value)
       router.push("/admin/announcement");
+    } else if (res.status === 401) {
+      const chekky = await reqAccessToken();
+      // console.log(chekky);
+      if (chekky === 'refresh expried'){
+      alert("Session has expried, please try again.");
+      router.push('/login')
+    }
     } else {
       throw new Error(`Cannot delete`);
     }
