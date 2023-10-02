@@ -1,8 +1,9 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import { ref,onMounted } from "vue"
-import {getAnnouncement} from "../composable/fetch"
+import { getAnnouncement, targetId} from "../composable/fetch"
 import navBar from "./nav.vue";
+import { useTokenStore } from "../stores/tokenStore.js";
 
 const API_ROOT = import.meta.env.VITE_ROOT_API
 const router = useRouter()
@@ -43,7 +44,10 @@ const addNewAnnouncement = async (newAnn) => {
     }
 }
 onMounted(async ()=>{
-
+  const check = await getAnnouncement()
+  console.log(check);
+  if (typeof check === "object" || check === "new token success") {
+  AnnDetail.value = await targetId(params.id);
   Announcement.value = await getAnnouncement()
   let runID = Announcement.value[0].id
   runID++
@@ -54,6 +58,10 @@ onMounted(async ()=>{
   closeDate: null,
   announcementDisplay:"N",
   categoryId: 1,
+  }
+} else if (check === 'refresh expried'){
+    alert("Session has expried, please try again.");
+    router.push('/login')
   }
 
 })

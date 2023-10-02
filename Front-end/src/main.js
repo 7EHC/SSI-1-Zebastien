@@ -9,7 +9,7 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 const app = createApp(App)
 const pinia = createPinia()
+app.use(pinia)
 app.use(router)
 app.mount('#app')
-app.use(pinia)
 app.component('QuillEditor', QuillEditor)

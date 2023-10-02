@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { getAllUsers } from "../composable/fetch";
+import { getAllUsers, reqAccessToken } from "../composable/fetch";
+import { useTokenStore } from "../stores/tokenStore.js";
 import navBar from "./nav.vue";
 
 const API_ROOT = import.meta.env.VITE_ROOT_API;
@@ -48,10 +49,15 @@ const hasDataChanged = () => {
 const addNewUser = async (newUserToSend) => {
   try {
     // checkUpdateAccount(newAccount)
+    const tokenStore = useTokenStore();
+    const accessToken = ref(tokenStore.accessToken);
     const res = await fetch(`${API_ROOT}/users`, {
       // const res = await fetch('http://localhost:8080/api/users', {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${accessToken.value}`,
+      },
       body: JSON.stringify(newUserToSend),
     }); //Add account at backend
     // method post. if it success, it will return status 201 / other methods return status 200
@@ -102,57 +108,27 @@ const addNewUser = async (newUserToSend) => {
         } else if (err.errorMessage.includes("size must be between 8 and 14")) {
           if (newPassword.value.length < 8 && newPassword.value.length !== 0) {
             validatePwMsg.value = `Password ${err.errorMessage}`;
-          } 
+          }
           if (cfPassword.value.length < 8 && cfPassword.value.length !== 0)
-          validateCfPwMsg.value = `Confirm password ${err.errorMessage}`;
-        } else if (err.errorMessage.includes('must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters')) {
-          if (newPassword.value.length >= 8 ) {
+            validateCfPwMsg.value = `Confirm password ${err.errorMessage}`;
+        } else if (
+          err.errorMessage.includes(
+            "must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters"
+          )
+        ) {
+          if (newPassword.value.length >= 8) {
             validatePwMsg.value = `${err.errorMessage}`;
           }
         }
       }
+    } else if (res.status === 401) {
+      const chekky = await reqAccessToken();
+      return chekky;
     }
   } catch (err) {
     // console.log(err);
   }
 };
-
-// const validateEmail = computed((email) => {
-//     if(email.length === 0){
-//       allConditionsMet.value = false
-//       return validateEmailMsg.value = 'Please fill out this field.'
-//     }
-
-//     // Additional format checks
-//     let atIndex = email.indexOf('@');
-
-//     if (atIndex === 0) {
-//         // email starts with '@'
-//         allConditionsMet.value = false
-//         return validateEmailMsg.value = "Please enter a part followed by '@'."
-//     }
-
-//     if (atIndex === email.length - 1) {
-//         // email ends with '@'
-//         allConditionsMet.value = false
-//         return validateEmailMsg.value = "Please enter a part following '@'."
-//     }
-
-//     let parts = email.split('@');
-//     if (parts.length <= 1) {
-//         // not in format 'xxxx@xxxx'
-//         allConditionsMet.value = false
-//         return validateEmailMsg.value = "Please include an '@' in the email address."
-//     }
-
-//     else if (parts.length > 2) {
-//         // more than one '@' after the first one
-//         allConditionsMet.value = false
-//         return validateEmailMsg.value = "A part following '@' should not contain the symbol '@'."
-//     }
-//     allConditionsMet.value = true
-//     return validateEmailMsg.value = ''
-// })
 
 const checkPw = computed(() => {
   if (cfPassword.value !== newPassword.value) {
@@ -165,8 +141,6 @@ const checkPw = computed(() => {
 });
 
 const submit = async () => {
-  // existData.value = await getAllUsers();
-
   newCreatedOn.value = new Date().toISOString();
   newUpdateOn.value = new Date().toISOString();
   newUserToSend.value = {
@@ -181,79 +155,33 @@ const submit = async () => {
   if (allConditionsMet.value) {
     addNewUser(newUserToSend.value);
   }
-  // validateUsernameMsg.value = "";
-  // validateNameMsg.value = "";
-  // validateEmailMsg.value = "";
-
-  // validatePassword();
-  // validateEmail(newEmail.value)
-
-  // for (let i = 0; i < existData.value.length; i++) {
-  //   if (
-  //     newUsername.value.length === 0 ||
-  //     newUsername.value === null ||
-  //     newUsername.value === undefined
-  //   ) {
-  //     validateUsernameMsg.value = "Please fill out this field.";
-  //     allConditionsMet.value = false;
-  //   } else if (newUsername.value.length > 45) {
-  //     validateUsernameMsg.value = "Username size must be between 1 and 45.";
-  //     allConditionsMet.value = false;
-  //   } else if (
-  //     existData.value[i].username.toLowerCase() ===
-  //     newUsername.value.toLowerCase()
-  //   ) {
-  //     validateUsernameMsg.value = "does not unique.";
-  //     allConditionsMet.value = false;
-  //   }
-
-  //   if (newName.value.length > 100) {
-  //     validateNameMsg.value = "Name size must be between 1 and 100.";
-  //     allConditionsMet.value = false;
-  //   } else if (
-  //     newName.value.length === 0 ||
-  //     newName.value === null ||
-  //     newName.value === undefined
-  //   ) {
-  //     validateNameMsg.value = "Name is required!";
-  //     allConditionsMet.value = false;
-  //   } else if (
-  //     existData.value[i].name.toLowerCase() === newName.value.toLowerCase()
-  //   ) {
-  //     validateNameMsg.value = "does not unique.";
-  //     allConditionsMet.value = false;
-  //   }
-
-  //   if (
-  //     existData.value[i].email.toLowerCase() === newEmail.value.toLowerCase()
-  //   ) {
-  //     validateEmailMsg.value = "does not unique.";
-  //     allConditionsMet.value = false;
-  //   }
-  // }
-  // if (allConditionsMet.value) {
-  // }
 };
 
 onMounted(async () => {
-  newUserToSend.value = {
-    username: newUsername.value,
-    name: newName.value,
-    email: newEmail.value,
-    role: newRole.value,
-    createdOn: newCreatedOn.value,
-    updatedOn: newUpdateOn.value,
-    password: newPassword.value,
-  };
-  // console.log(newUserToSend.value.role)
-
-  cloneNewUser.value = Object.assign({}, newUserToSend.value);
+  const check = await getAllUsers()
+  if (typeof check === "object" || check === "new token success") {
+    newUserToSend.value = {
+      username: newUsername.value,
+      name: newName.value,
+      email: newEmail.value,
+      role: newRole.value,
+      createdOn: newCreatedOn.value,
+      updatedOn: newUpdateOn.value,
+      password: newPassword.value,
+    };
+    // console.log(newUserToSend.value.role)
+  
+    cloneNewUser.value = Object.assign({}, newUserToSend.value);
+  } else if (check === 'refresh expried'){
+    alert("Session has expried, please try again.");
+    router.push('/login')
+  }
 });
 </script>
 
 <template>
   <div class="all">
-    <navBar/>
+    <navBar />
     <div class="form">
       <h1>User Detail:</h1>
       <div>
