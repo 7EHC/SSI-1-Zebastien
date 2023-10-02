@@ -12,7 +12,7 @@ export const usePageStore = defineStore('page', () => {
     const setClosePage = (newPage) => {
       pageClose.value = newPage;
     };
-  
+
     return {
       page,
       pageClose,
@@ -20,3 +20,4 @@ export const usePageStore = defineStore('page', () => {
       setClosePage
     };
   })
+

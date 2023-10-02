@@ -1,5 +1,6 @@
 package sit.project.projectv1.controllers;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import sit.project.projectv1.advice.ErrorResponse;
 import sit.project.projectv1.dtos.*;
+import sit.project.projectv1.entities.Announcement;
 import sit.project.projectv1.entities.User;
+import sit.project.projectv1.enums.Role;
 import sit.project.projectv1.services.UserService;
 import sit.project.projectv1.utils.ListMapper;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -35,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public User createUser(@RequestBody @Valid InputUserDTO userDTO) {
+    public User createUser(@RequestBody @Valid User userDTO) {
         userDTO.setUsername(userDTO.getUsername().trim());
         userDTO.setName(userDTO.getName().trim());
         userDTO.setEmail(userDTO.getEmail().trim());
@@ -59,10 +63,17 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User update(@PathVariable Integer id, @RequestBody @Valid putUserDTO updateUser) {
+    public User update(@PathVariable Integer id, @RequestBody InputUserDTO updateUser) {
         User user = modelMapper.map(updateUser, User.class);
         return userService.updateUser(id, user);
     }
+
+//    @PostMapping("/token")
+//    public ResponseEntity<Map<String, String>> authenticateUser(@RequestBody InputUserLoginDTO inputUserLoginDTO) {
+//        return userService.authenticate(inputUserLoginDTO.getUsername(), inputUserLoginDTO.getPassword());
+//    }
+
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

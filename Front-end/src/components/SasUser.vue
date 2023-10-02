@@ -1,117 +1,167 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
-import { ref,onMounted } from "vue"
-import { getAllUsers } from "../composable/fetch"
-import { changeTime } from "../composable/changeTime"
+import { ref, onMounted } from "vue";
+import { getAllUsers } from "../composable/fetch";
+import { changeTime } from "../composable/changeTime";
 import navBar from "./nav.vue";
+import { useTokenStore } from "../stores/tokenStore.js";
 
-const router = useRouter()
-const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-const user = ref([])
-const confirmDelete = ref(false)
-const idToDelete = ref()
-const API_ROOT = import.meta.env.VITE_ROOT_API
+// const accessToken = localStorage.getItem("accessToken");
+// const refreshToken = localStorage.getItem("refreshToken");
+const router = useRouter();
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const user = ref([]);
+const confirmDelete = ref(false);
+const idToDelete = ref();
+const API_ROOT = import.meta.env.VITE_ROOT_API;
 
 const deleteUser = async (id) => {
-    try {
-        const res = await fetch(`${API_ROOT}/users/${id}`, { method: 'DELETE' });
-        // const res = await fetch(`http://localhost:8080/api/users/${id}`, { method: 'DELETE' })
-        if (res.ok) {
-         changeConfirm()
-         user.value = user.value.filter((usr) => usr.id !== id) //Delete frontend
-          // console.log(announcement.value)
-            router.push('/admin/user')
-        } else {
-            throw new Error(`Cannot delete`)
-        }
-    } catch (err) {
-        alert(`Error: ${err}`)
+  try {
+    const tokenStore = useTokenStore();
+    const accessToken = ref(tokenStore.accessToken);
+    const res = await fetch(
+      `${API_ROOT}/users/${id}`,
+      // const res = await fetch(`http://localhost:8080/api/users/${id}`, { method: 'DELETE' })
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken.value}`,
+        },
+      }
+    );
+    if (res.ok) {
+      changeConfirm();
+      user.value = user.value.filter((usr) => usr.id !== id); //Delete frontend
+      // console.log(announcement.value)
+      router.push("/admin/user");
+    } else {
+      throw new Error(`Cannot delete`);
     }
-}
+  } catch (err) {
+    alert(`Error: ${err}`);
+  }
+};
 
 const changeConfirm = (id) => {
-  confirmDelete.value = !confirmDelete.value
-  idToDelete.value = id
+  confirmDelete.value = !confirmDelete.value;
+  idToDelete.value = id;
   // console.log(confirmDelete.value)
   // console.log(idToDelete.value)
-}
+};
 
 const goToEdit = (id) => {
-  router.push({ name: 'SasEditUser', params: { id: id } })
-}
+  router.push({ name: "SasEditUser", params: { id: id } });
+};
 
-onMounted(async () =>{
-  user.value = await getAllUsers()
-  user.value.sort((a, b) => a.role.localeCompare(b.role) || a.username.localeCompare(b.username));
-  // return user.value
-  // console.log(user.value)
-  if(!user.value){
-    user.value = []
+onMounted(async () => {
+  const check = await getAllUsers();
+  if (typeof check === "object" || check === "new token success") {
+    user.value = await getAllUsers();
+    // console.log(user.value);
+    user.value.sort(
+      (a, b) =>
+        a.role.localeCompare(b.role) || a.username.localeCompare(b.username)
+    );
+
+    if (!user.value) {
+      user.value = [];
+    }
+  } else if (check === "refresh expried") {
+    alert("Session has expried, please try again.");
+    router.push("/login");
   }
-})
+});
 </script>
- 
+
 <template>
-<div class="all">
-  <navBar/>
-  <div class="popup">
-  <Teleport to="body">
-    <div class="modal" style="background-color: rgba(0, 0, 0, 0.3); width: 100%;" v-if="confirmDelete === true">
-      <!-- <div class="modal" style="background-color: rgba(0, 0, 0, 0.3); width: 100%;"> -->
-      <div class="window" style="height: 40%; width: 50%; background-color: white;">
-        <p style="font-size: 48px;">Delete</p>
-        <hr>
-        <p style="font-size: 24px; margin-top: 30px;">Do you want to delete these records ?</p>
-        <button class="viewBut" @click="changeConfirm">Cancel</button><RouterLink :to="{ name: 'SasUser' }">
-        <button @click="deleteUser(idToDelete)" class="deleteButPopup">Delete</button></RouterLink>
-      </div>
+  <div class="all">
+    <navBar />
+    <div class="popup">
+      <Teleport to="body">
+        <div
+          class="modal"
+          style="background-color: rgba(0, 0, 0, 0.3); width: 100%"
+          v-if="confirmDelete === true"
+        >
+          <!-- <div class="modal" style="background-color: rgba(0, 0, 0, 0.3); width: 100%;"> -->
+          <div
+            class="window"
+            style="height: 40%; width: 50%; background-color: white"
+          >
+            <p style="font-size: 48px">Delete</p>
+            <hr />
+            <p style="font-size: 24px; margin-top: 30px">
+              Do you want to delete these records ?
+            </p>
+            <button class="viewBut" @click="changeConfirm">Cancel</button
+            ><RouterLink :to="{ name: 'SasUser' }">
+              <button @click="deleteUser(idToDelete)" class="deleteButPopup">
+                Delete
+              </button></RouterLink
+            >
+          </div>
+        </div>
+      </Teleport>
     </div>
-  </Teleport>
-</div>
 
     <div class="parent-container">
-        <h1 class="user-man">User Management</h1>
+      <h1 class="user-man">User Management</h1>
     </div>
     <div>
-        <h4 class="ann-timezone">Date/Time shown in Timezone: {{ timeZone }}</h4>
+      <h4 class="ann-timezone">Date/Time shown in Timezone: {{ timeZone }}</h4>
 
-        <div class="ann-button" id="addDiv">
-        <RouterLink :to="{name: 'SasAddUser'}"><button id="addBut" style="float: right;">Add User</button></RouterLink>
-        </div>
-        <div class="bigTable">
-            <table>
-                <tr class="tableHead">
-                    <th class="trHead">No.</th>
-                    <th class="trHead">Username</th>
-                    <th class="trHead">Name</th>
-                    <th class="trHead">Email </th>
-                    <th class="trHead">Role</th>
-                    <th class="trHead">Created On</th>
-                    <th class="trHead">Updated On</th>
-                    <th class="trHead">Action</th>
-                </tr>
+      <div class="ann-button" id="addDiv">
+        <RouterLink :to="{ name: 'SasAddUser' }"
+          ><button id="addBut" style="float: right">
+            Add User
+          </button></RouterLink
+        >
+      </div>
+      <div class="bigTable">
+        <table>
+          <tr class="tableHead">
+            <th class="trHead">No.</th>
+            <th class="trHead">Username</th>
+            <th class="trHead">Name</th>
+            <th class="trHead">Email</th>
+            <th class="trHead">Role</th>
+            <th class="trHead">Created On</th>
+            <th class="trHead">Updated On</th>
+            <th class="trHead">Action</th>
+          </tr>
 
-                <tr v-for="(usr, index) in user" :key="index" class="ann-item">
-                  <td>{{ index + 1 }}</td>
-                  <td class="ann-username">{{ usr.username }}</td>
-                  <td class="ann-name">{{ usr.name }}</td>
-                  <td class="ann-email">{{ usr.email }}</td>
-                  <td class="ann-role">{{ usr.role }}</td>
-                  <td class="ann-created-on">{{ changeTime(usr.createdOn) }}</td>
-                  <td class="ann-updated-on">{{ changeTime(usr.updatedOn) }}</td>
-                  <td class="ann-button-td">
-                    <button class="ann-button" id="edit-button" @click="goToEdit(usr.id)">edit</button>
-                    <button class="ann-button" id="delete-button" @click="changeConfirm(usr.id)">delete</button>
-                  </td>
-                </tr>
-            </table>  
-        </div>
+          <tr v-for="(usr, index) in user" :key="index" class="ann-item">
+            <td>{{ index + 1 }}</td>
+            <td class="ann-username">{{ usr.username }}</td>
+            <td class="ann-name">{{ usr.name }}</td>
+            <td class="ann-email">{{ usr.email }}</td>
+            <td class="ann-role">{{ usr.role }}</td>
+            <td class="ann-created-on">{{ changeTime(usr.createdOn) }}</td>
+            <td class="ann-updated-on">{{ changeTime(usr.updatedOn) }}</td>
+            <td class="ann-button-td">
+              <button
+                class="ann-button"
+                id="edit-button"
+                @click="goToEdit(usr.id)"
+              >
+                edit
+              </button>
+              <button
+                class="ann-button"
+                id="delete-button"
+                @click="changeConfirm(usr.id)"
+              >
+                delete
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
     <h4 class="NoAlert" v-if="user.length === 0">No user</h4>
-</div>
-
+  </div>
 </template>
- 
+
 <style scoped>
 .ann-timezone {
   justify-content: start;
@@ -125,22 +175,24 @@ onMounted(async () =>{
   margin-top: 10%;
   margin-left: 13.5%;
 }
-.ann-timezone,.bigTable{
-    padding-left: 13.5%;
+.ann-timezone,
+.bigTable {
+  padding-left: 13.5%;
 }
 .parent-container {
   display: flex;
   padding-left: 50%;
   /* align-items: center; */
 }
-.all{
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+.all {
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
 }
-.ann-app-title{
-    color: black;
+.ann-app-title {
+  color: black;
 }
-.text-nav{
-    padding-left: 15px;
+.text-nav {
+  padding-left: 15px;
 }
 table {
   /* margin-top: 30px; */
@@ -159,21 +211,23 @@ td {
   padding: 15px;
   border: 1px solid lightgray;
 }
-.ann-button-td{
+.ann-button-td {
   width: 220px;
 }
-#delete-button:hover{
+#delete-button:hover {
   background-color: salmon;
   font-weight: bold;
 }
-#delete-button{
+#delete-button {
   margin-left: 15px;
 }
-#edit-button:hover{
+#edit-button:hover {
   background-color: #fada5e;
   font-weight: bold;
 }
-#addBut,#edit-button,#delete-button{
+#addBut,
+#edit-button,
+#delete-button {
   width: 100px;
   height: 30px;
   border: 0px;
@@ -181,19 +235,19 @@ td {
   background-color: #e6e6e6;
   font-weight: normal;
 }
-#addBut:hover{
+#addBut:hover {
   background-color: mediumseagreen;
   font-weight: bold;
 }
-.ann-button{
+.ann-button {
   text-align: center;
 }
-#addDiv{
+#addDiv {
   float: right;
   margin-bottom: 10px;
 }
 
-.deleteButPopup{
+.deleteButPopup {
   /* background-color: coral; */
   background-color: salmon;
   width: 100px;
@@ -201,7 +255,7 @@ td {
   border: 0px;
   border-radius: 6px;
 }
-.deleteButPopup:hover{
+.deleteButPopup:hover {
   background-color: indianred;
 }
 
@@ -217,7 +271,7 @@ td {
   justify-content: center;
   align-items: center;
 }
-.modal>div {
+.modal > div {
   /* background-color: rgb(250 204 21); */
   padding: 10px;
   border-radius: 10px;
@@ -225,26 +279,28 @@ td {
   height: 30%; */
   border: 0px;
 }
-.window{
+.window {
   text-align: center;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
 }
-.viewBut{
+.viewBut {
   width: 100px;
   height: 30px;
   border: 0px;
   border-radius: 6px;
   background-color: #e6e6e6;
 }
-.viewBut:hover{
+.viewBut:hover {
   background-color: lightgray;
 }
 
-.ann-timezone,#addDiv{
+.ann-timezone,
+#addDiv {
   display: inline-block;
   padding-bottom: 0%;
 }
-#addDiv{
+#addDiv {
   padding-top: 18px;
 }
 </style>
