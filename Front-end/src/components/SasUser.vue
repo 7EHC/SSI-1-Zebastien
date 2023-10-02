@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import { ref, onMounted } from "vue";
-import { getAllUsers } from "../composable/fetch";
+import { getAllUsers, reqAccessToken } from "../composable/fetch";
 import { changeTime } from "../composable/changeTime";
 import navBar from "./nav.vue";
 import { useTokenStore } from "../stores/tokenStore.js";
@@ -35,6 +35,13 @@ const deleteUser = async (id) => {
       user.value = user.value.filter((usr) => usr.id !== id); //Delete frontend
       // console.log(announcement.value)
       router.push("/admin/user");
+    } else if (res.status === 401) {
+      const chekky = await reqAccessToken();
+      // console.log(chekky);
+      if (chekky === 'refresh expried'){
+      alert("Session has expried, please try again.");
+      router.push('/login')
+    }
     } else {
       throw new Error(`Cannot delete`);
     }

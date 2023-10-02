@@ -123,7 +123,11 @@ const addNewUser = async (newUserToSend) => {
       }
     } else if (res.status === 401) {
       const chekky = await reqAccessToken();
-      return chekky;
+      // console.log(chekky);
+      if (chekky === 'refresh expried'){
+      alert("Session has expried, please try again.");
+      router.push('/login')
+    }
     }
   } catch (err) {
     // console.log(err);
