@@ -67,8 +67,8 @@ onMounted(async () => {
 <template>
   <div class="all">
     <div class="matchText" v-if="loginStatus === 'default'">
-      <p style="text-align: center; margin-left: -30px" class="ann-message">
-        Plese Login
+      <p style="text-align: center; margin-left: -30px;" class="ann-message">
+        Please Login
       </p>
     </div>
     <div class="matchTextGreen" v-else-if="loginStatus === 'green'">
