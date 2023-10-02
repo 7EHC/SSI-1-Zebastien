@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, onBeforeMount } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { getUserById, getAllUsers } from "../composable/fetch";
+import { getUserById, getAllUsers, reqAccessToken } from "../composable/fetch";
 import { changeTime } from "../composable/changeTime";
 import navBar from "./nav.vue";
 import { useTokenStore } from "../stores/tokenStore.js";
@@ -92,6 +92,9 @@ const editUser = async (updateUser) => {
           validateEmailMsg.value = err.errorMessage;
         }
       }
+    } else if (res.status === 401) {
+      const chekky = await reqAccessToken();
+      return chekky;
     }
   } catch (err) {
     console.log(err);

@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, useRoute, useRouter } from "vue-router";
-import { targetId } from "../composable/fetch";
+import { targetId, reqAccessToken } from "../composable/fetch";
 import { onMounted, ref } from "vue";
 import navBar from "./nav.vue";
 import { useTokenStore } from "../stores/tokenStore.js";
@@ -69,9 +69,12 @@ const modifyAccount = async (updateAccount) => {
     // method put. if it success. it will return status 200
     if (res.status === 200) {
       router.push("/admin/announcement");
+    } else if (res.status === 401) {
+      const chekky = await reqAccessToken();
+      return chekky;
     } else if (res.status === 500) {
       throw new Error("Cannot edit");
-    }
+    } 
   } catch (err) {
     console.log(err);
   }
