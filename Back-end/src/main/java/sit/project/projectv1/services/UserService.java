@@ -1,11 +1,7 @@
 package sit.project.projectv1.services;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,7 +9,7 @@ import sit.project.projectv1.dtos.InputUserLoginDTO;
 import sit.project.projectv1.entities.User;
 import sit.project.projectv1.repositories.UserRepository;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -80,34 +76,4 @@ public class UserService {
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
-
-//    public ResponseEntity<Map<String, String>> authenticate(String username, String rawPassword) {
-//        if (userRepository.existsByUsername(username)) {
-//            User user = userRepository.findByUsername(username);
-//
-//            if (argon2.matches(rawPassword, user.getPassword())) {
-//                String accessToken = generateJwtToken(username, accessTokenExpiration);
-//                String refreshToken = generateJwtToken(username, refreshTokenExpiration);
-//
-//                Map<String, String> tokens = new HashMap<>();
-//                tokens.put("accessToken", accessToken);
-//                tokens.put("refreshToken", refreshToken);
-//
-//                return ResponseEntity.ok(tokens);
-//            } else {
-//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "Invalid password"));
-//            }
-//        } else {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("error", "User not found"));
-//        }
-//    }
-//
-//    private String generateJwtToken(String username, int expiration) {
-//        return Jwts.builder()
-//                .setSubject(username)
-//                .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000))
-//                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-//                .compact();
-//    }
-
-    }
+}

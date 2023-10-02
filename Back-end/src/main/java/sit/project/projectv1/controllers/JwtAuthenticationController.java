@@ -1,12 +1,7 @@
 package sit.project.projectv1.controllers;
 
-import java.util.*;
-
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,7 +16,6 @@ import sit.project.projectv1.config.JwtTokenUtil;
 import sit.project.projectv1.dtos.JwtRefreshResponse;
 import sit.project.projectv1.dtos.JwtRequest;
 import sit.project.projectv1.dtos.JwtResponse;
-import sit.project.projectv1.entities.User;
 import sit.project.projectv1.repositories.UserRepository;
 import sit.project.projectv1.services.JwtUserDetailsService;
 
@@ -90,7 +84,7 @@ public class JwtAuthenticationController {
         String refreshToken = requestHeaderToken.substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(refreshToken);
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        final String token = jwtTokenUtil.generateRefreshToken(userDetails);
+        final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtRefreshResponse(token));
     }
 
