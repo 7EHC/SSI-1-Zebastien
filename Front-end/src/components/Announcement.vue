@@ -85,7 +85,7 @@ onMounted(async () => {
         <p style="font-size: 48px;">Delete</p>
         <hr>
         <p style="font-size: 24px; margin-top: 30px;">Do you want to delete these records ?</p>
-        <button class="viewBut" @click="changeConfirm">Cancel</button><RouterLink :to="{ name: 'Announcement' }">
+        <button class="cancleBut" @click="changeConfirm">Cancel</button><RouterLink :to="{ name: 'Announcement' }">
         <button @click="deleteAnn(idToDelete)" class="deleteButPopup">Delete</button></RouterLink>
       </div>
     </div>
@@ -196,6 +196,9 @@ button{
 .deleteBut:hover{
   background-color: #CD7474;
   font-weight: bold;
+}
+.cancleBut:hover{
+  background-color: lightgray;
 }
 
 #addDiv{

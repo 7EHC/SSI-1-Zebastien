@@ -208,7 +208,7 @@ onMounted(async () => {
       <tr>
         <th>Description</th>
         <td>
-          <QuillEditor
+          <input
             style="height: 200px"
             toolbar="full"
             theme="snow"
