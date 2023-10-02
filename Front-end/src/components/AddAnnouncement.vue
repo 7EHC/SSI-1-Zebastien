@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import { ref, onMounted } from "vue";
-import { getAnnouncement, targetId } from "../composable/fetch";
+import { getAnnouncement, reqAccessToken, targetId } from "../composable/fetch";
 import navBar from "./nav.vue";
 import { useTokenStore } from "../stores/tokenStore.js";
 
@@ -42,6 +42,9 @@ const addNewAnnouncement = async (newAnn) => {
       // console.log('Okay')
       const AddAnnouncement = await res.json(); //keep info that added from backend
       router.push("/admin/announcement");
+    } else if (res.status === 401) {
+      const chekky = await reqAccessToken();
+      return chekky; 
     } else if (res.status === 500) {
       throw new Error("Cannot add");
     }
@@ -103,7 +106,7 @@ const submit = () => {
   newAnn.value.categoryId = newCateID.value === undefined ? 1 : newCateID.value;
   newAnn.value.announcementDisplay = newDisplay.value ? "Y" : "N";
   addNewAnnouncement(newAnn.value);
-  console.log(newDesc.value);
+  // console.log(newDesc.value);
 };
 
 const updateTestEditor = (event) => {
