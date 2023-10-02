@@ -5,6 +5,7 @@ import { changeTime } from "../composable/changeTime";
 import { useRouter } from "vue-router";
 import navBar from "./nav.vue";
 import { useTokenStore } from "../stores/tokenStore.js";
+import { DocumentPlusIcon, MagnifyingGlassPlusIcon, TrashIcon } from '@heroicons/vue/24/solid'
 // import  DeletePopup  from "./DeletePopup.vue"
 // import AddAnnouncement from "./AddAnnouncement.vue"
 // import { useRoute, useRouter } from "vue-router";
@@ -69,100 +70,73 @@ onMounted(async () => {
 </script>
 
 <template>
-  <navBar />
-  <div class="Header">
+  <navBar/>
+<div class="Header">
     <h1>SIT Announcement System (SAS)</h1>
   </div>
   <!-- <RouterLink :to="{name : 'SasUser'}"><button class="admin-back">Back to admin page</button></RouterLink>
   <RouterLink :to="{name: 'User'}"><button class="admin-back">User</button></RouterLink> -->
   <!-- Delete Confirmation---------------------------------------------------------------------------- -->
   <div class="popup">
-    <Teleport to="body">
-      <div
-        class="modal"
-        style="background-color: rgba(0, 0, 0, 0.3); width: 100%"
-        v-if="confirmDelete === true"
-      >
-        <!-- <div class="modal" style="background-color: rgba(0, 0, 0, 0.3); width: 100%;"> -->
-        <div
-          class="window"
-          style="height: 40%; width: 50%; background-color: white"
-        >
-          <p style="font-size: 48px">Delete</p>
-          <hr />
-          <p style="font-size: 24px; margin-top: 30px">
-            Do you want to delete these records ?
-          </p>
-          <button class="viewBut" @click="changeConfirm">Cancel</button
-          ><RouterLink :to="{ name: 'Announcement' }">
-            <button @click="deleteAnn(idToDelete)" class="deleteButPopup">
-              Delete
-            </button></RouterLink
-          >
-        </div>
+  <Teleport to="body">
+    <div class="modal" style="background-color: rgba(0, 0, 0, 0.3); width: 100%;" v-if="confirmDelete === true">
+      <!-- <div class="modal" style="background-color: rgba(0, 0, 0, 0.3); width: 100%;"> -->
+      <div class="window" style="height: 40%; width: 50%; background-color: white;">
+        <p style="font-size: 48px;">Delete</p>
+        <hr>
+        <p style="font-size: 24px; margin-top: 30px;">Do you want to delete these records ?</p>
+        <button class="viewBut" @click="changeConfirm">Cancel</button><RouterLink :to="{ name: 'Announcement' }">
+        <button @click="deleteAnn(idToDelete)" class="deleteButPopup">Delete</button></RouterLink>
       </div>
-    </Teleport>
-  </div>
-  <!-- ------------------------------------------------------------------------------------------------- -->
+    </div>
+  </Teleport>
+</div>
+<!-- ------------------------------------------------------------------------------------------------- -->
 
-  <!-- Main Content------------------------------------------------------------------------------------- -->
+<!-- Main Content------------------------------------------------------------------------------------- -->
   <div class="allContents">
     <!-- <RouterLink :to="{name : 'SasUser'}"><button>Back to admin page</button></RouterLink> -->
-    <h4 class="timeZone">Date/Time shown in Timezone: {{ timeZone }}</h4>
-    <div class="ann-button" id="addDiv">
-      <RouterLink :to="{ name: 'AddAnnouncement' }">
-        <button id="addBut" style="float: right">Add Announcement</button>
-      </RouterLink>
-    </div>
-    <div v-show="true" class="bigTable">
-      <table>
-        <tr class="tableHead">
-          <th class="trHead">No.</th>
-          <th class="trHead">Title</th>
-          <th class="trHead">Category</th>
-          <th class="trHead">Publish Date</th>
-          <th class="trHead">Close Date</th>
-          <th class="trHead">Display</th>
-          <th class="trHead">Action</th>
-        </tr>
-        <tr v-for="(ann, index) in announcement" :key="index" class="ann-item">
-          <td>{{ index + 1 }}</td>
-          <td class="ann-title">{{ ann.announcementTitle }}</td>
-          <td class="ann-category">{{ ann.announcementCategory }}</td>
-          <td class="ann-publish-date">{{ changeTime(ann.publishDate) }}</td>
-          <td class="ann-close-date">{{ changeTime(ann.closeDate) }}</td>
-          <td class="ann-display">
-            <p
-              class="disBack"
-              :style="{
-                backgroundColor:
-                  ann.announcementDisplay === 'Y'
-                    ? 'mediumseagreen'
-                    : 'lightgray',
-              }"
-            >
-              {{ ann.announcementDisplay }}
-            </p>
-          </td>
-          <td class="ann-button">
-            <button class="viewBut" @click="gotoView(ann.id)">view</button>
-            <button class="deleteBut" @click="changeConfirm(ann.id)">
-              delete
-            </button>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <h4 class="NoAlert" v-if="announcement.length === 0">No Announcement</h4>
+  <h4 class="timeZone">Date/Time shown in Timezone: {{ timeZone }}</h4>
+  <div class="ann-button" id="addDiv">
+   <RouterLink :to="{name: 'AddAnnouncement'}"><button id="addBut" style="float: right;"><DocumentPlusIcon style="height: 20px;" />
+    </button>
+   </RouterLink>
   </div>
-  <!-- ------------------------------------------------------------------------------------------------- -->
-  <!-- <RouterLink :to="{name: 'User'}">User</RouterLink> -->
+  <div v-show="true" class="bigTable">
+    <table>
+      <tr class="tableHead">
+        <th class="trHead">No.</th>
+        <th class="trHead">Title</th>
+        <th class="trHead">Category</th>
+        <th class="trHead">Publish Date</th>
+        <th class="trHead">Close Date</th>
+        <th class="trHead">Display</th>
+        <th class="trHead">Action</th>
+      </tr>
+      <tr v-for="(ann, index) in announcement" :key="index" class="ann-item">
+        <td>{{ index + 1 }}</td>
+        <td class="ann-title">{{ ann.announcementTitle }}</td>
+        <td class="ann-category">{{ ann.announcementCategory }}</td>
+        <td class="ann-publish-date">{{ changeTime(ann.publishDate) }}</td>
+        <td class="ann-close-date">{{ changeTime(ann.closeDate) }}</td>
+        <td class="ann-display"><p class="disBack" :style="{ backgroundColor: ann.announcementDisplay === 'Y' ? '#45a29e' : 'lightgray' }">{{ ann.announcementDisplay }}</p></td>
+        <td class="ann-button">
+        <button class="viewBut" @click="gotoView(ann.id)"><MagnifyingGlassPlusIcon style="height: 15px;" /></button>
+        <button class="deleteBut" @click="changeConfirm(ann.id)"><TrashIcon style="height: 15px;" /></button>
+
+        </td>
+      </tr>
+    </table>
+  </div>
+  <h4 class="NoAlert" v-if="announcement.length === 0">No Announcement</h4>
+</div>
+<!-- ------------------------------------------------------------------------------------------------- -->
+<!-- <RouterLink :to="{name: 'User'}">User</RouterLink> -->
 </template>
 
 <style scoped>
 .allContents {
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   margin-left: 13.5%;
 }
 
@@ -197,7 +171,7 @@ td {
   border: 1px solid lightgray;
 }
 
-button {
+button{
   padding: 8px;
   /* width: 90px; */
   border-radius: 8px;
@@ -205,45 +179,48 @@ button {
   border: 0px;
 }
 
-.viewBut {
+.viewBut{
   width: 90px;
+  transition: background-color 0.3s;
 }
-.viewBut:hover {
-  background-color: lightgray;
+.viewBut:hover{
+  background-color: #45a29e;
   font-weight: bold;
 }
 
-.deleteBut {
+.deleteBut{
   /* background-color: coral; */
   width: 90px;
+  transition: background-color 0.3s;
 }
-.deleteBut:hover {
-  background-color: salmon;
+.deleteBut:hover{
+  background-color: #CD7474;
   font-weight: bold;
 }
 
-#addDiv {
+#addDiv{
   float: right;
   margin-bottom: 5px;
 }
-#addBut {
+#addBut{
   /* background-color: lightgreen; */
-  width: 160px;
+  width: 200px;
+  transition: background-color 0.3s;
 }
-#addBut:hover {
-  background-color: mediumseagreen;
+#addBut:hover{
+  background-color: #45a29e;
   font-weight: bold;
 }
 
-.ann-button {
+.ann-button{
   text-align: center;
   width: 200px;
 }
 
-.window {
+
+.window{
   text-align: center;
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 .modal {
   position: fixed;
@@ -257,7 +234,7 @@ button {
   justify-content: center;
   align-items: center;
 }
-.modal > div {
+.modal>div {
   /* background-color: rgb(250 204 21); */
   padding: 10px;
   border-radius: 10px;
@@ -266,7 +243,7 @@ button {
   border: 0px;
 }
 
-button {
+button{
   border-radius: 8px;
   width: 90px;
   margin: 4px;
@@ -275,23 +252,16 @@ button {
   border: 0px;
 }
 
-.viewBut {
-  width: 90px;
-}
-.viewBut:hover {
-  background-color: lightgray;
-}
-
-.deleteButPopup {
+.deleteButPopup{
   /* background-color: coral; */
   background-color: salmon;
   width: 90px;
 }
-.deleteButPopup:hover {
+.deleteButPopup:hover{
   background-color: indianred;
 }
 
-.disBack {
+.disBack{
   padding: 8px;
   color: black;
   width: 10px;
@@ -303,14 +273,54 @@ button {
   display: flex;
   margin-left: 13%;
   justify-content: center;
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
-.admin-back {
+.admin-back{
   width: 160px;
 }
-.admin-back:hover {
+.admin-back:hover{
   font-weight: bold;
   background-color: lightgray;
+}
+/*NEW--------------------------------------------------------------------------- */
+.trHead{
+  background-color: #1a1a1d;
+  color: #45a29e;
+}
+#addBut::after{
+  content: "add announcement ";
+  display: none;
+  color: black;
+  transform: translateX(-10%);
+}
+#addBut:hover::after{
+  display: block;
+  float: right;
+  padding-top: 4px;
+  /* opacity: 1; */
+}
+.deleteBut::after{
+  content: "delete";
+  display: none;
+  color: black;
+  transform: translateX(-10%);
+}
+.deleteBut:hover::after{
+  display: block;
+  float: right;
+  padding-top: 1px;
+  /* padding-left: 4px; */
+}
+.viewBut::after{
+  content: "view";
+  display: none;
+  color: black;
+  transform: translateX(-10%);
+}
+.viewBut:hover::after{
+  display: block;
+  float: right;
+  padding-top: 1px;
+  /* padding-left: 4px; */
 }
 </style>

@@ -68,7 +68,7 @@ onMounted(async () => {
   <div class="all">
     <div class="matchText" v-if="loginStatus === 'default'">
       <p style="text-align: center; margin-left: -30px" class="ann-message">
-        Login
+        Plese Login
       </p>
     </div>
     <div class="matchTextGreen" v-else-if="loginStatus === 'green'">
@@ -80,8 +80,8 @@ onMounted(async () => {
     <div class="matchTextNo" v-else>
       <p class="ann-message">Username DOES NOT exist</p>
     </div>
-    <div class="form">
-      <h2>Match password</h2>
+    <div class="form" style="background-color: #1a1a1d;">
+      <h2 style="color: #45a29e;">Login to SIT Announcement system (SAS)</h2>
       <div class="div-form">
         <b>Username</b>
         <input
@@ -182,6 +182,7 @@ input {
 .div-form {
   margin-top: 5px;
   margin-right: 10px;
+  color: #45a29e;
 }
 .ann-button {
   margin-top: 25px;

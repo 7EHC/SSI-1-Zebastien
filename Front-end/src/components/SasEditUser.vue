@@ -142,10 +142,10 @@ onMounted(async () => {
   <div class="all">
     <navBar />
     <div class="form">
-      <h1>User Detail:</h1>
+      <h1 style="color: #45a29e;">User Detail:</h1>
 
       <div>
-        <b>Username</b>
+        <b style="color: #45a29e;">Username</b>
         <input
           class="ann-username"
           v-model.trim="ogData.username"
@@ -157,7 +157,7 @@ onMounted(async () => {
         <p class="ann-error-username">{{ validateUsernameMsg }}</p>
       </div>
       <div class="div-form">
-        <b>Name</b>
+        <b style="color: #45a29e;">Name</b>
         <input
           class="ann-name"
           v-model.trim="ogData.name"
@@ -169,7 +169,7 @@ onMounted(async () => {
         <p class="ann-error-name">{{ validateNameMsg }}</p>
       </div>
       <div class="div-form">
-        <b>Email</b>
+        <b style="color: #45a29e;">Email</b>
         <input
           class="ann-email"
           v-model.trim="ogData.email"
@@ -181,7 +181,7 @@ onMounted(async () => {
         <p class="ann-error-email">{{ validateEmailMsg }}</p>
       </div>
       <div class="div-form">
-        <b>Role</b><br />
+        <b style="color: #45a29e;">Role</b><br />
         <select
           name="roleName"
           class="ann-role"
@@ -193,7 +193,7 @@ onMounted(async () => {
         </select>
       </div>
       <div class="div-form">
-        <b
+        <b style="color: #45a29e;"
           >Created On
           <span class="ann-created-on" style="font-weight: normal">{{
             changeTime(ogData.createdOn)
@@ -233,6 +233,7 @@ onMounted(async () => {
 .all {
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
+    padding-left: 2.5%;
 }
 
 .form {
@@ -243,6 +244,7 @@ onMounted(async () => {
   margin-right: 30px;
   padding: 15px;
   font-weight: bold;
+  background-color: #1a1a1d;
 }
 
 .div-form,
@@ -273,9 +275,12 @@ select {
   height: 36px;
   border-radius: 7px;
   border: 0px;
+  transition: background-color 0.3s;
 }
 .ann-button:hover {
-  background-color: lightgrey;
+  background-color: #787878;
+  color: white;
+  font-weight: bold;
 }
 .ann-menu {
   color: black;

@@ -52,7 +52,7 @@ const addNewAnnouncement = async (newAnn) => {
 onMounted(async () => {
   const check = await getAnnouncement();
   if (typeof check === "object" || check === "new token success") {
-    AnnDetail.value = await targetId(params.id);
+    // AnnDetail.value = await targetId(params.id);
     Announcement.value = await getAnnouncement();
     let runID = Announcement.value[0].id;
     runID++;

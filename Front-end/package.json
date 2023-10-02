@@ -10,6 +10,7 @@
     "cypress:open": "cypress open"
   },
   "dependencies": {
+    "@heroicons/vue": "^2.0.18",
     "@vueup/vue-quill": "^1.2.0",
     "@vueuse/core": "^10.1.2",
     "moment": "^2.29.4",
