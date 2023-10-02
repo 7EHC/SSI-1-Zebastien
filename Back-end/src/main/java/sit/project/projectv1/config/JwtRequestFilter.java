@@ -1,5 +1,6 @@
 package sit.project.projectv1.config;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,8 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import io.jsonwebtoken.ExpiredJwtException;
 import sit.project.projectv1.services.JwtUserDetailsService;
 
 import java.io.IOException;

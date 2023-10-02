@@ -1,17 +1,24 @@
 package sit.project.projectv1.exceptions;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.HandlerMapping;
+import sit.project.projectv1.entities.User;
 import sit.project.projectv1.repositories.UserRepository;
-import sit.project.projectv1.services.UserService;
 
 
 public class UserUniqueValidator implements ConstraintValidator<UserUnique, String> {
 
-
+    @Autowired
+    private HttpServletRequest request;
     public UserRepository userRepository;
-    public UserUniqueValidator(UserRepository user){
-     this.userRepository = user;
+
+    public UserUniqueValidator(UserRepository user) {
+        this.userRepository = user;
     }
 
     private boolean username;
@@ -27,65 +34,68 @@ public class UserUniqueValidator implements ConstraintValidator<UserUnique, Stri
 
 
     @Override
-    public boolean isValid(String value,ConstraintValidatorContext context) {
-        if(value == null || value.isEmpty()){
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (value == null || value.isEmpty()) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("must not be blank").addConstraintViolation();
             return true;
         }
 
+        if (request.getMethod().equals("PUT")) {
+            String path = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+            String[] pathSplit = path.split("/");
+            Integer userId = Integer.parseInt(pathSplit[pathSplit.length - 1]);
+            User storedUser = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "This user does not exits!!!"));
+            if (this.username && value.equals(storedUser.getUsername())) {
+                return true;
+            } else if (this.name && value.equals(storedUser.getName())) {
+                return true;
+            } else if (this.email && value.equals(storedUser.getEmail())) {
+                return true;
+            }
 
-        if(this.username == true) {
-            boolean NotUniqueUsername = userRepository.existsByUsername(value);
-            if(NotUniqueUsername) {
+            // Check if the updated value already exists for other users
+            if (this.username && userRepository.existsByUsername(value)) {
                 context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
                 return false;
-            } else return true;
-        }
-        else if(this.name == true){
-            boolean NotUniqueName = userRepository.existsByName(value);
-            if(NotUniqueName){
+            } else if (this.name && userRepository.existsByName(value)) {
                 context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
                 return false;
-            } else return true;
-        }
-        else {
-            boolean NotUniqueEmail = userRepository.existsByEmail(value);
-            if(NotUniqueEmail){
+            } else if (this.email && userRepository.existsByEmail(value)) {
                 context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
                 return false;
-            } else return true;
+            }
+
+            if (this.username == true) {
+                boolean NotUniqueUsername = userRepository.existsByUsername(value);
+                if (NotUniqueUsername) {
+                    context.disableDefaultConstraintViolation();
+                    context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
+                    return false;
+                } else return true;
+            } else if (this.name == true) {
+                boolean NotUniqueName = userRepository.existsByName(value);
+                if (NotUniqueName) {
+                    context.disableDefaultConstraintViolation();
+                    context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
+                    return false;
+                } else return true;
+            } else {
+                boolean NotUniqueEmail = userRepository.existsByEmail(value);
+                if (NotUniqueEmail) {
+                    context.disableDefaultConstraintViolation();
+                    context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
+                    return false;
+                } else return true;
+            }
         }
-
-
-
-
-
-
-
-//        if (username == null){
-//            return true;
-//        }
-//
-//        boolean isNotUsernameUnique = userService.checkUniqueUsername(username);
-//        boolean isNotNameUnique = userService.checkUniqueName(name);
-//
-//
-//        if (isNotUsernameUnique || isNotNameUnique) {
-//          context.disableDefaultConstraintViolation(); // ja pai disable default message exception
-//            if (isNotUsernameUnique) {
-//                context.buildConstraintViolationWithTemplate("Username is not unique").addPropertyNode("username").addConstraintViolation();
-//            }
-//            if (isNotNamelUnique) {
-//                context.buildConstraintViolationWithTemplate("name is not unique").addPropertyNode("name").addConstraintViolation();
-//            }
-//            return false; //
-//        }
-//        return true;
+        return true;
     }
 }
+
+
 
 

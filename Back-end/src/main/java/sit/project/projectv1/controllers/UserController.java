@@ -1,6 +1,5 @@
 package sit.project.projectv1.controllers;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +10,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import sit.project.projectv1.advice.ErrorResponse;
-import sit.project.projectv1.dtos.*;
-import sit.project.projectv1.entities.Announcement;
+import sit.project.projectv1.dtos.InputUserDTO;
+import sit.project.projectv1.dtos.InputUserLoginDTO;
+import sit.project.projectv1.dtos.OutputUserDTO;
 import sit.project.projectv1.entities.User;
-import sit.project.projectv1.enums.Role;
 import sit.project.projectv1.services.UserService;
 import sit.project.projectv1.utils.ListMapper;
 
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin
 @RestController

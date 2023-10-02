@@ -47,7 +47,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @JsonIgnore
+//    @JsonIgnore
     @Column(name ="password")
     private String password;
 
