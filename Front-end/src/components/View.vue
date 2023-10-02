@@ -20,7 +20,7 @@ const changeEdit = (editID) => {
 
 onMounted(async () => {
   const check = await targetId(params.id);
-  console.log(check);
+  // console.log(check);
   if (typeof check === "object" || check === "new token success") {
   AnnDetail.value = await targetId(params.id);
   if(!AnnDetail.value) {
