@@ -1,12 +1,13 @@
 <script setup>
 import { RouterLink,useRouter } from "vue-router";
 import { UserIcon, MegaphoneIcon,ArrowRightOnRectangleIcon } from '@heroicons/vue/24/solid'
+import { useTokenStore } from "../stores/tokenStore.js";
 
+const tokenStore = useTokenStore();
 const router = useRouter()
 const signout = () => {
-  localStorage.removeItem('accessToken'); // Remove the JWT token from local storage
-  localStorage.removeItem('refreshToken');
-  // Redirect to the login page or any other desired destination
+  tokenStore.setAccessToken('')
+  tokenStore.setRefreshToken('')
   router.push("/login");
 }
 </script>
