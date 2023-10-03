@@ -159,6 +159,8 @@ const reqAccessToken = async () => {
       tokenStore.setAccessToken(response.token)
       return 'new token success'
     } else if (res.status === 401) {
+      tokenStore.setAccessToken('')
+      tokenStore.setRefreshToken('')
       return 'refresh expried'
     }
   } catch (error) {
