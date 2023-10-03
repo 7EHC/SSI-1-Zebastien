@@ -64,15 +64,16 @@ const changeConfirm = (id) => {
 
 onMounted(async () => {
   const check = await getAnnouncement();
-  if (typeof check === "object" || check === "new token success" || typeof check === 'string') {
+  if (typeof check === "object") {
+    announcement.value = check
+  } else if (check === "new token success") {
   announcement.value = await getAnnouncement();
-  if (!announcement.value) {
+  } else if (!announcement.value) {
     announcement.value = [];
   } else if (check === "refresh expried") {
     alert("Session has expried, please try again.");
     router.push("/login");
   }
-}
 });
 </script>
 
