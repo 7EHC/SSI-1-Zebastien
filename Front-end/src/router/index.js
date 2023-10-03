@@ -19,6 +19,42 @@ const router = createRouter({
       redirect: '/admin/announcement',
     },
     {
+      path: '/admin/announcement',
+      beforeEnter: (to, from, next) => {
+        if (localStorage.getItem('accessToken').length === 0) {
+          // Redirect to the login page if accessToken is empty
+          next('/login');
+        } else {
+          // Allow access to the admin page if accessToken is not empty
+          next();
+        }
+      },
+      component: Announcement, // Replace with your actual admin component
+      children: [
+        {
+          path: '/admin/announcement',
+          component: Announcement, // Replace with your announcement component
+        }]
+      },
+      {
+        path: '/admin/user',
+        beforeEnter: (to, from, next) => {
+          if (localStorage.getItem('accessToken').length === 0) {
+            // Redirect to the login page if accessToken is empty
+            next('/login');
+          } else {
+            // Allow access to the admin page if accessToken is not empty
+            next();
+          }
+        },
+        component: SasUser, // Replace with your actual admin component
+        children: [
+          {
+            path: '/admin/user',
+            component: SasUser, // Replace with your announcement component
+          }]
+        },
+    {
       path: '/admin/announcement/:id',
       name: 'View',
       component: View,
