@@ -21,7 +21,7 @@ const router = createRouter({
     {
       path: '/admin/announcement',
       beforeEnter: (to, from, next) => {
-        if (localStorage.getItem('accessToken').length === 0) {
+        if (!localStorage.getItem('accessToken')) {
           // Redirect to the login page if accessToken is empty
           next('/login');
         } else {
@@ -39,7 +39,7 @@ const router = createRouter({
       {
         path: '/admin/user',
         beforeEnter: (to, from, next) => {
-          if (localStorage.getItem('accessToken').length === 0) {
+          if (!localStorage.getItem('accessToken')) {
             // Redirect to the login page if accessToken is empty
             next('/login');
           } else {
