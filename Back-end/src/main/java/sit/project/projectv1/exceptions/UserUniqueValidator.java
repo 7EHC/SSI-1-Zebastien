@@ -3,13 +3,15 @@ package sit.project.projectv1.exceptions;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.HandlerMapping;
 import sit.project.projectv1.entities.User;
 import sit.project.projectv1.repositories.UserRepository;
-
 
 public class UserUniqueValidator implements ConstraintValidator<UserUnique, String> {
 
@@ -25,11 +27,14 @@ public class UserUniqueValidator implements ConstraintValidator<UserUnique, Stri
     private boolean name;
     private boolean email;
 
+    private boolean password;
+
     @Override
     public void initialize(UserUnique constraintAnnotation) {
         this.username = constraintAnnotation.username();
         this.name = constraintAnnotation.name();
         this.email = constraintAnnotation.email();
+        this.password = constraintAnnotation.password();
     }
 
 
@@ -39,6 +44,20 @@ public class UserUniqueValidator implements ConstraintValidator<UserUnique, Stri
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("must not be blank").addConstraintViolation();
             return true;
+        }
+
+        if (this.username && userRepository.existsByUsername(value)) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
+            return false;
+        } else if (this.name && userRepository.existsByName(value)) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
+            return false;
+        } else if (this.email && userRepository.existsByEmail(value)) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
+            return false;
         }
 
         if (request.getMethod().equals("PUT")) {
