@@ -17,5 +17,6 @@ public @interface UserUnique {
     boolean name() default false;
     boolean username() default false;
     boolean email() default false;
+    boolean password() default false;
 
 }

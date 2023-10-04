@@ -9,10 +9,12 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 import sit.project.projectv1.advice.ErrorResponse;
 import sit.project.projectv1.dtos.InputUserDTO;
 import sit.project.projectv1.dtos.InputUserLoginDTO;
 import sit.project.projectv1.dtos.OutputUserDTO;
+import sit.project.projectv1.dtos.putUserDTO;
 import sit.project.projectv1.entities.User;
 import sit.project.projectv1.services.UserService;
 import sit.project.projectv1.utils.ListMapper;
@@ -37,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public User createUser(@RequestBody @Valid User userDTO) {
+    public User createUser(@RequestBody @Valid InputUserDTO userDTO) {
         userDTO.setUsername(userDTO.getUsername().trim());
         userDTO.setName(userDTO.getName().trim());
         userDTO.setEmail(userDTO.getEmail().trim());
@@ -61,7 +63,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User update(@PathVariable Integer id, @RequestBody InputUserDTO updateUser) {
+    public User update(@PathVariable Integer id, @RequestBody @Valid putUserDTO updateUser) {
         User user = modelMapper.map(updateUser, User.class);
         return userService.updateUser(id, user);
     }

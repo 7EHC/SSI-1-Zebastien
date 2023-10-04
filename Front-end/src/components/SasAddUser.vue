@@ -72,6 +72,7 @@ const addNewUser = async (newUserToSend) => {
       validateUsernameMsg.value = "";
       validateNameMsg.value = "";
       validateEmailMsg.value = "";
+      validatePwMsg.value = "";
       for (const err of errorMsg.value) {
         if (err.errorMessage === "does not unique") {
           switch (err.field) {

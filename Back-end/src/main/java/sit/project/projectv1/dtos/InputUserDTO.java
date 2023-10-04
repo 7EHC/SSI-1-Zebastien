@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
+import net.minidev.json.annotate.JsonIgnore;
 import sit.project.projectv1.enums.Role;
 import sit.project.projectv1.exceptions.EnumSizeLimit;
 import sit.project.projectv1.exceptions.UserUnique;
@@ -30,7 +31,8 @@ public class InputUserDTO {
     @Size(min = 1, max = 150)
     private String email;
 
-    @NotBlank
+    @NotNull@NotBlank
+    @UserUnique(password = true)
     @Pattern(message = "must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters",
              regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[#?_!@$%^&*=+-]).*$")
     @Size(min = 8,max = 14, message = "size must be between 8 and 14")
