@@ -26,7 +26,6 @@ public class UserUniqueValidator implements ConstraintValidator<UserUnique, Stri
     private boolean username;
     private boolean name;
     private boolean email;
-
     private boolean password;
 
     @Override
@@ -37,27 +36,12 @@ public class UserUniqueValidator implements ConstraintValidator<UserUnique, Stri
         this.password = constraintAnnotation.password();
     }
 
-
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null || value.isEmpty()) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("must not be blank").addConstraintViolation();
             return true;
-        }
-
-        if (this.username && userRepository.existsByUsername(value)) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
-            return false;
-        } else if (this.name && userRepository.existsByName(value)) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
-            return false;
-        } else if (this.email && userRepository.existsByEmail(value)) {
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
-            return false;
         }
 
         if (request.getMethod().equals("PUT")) {
@@ -110,6 +94,19 @@ public class UserUniqueValidator implements ConstraintValidator<UserUnique, Stri
                     return false;
                 } else return true;
             }
+        }
+        if (this.username && userRepository.existsByUsername(value)) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
+            return false;
+        } else if (this.name && userRepository.existsByName(value)) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
+            return false;
+        } else if (this.email && userRepository.existsByEmail(value)) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("does not unique").addConstraintViolation();
+            return false;
         }
         return true;
     }
