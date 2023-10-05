@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sit.project.projectv1.dtos.InputUserLoginDTO;
 import sit.project.projectv1.entities.User;
+import sit.project.projectv1.exceptions.ResourceNotFoundException;
 import sit.project.projectv1.repositories.UserRepository;
 
 import java.util.List;
@@ -65,15 +66,18 @@ public class UserService {
     }
 
 
-    public Boolean matchPassword(InputUserLoginDTO input){
-        if(userRepository.existsByUsername(input.getUsername())){
+    public Boolean matchPassword(InputUserLoginDTO input) {
+        if (userRepository.existsByUsername(input.getUsername())) {
             String inputPassword = input.getPassword();
             String existPassword = userRepository.findByUsername(input.getUsername()).getPassword();
-            if(argon2.matches(inputPassword,existPassword) == true){
-                return argon2.matches(inputPassword,existPassword);
+            if (argon2.matches(inputPassword, existPassword) == true) {
+                return argon2.matches(inputPassword, existPassword);
+            } else {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
             }
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        } else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Username not found");
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 }

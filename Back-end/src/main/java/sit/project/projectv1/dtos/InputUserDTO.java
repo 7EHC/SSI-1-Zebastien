@@ -31,7 +31,7 @@ public class InputUserDTO {
     @Size(min = 1, max = 150)
     private String email;
 
-    @NotNull@NotBlank
+    @NotBlank
     @UserUnique(password = true)
     @Pattern(message = "must be 8-14 characters long, at least 1 of uppercase, lowercase, number and special characters",
              regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[#?_!@$%^&*=+-]).*$")
