@@ -34,9 +34,10 @@ const signout = () => {
         <hr />
         <!-- <RouterLink :to="{ name: 'Match' }"
           ><button class="ann-menu">Match Password</button></RouterLink
-        > -->
-        <!-- <RouterLink :to="{name: 'Match'}" class="ann-menu">Match Password</RouterLink> -->
-        <!-- <hr /> -->
+        > --><div class="menu-parent">
+        <RouterLink :to="{name: 'Match'}" class="ann-menu">Match Password</RouterLink>
+        </div>
+        <hr />
         <!-- <RouterLink :to="{name: 'Login'}" style="position: absolute;bottom: 20px;border-top: 2px solid lightgray;width: 85%;" class="ann-menu">Sign-Out</RouterLink> -->
         <button class="signout" style="position: absolute;bottom: 20px;border-top: 1px solid;width: 85%; padding-top: 10px;"
           @click="signout">
