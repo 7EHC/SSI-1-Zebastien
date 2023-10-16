@@ -6,7 +6,10 @@ import { useRouter } from "vue-router";
 import { usePageStore } from '../stores/pageStore.js'
 import { useModeStore } from '../stores/modeStore.js'
 import { useCategoryStore } from '../stores/categoryStore.js'
+import navBar from "./nav.vue";
+import { useTokenStore } from "../stores/tokenStore.js";
 
+const { accessToken } = useTokenStore()
 const router = useRouter()
 const disableNext = ref(true)
 const disableNextClose = ref(true)
@@ -172,10 +175,12 @@ if((filterAnnActive.value.totalPages) === defaultPage.value){
 </script>
  
 <template>
-  <div class="Header">
-    <h1>SIT Announcement System (SAS)</h1>
+<div class="allContents1" v-if="accessToken">
+  <div class="nav">
+    <navBar v-if=accessToken />
+  <div>
+    <h1 class="Header">SIT Announcement System (SAS)</h1>
   </div>
-<div class="allContents">
     <h4 class="timeZone">Date/Time shown in Timezone: {{ timeZone }}<br><br>
       <b v-if="activeClose===false" >Category:
           <select v-model="categoryFil" @change="filterAc(categoryFil)" class="ann-category-filter">
@@ -232,7 +237,97 @@ if((filterAnnActive.value.totalPages) === defaultPage.value){
     </div>
 
 <!-- Button---------------------------------------------------------------------------------------------------- -->
-<div class="allButtons">
+<div class="allButtons1">
+<div v-if="filterAnnActive.totalPages > 1 && activeClose === false && arrPageNum !== undefined">
+    <div class="butAcDiv">
+    <button class="ann-page-prev" @click="prevPage" :disabled="disablePrev">Prev</button>
+    <button v-for="(page,index) in visibleButton" :key="index" :style="[page === defaultPage + 1 ? 'background-color: lightgray':'' ]" :class="['ann-page-'+ index]" @click="changePage(page)" class="butPage">{{ page }}</button>
+    <button class="ann-page-next" @click="nextPage" :disabled="disableNext">Next</button>
+    </div>
+</div>
+<div v-if="filterAnnClose.totalPages > 1 && activeClose === true && arrClosePageNum !== undefined">
+    <div class="butCloseDiv">
+    <button class="ann-page-prev" @click="prevClosePage" :disabled="disablePrev">Prev</button>
+    <button v-for="(page,index) in visibleCloseButton" :key="index" :style="[page === defaultPageClose + 1 ? 'background-color: lightgray':'' ]" :class="['ann-page-'+ index]" @click="changeClosePage(page)" class="butPage">{{ page }}</button>
+    <button class="ann-page-next" @click="nextClosePage" :disabled="disableNextClose">Next</button>
+    </div>
+  </div>
+</div>
+<!-- Button---------------------------------------------------------------------------------------------------- -->
+
+<!-- No Announcement------------------------------------------------------------------------------------------------ -->
+    <h4 class="NoAlert" v-if="activeClose === false && filterAnnActive.totalPages === 0">No Announcements</h4>
+    <h4 class="NoAlert" v-if="filterAnnActive.length === 0">Can't load data</h4>
+<!-- No Announcement------------------------------------------------------------------------------------------------ -->
+
+</div>
+</div>
+
+<div class="allContents2" v-if="!accessToken">
+  <div>
+    <h1 class="Header">SIT Announcement System (SAS)</h1>
+    <div style="position: absolute; top: 0; right: 0;">
+    <RouterLink :to="{ name: 'Login' }"
+          ><button class="login">Login</button></RouterLink
+        ></div>
+  </div>
+    <h4 class="timeZone">Date/Time shown in Timezone: {{ timeZone }}<br><br>
+      <b v-if="activeClose===false" >Category:
+          <select v-model="categoryFil" @change="filterAc(categoryFil)" class="ann-category-filter">
+            <option id="0" value="0" >ทั้งหมด</option>
+            <option id="1" value="1" >ทั่วไป</option>
+            <option id="2" value="2" >ทุนการศึกษา</option>
+            <option id="3" value="3" >หางาน</option>
+            <option id="4" value="4" >ฝึกงาน</option>
+          </select>
+    </b>
+    <b v-if="activeClose===true">Category: 
+          <select v-model="categoryFil" @change="filterAc(categoryFil)" class="ann-category-filter">
+            <option id="0" value="0" >ทั้งหมด</option>
+            <option id="1" value="1" >ทั่วไป</option>
+            <option id="2" value="2" >ทุนการศึกษา</option>
+            <option id="3" value="3" >หางาน</option>
+            <option id="4" value="4" >ฝึกงาน</option>
+          </select>
+    </b>
+    </h4>
+    <div class="ann-button" id="addDiv" >
+        <button id="addBut" style="float: inline-end;" @click="activeClose =! activeClose;" >{{ activeBut(activeClose) }}</button>
+    </div>
+   
+    <div>
+    <table v-if="activeClose === false">
+      <tr class="tableHead">
+        <th class="trHead">No.</th>
+        <th class="trHead">Title</th>
+        <th class="trHead">Category</th>
+      </tr>
+      <tr v-for="(ann, index) in filterAnnActive.content" :key="index" class="ann-item">
+        <td>{{ ++index + (filterAnnActive.size*filterAnnActive.page) }}</td>
+        <td class="ann-title" id="titleClick" @click="gotoView(ann.id)"><p>{{ ann.announcementTitle }}</p></td>
+        <td class="ann-category">{{ ann.announcementCategory }}</td>
+      </tr>
+    </table>
+
+    <table v-if="activeClose === true">
+      <tr class="tableHead">
+        <th class="trHead">No.</th>
+        <th class="trHead">Title</th>
+        <th class="trHead">Close Date</th>
+        <th class="trHead">Category</th>
+      </tr>
+      <tr v-for="(ann, index) in filterAnnClose.content" :key="index" class="ann-item">
+        <td>{{ ++index + (filterAnnClose.size*filterAnnClose.page) }}</td>
+        <td class="ann-title" id="titleClick" @click="gotoView(ann.id)"><p>{{ ann.announcementTitle }}</p></td>
+        <td class="ann-close-date">{{ changeTime(ann.closeDate) }}</td>
+        <td class="ann-category">{{ ann.announcementCategory }}</td>
+      </tr>
+    </table>
+    <h4 class="NoAlert" v-if="activeClose === true && filterAnnClose.totalPages === 0">No Announcements</h4>
+    </div>
+
+<!-- Button---------------------------------------------------------------------------------------------------- -->
+<div class="allButtons2">
 <div v-if="filterAnnActive.totalPages > 1 && activeClose === false && arrPageNum !== undefined">
     <div class="butAcDiv">
     <button class="ann-page-prev" @click="prevPage" :disabled="disablePrev">Prev</button>
@@ -260,13 +355,22 @@ if((filterAnnActive.value.totalPages) === defaultPage.value){
 </template>
  
 <style scoped>
-.allContents {
+.allContents1 {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  /* margin-left: 13.5%; */
+}
+
+.nav {
+  margin-left: 13.5%;
+}
+
+.allContents2 {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .timeZone {
   justify-content: start;
-  margin-bottom: -4%;
+  margin-bottom: -5%;
   font-weight: lighter;
   margin-top: 10px;
 }
@@ -285,6 +389,10 @@ table {
   margin-top: 100px;
   border-collapse: collapse;
   width: 100%;
+}
+.trHead{
+  background-color: #1a1a1d;
+  color: #45a29e;
 }
 
 th {
@@ -307,11 +415,27 @@ button{
   border: 0px;
 }
 
-.allButtons {
+.allButtons1 {
   display: flex;
-  position: relative;
+  position: fixed;
   justify-content: center;
+  margin-left: 13.5%;
+  margin-bottom: 20px;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
+
+.allButtons2 {
+  display: flex;
+  position: fixed;
+  justify-content: center;
+  margin-bottom: 20px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
 select {
   height: 36px;
   width: 120px;
@@ -326,6 +450,7 @@ select {
 }
 #addBut{
   /* background-color: lightgreen; */
+  /* margin-top: 5px; */
   width: 190px;
 }
 #addBut:hover{
@@ -343,6 +468,7 @@ button{
   margin-top: 30px;
   padding: 15px;
   border: 0px;
+  transition-duration: 0.4s;
 }
 #titleClick:hover{
     color: black;
@@ -350,11 +476,27 @@ button{
 }
 .butPage:hover{
 background-color: lightgray;
+transition-duration: 0.4s;
+}
+.ann-page-next:hover,
+.ann-page-prev:hover {
+  background-color: lightgray;
 }
 .Header {
   display: flex;
   justify-content: center;
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+.login {
+  margin-right: 10px;
+  margin-top: 20px;
+  border: 1px solid transparent;
+  transition-duration: 0.4s;
+}
+.login:hover {
+  font-weight: bold;
+  background-color: #45a29e;
+  color: white;
 }
 
 </style>

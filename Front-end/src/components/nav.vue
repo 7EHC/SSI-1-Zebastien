@@ -1,14 +1,23 @@
 <script setup>
 import { RouterLink,useRouter } from "vue-router";
-import { UserIcon, MegaphoneIcon,ArrowRightOnRectangleIcon } from '@heroicons/vue/24/solid'
+import { UserCircleIcon, UserIcon, MegaphoneIcon,ArrowRightOnRectangleIcon, CheckCircleIcon, RectangleStackIcon } from '@heroicons/vue/24/solid'
 import { useTokenStore } from "../stores/tokenStore.js";
+import jwt_decode from "jwt-decode";
 
+const { accessToken } = useTokenStore()
+const decodedUsername = jwt_decode(accessToken)
+const { userRole } = useTokenStore()
+// console.log(userRole);
+// console.log(decodedUsername.sub)
+// console.log(accessToken)
 const tokenStore = useTokenStore();
 const router = useRouter()
 const signout = () => {
   tokenStore.setAccessToken('')
   tokenStore.setRefreshToken('')
-  router.push("/login");
+  tokenStore.setRole('')
+  tokenStore.setUserLogin('')
+  router.push("/announcement");
 }
 </script>
 
@@ -17,6 +26,16 @@ const signout = () => {
     <div class="sidenav">
       <div class="text-nav">
         <h1 class="ann-app-title">SAS</h1>
+        <div style="display: flex; align-items: center;">
+          <UserCircleIcon style="height: 35px;margin: 10px;"/><h3 style="display: inline-block; margin: 5px; color: white;">{{ decodedUsername.sub }}</h3>
+        </div>
+        <hr />
+        <!-- <RouterLink :to="{ name: 'Announcement' }"
+          ><button class="ann-menu">Announcement</button></RouterLink
+        > --><div class="menu-parent">
+        <RouterLink :to="{name: 'User'}" class="ann-menu">All Announcements</RouterLink><RectangleStackIcon style="
+        height: 25px;margin-right: 10px;float: right;"/>
+        </div>
         <hr />
         <!-- <RouterLink :to="{ name: 'Announcement' }"
           ><button class="ann-menu">Announcement</button></RouterLink
@@ -27,17 +46,18 @@ const signout = () => {
         <hr />
         <!-- <RouterLink :to="{ name: 'SasUser' }"
           ><button class="ann-menu">User</button></RouterLink
-        > --><div class="menu-parent">
+        > --><div class="menu-parent" v-if="userRole === 'admin'">
         <RouterLink :to="{name: 'SasUser'}" class="ann-menu">User</RouterLink><UserIcon style="
         height: 25px;margin-right: 10px;float: right;"/>
         </div>
-        <hr />
+        <hr v-if="userRole === 'admin'"/>
         <!-- <RouterLink :to="{ name: 'Match' }"
           ><button class="ann-menu">Match Password</button></RouterLink
-        > --><div class="menu-parent">
-        <RouterLink :to="{name: 'Match'}" class="ann-menu">Match Password</RouterLink>
+        > --><div class="menu-parent" v-if="userRole === 'admin'">
+        <RouterLink :to="{name: 'Match'}" class="ann-menu">Match Password</RouterLink><CheckCircleIcon style="
+        height: 25px;margin-right: 10px;float: right;" />
         </div>
-        <hr />
+        <hr v-if="userRole === 'admin'"/>
         <!-- <RouterLink :to="{name: 'Login'}" style="position: absolute;bottom: 20px;border-top: 2px solid lightgray;width: 85%;" class="ann-menu">Sign-Out</RouterLink> -->
         <button class="signout" style="position: absolute;bottom: 20px;border-top: 1px solid;width: 85%; padding-top: 10px;"
           @click="signout">
