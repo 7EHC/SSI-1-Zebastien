@@ -6,6 +6,8 @@ const getAnnouncement = async () => {
   try {
     const tokenStore = useTokenStore()
     const accessToken = tokenStore.accessToken
+    const { userRole } = useTokenStore()
+    const { userLogin } = useTokenStore()
     const res = await fetch(
       `${API_ROOT}/announcements`,
       // const res = await fetch("http://localhost:8080/api/announcements");
@@ -18,7 +20,18 @@ const getAnnouncement = async () => {
     );
     if (res.ok) {
       const ann = await res.json();
-      return ann;
+      if(userRole === 'announcer') {
+        const filteredAnnouncementsByOwner = [];
+        for (let i = 0; i < ann.length; i++) {
+          if (ann[i].announcementOwner === userLogin) {
+            filteredAnnouncementsByOwner.push(ann[i])
+          }
+        }
+        console.log(filteredAnnouncementsByOwner);
+        return filteredAnnouncementsByOwner
+      } else {
+        return ann;
+      }
     } else if (res.status === 401) {
       const chekky = await reqAccessToken()
       return chekky
@@ -26,7 +39,7 @@ const getAnnouncement = async () => {
   } catch (error) {
     console.log(`ERROR cannot read data: ${error}`);
   }
-};
+}
 
 const getPageAnn = async (page, category) => {
   if (category === undefined || null) {

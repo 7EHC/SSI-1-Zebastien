@@ -2,6 +2,8 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useTokenStore } from "../stores/tokenStore.js";
+import { getAllUsers } from "../composable/fetch";
+import jwt_decode from "jwt-decode";
 
 const loginStatus = ref("default");
 const loginObj = ref({});
@@ -10,7 +12,6 @@ const password = ref("");
 const router = useRouter();
 const API_ROOT = import.meta.env.VITE_ROOT_API;
 const tokenStore = useTokenStore();
-const accessToken = ref(tokenStore.accessToken);
 
 const login = async (input) => {
   try {
@@ -27,6 +28,11 @@ const login = async (input) => {
       // Store the access token and refresh token in local storage
       tokenStore.setAccessToken(response.token);
       tokenStore.setRefreshToken(response.refreshToken);
+
+      const decodedToken = jwt_decode(response.token)
+      tokenStore.setUserLogin(decodedToken.sub)
+      tokenStore.setRole(decodedToken.role);
+
       // console.log(accessToken);
       // localStorage.setItem('accessToken', response.token);
       // localStorage.setItem('refreshToken', response.refreshToken);
@@ -35,7 +41,7 @@ const login = async (input) => {
 
       // Redirect after 1.5 seconds
       setTimeout(function () {
-        router.push("/admin/user");
+        router.push("/announcement");
       }, 1500);
     } else if (res.status === 401) {
       loginStatus.value = "red";

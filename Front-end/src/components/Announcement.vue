@@ -10,6 +10,8 @@ import { DocumentPlusIcon, MagnifyingGlassPlusIcon, TrashIcon } from '@heroicons
 // import AddAnnouncement from "./AddAnnouncement.vue"
 // import { useRoute, useRouter } from "vue-router";
 
+const tokenStore = useTokenStore();
+const { userRole } = useTokenStore()
 const announcement = ref([]);
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const router = useRouter();
@@ -19,7 +21,6 @@ const API_ROOT = import.meta.env.VITE_ROOT_API;
 
 const deleteAnn = async (annID) => {
   try {
-    const tokenStore = useTokenStore();
     const accessToken = ref(tokenStore.accessToken);
     const res = await fetch(
       `${API_ROOT}/announcements/${annID}`,
@@ -119,6 +120,7 @@ onMounted(async () => {
         <th class="trHead">Publish Date</th>
         <th class="trHead">Close Date</th>
         <th class="trHead">Display</th>
+        <th class="trHead" v-if="userRole === 'admin'">Owner</th>
         <th class="trHead">Action</th>
       </tr>
       <tr v-for="(ann, index) in announcement" :key="index" class="ann-item">
@@ -128,6 +130,7 @@ onMounted(async () => {
         <td class="ann-publish-date">{{ changeTime(ann.publishDate) }}</td>
         <td class="ann-close-date">{{ changeTime(ann.closeDate) }}</td>
         <td class="ann-display"><p class="disBack" :style="{ backgroundColor: ann.announcementDisplay === 'Y' ? '#45a29e' : 'lightgray' }">{{ ann.announcementDisplay }}</p></td>
+        <td v-if="userRole === 'admin'">{{ ann.announcementOwner }}</td>
         <td class="ann-button">
         <button class="viewBut" @click="gotoView(ann.id)"><MagnifyingGlassPlusIcon style="height: 15px;" /></button>
         <button class="deleteBut" @click="changeConfirm(ann.id)"><TrashIcon style="height: 15px;" /></button>

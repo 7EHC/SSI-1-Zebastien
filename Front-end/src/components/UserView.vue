@@ -4,7 +4,10 @@ import { onMounted, ref } from "vue";
 import { changeTime } from "../composable/changeTime";
 import { useRoute, useRouter, RouterLink } from "vue-router";
 import { useModeStore } from '../stores/modeStore.js'
+import navBar from "./nav.vue";
+import { useTokenStore } from "../stores/tokenStore.js";
 
+const { accessToken } = useTokenStore()
 const modeStore = useModeStore()
 const checkActiveClose = ref(modeStore.AcCloseBut)
 const { params } = useRoute();
@@ -22,7 +25,37 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="big">
+  <div class="big1" v-if="accessToken">
+    <div class="nav">
+    <navBar v-if=accessToken />
+    <h2>Announcement Detail ::</h2>
+    <div class="ann-item">
+      <div class="head">
+        <h1 class="ann-title">
+          {{ AnnDetail.announcementTitle }}<br /><span class="ann-category">{{
+            AnnDetail.announcementCategory
+          }}</span>
+          <span class="ann-close-date" v-if="checkActiveClose === true">Closed On: {{ changeTime(AnnDetail.closeDate) }}</span>
+        </h1>
+        <hr style="border: 0.1px solid lightgray" />
+        <div style="width: 100%">
+          <p class="ann-description" style="font-size: 18px;">
+            <!-- <b style="font-size: 20px;">Description: </b> -->
+            <div v-html="AnnDetail.announcementDescription"></div>
+          </p>
+        </div>
+      </div>
+      <hr style="border: 0.1px solid lightgray" />
+      <div class="butClass">
+        <RouterLink :to="{ name: 'User' }"
+          ><button class="ann-button">Back</button></RouterLink
+        >
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="big2" v-if="!accessToken">
     <h2>Announcement Detail ::</h2>
     <div class="ann-item">
       <div class="head">
@@ -55,7 +88,14 @@ onMounted(async () => {
     padding-left: 25px;
     white-space: pre-line;
 }
-.big {
+.big1 {
+  align-items: start;
+  display: grid;
+  margin-left: 13.5%;
+  margin-right: 5%;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+.big2 {
   align-items: start;
   display: grid;
   margin-left: 5%;
