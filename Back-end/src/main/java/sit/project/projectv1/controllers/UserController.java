@@ -1,10 +1,14 @@
 package sit.project.projectv1.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +20,7 @@ import sit.project.projectv1.dtos.InputUserLoginDTO;
 import sit.project.projectv1.dtos.OutputUserDTO;
 import sit.project.projectv1.dtos.putUserDTO;
 import sit.project.projectv1.entities.User;
+import sit.project.projectv1.enums.Role;
 import sit.project.projectv1.services.UserService;
 import sit.project.projectv1.utils.ListMapper;
 
@@ -52,11 +57,25 @@ public class UserController {
         return userService.matchPassword(inputUserLoginDTO);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Integer id) {
-        userService.deleteUser(id);
-    }
+//    @DeleteMapping("/{id}")
+//    public void deleteUser(@PathVariable Integer id) {
+//        userService.deleteUser(id);
+//    }
+//    @DeleteMapping("/{id}")
+//    public void deleteUser(@PathVariable Integer id, HttpServletRequest request) {
+//        userService.deleteUser(id, request);
+//    }
+@DeleteMapping("/{userId}")
+public void deleteUser(@PathVariable Integer userId) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    User user = userService.getUserFromToken(authentication);
 
+    if (user.getRole() == Role.admin && userService.getUserById(userId) != user) {
+        userService.deleteUser(userId, user);
+    } else {
+        throw new AccessDeniedException("Access denied!!!");
+    }
+}
     @GetMapping("/{id}")
     public OutputUserDTO getUserById(@PathVariable Integer id){
         return modelMapper.map(userService.getUserById(id), OutputUserDTO.class);

@@ -31,8 +31,16 @@ public class SecurityConfig {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http.cors();
         http
-                .csrf().disable().authorizeHttpRequests().requestMatchers("/api/token","api/announcements/pages","api/categories","api/users/match").permitAll()
-                .anyRequest().authenticated().and().exceptionHandling().authenticationEntryPoint(entryPoint).and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .csrf().disable()
+                .authorizeHttpRequests()
+                .requestMatchers("/api/token", "api/announcements/**","api/announcements/pages",
+                        "api/announcements/{announcementId}","api/categories","api/users/match", "api/users/**")
+                .permitAll()
+                .requestMatchers("/api/users","api/users/match").hasRole("ADMIN")
+                .requestMatchers("/api/announcements/**").hasRole("ANNOUNCER")
+                .anyRequest().authenticated()
+                .and().exceptionHandling().authenticationEntryPoint(entryPoint)
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

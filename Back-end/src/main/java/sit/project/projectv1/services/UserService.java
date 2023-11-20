@@ -1,16 +1,23 @@
 package sit.project.projectv1.services;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import sit.project.projectv1.config.JwtTokenUtil;
 import sit.project.projectv1.dtos.InputUserLoginDTO;
+import sit.project.projectv1.entities.Announcement;
 import sit.project.projectv1.entities.User;
 import sit.project.projectv1.exceptions.ResourceNotFoundException;
+import sit.project.projectv1.repositories.AnnouncementRepository;
 import sit.project.projectv1.repositories.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -18,6 +25,10 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private Argon2PasswordEncoder argon2;
+    @Autowired
+    private AnnouncementRepository announcementRepository;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
 //    @Value("${jwt.secret}")
 //    private String jwtSecret;
@@ -27,6 +38,7 @@ public class UserService {
 //
 //    @Value("${jwt.expiration.refresh}")
 //    private int refreshTokenExpiration;  // In seconds
+
 
     public List<User> getAllUsers(){
         return userRepository.findAll();
@@ -45,13 +57,65 @@ public class UserService {
         return usr;
     }
 
-    public void deleteUser(Integer id) {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This USER does not exist!!!");
+//    public void deleteUser(Integer id) {
+//        if (userRepository.existsById(id)) {
+//            userRepository.deleteById(id);
+//        } else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This USER does not exist!!!");
+//        }
+//    }
+
+//    public void deleteUser(Integer id, HttpServletRequest request) {
+//        String token = request.getHeader("Authorization").substring(7);
+//        String adminUsername = jwtTokenUtil.getAdminUsernameFromToken(token);
+//        Optional<User> userOptional = userRepository.findById(id);
+//        if (userOptional.isPresent()) {
+//            User userToDelete = userOptional.get();
+//
+//            // Retrieve announcements owned by the user being deleted
+//            List<Announcement> announcementsToDelete = announcementRepository.findAnnouncementByAnnouncementOwner(userToDelete);
+//
+//            // Set the admin user as the new owner for these announcements
+//            User adminUser = userRepository.findByUsername(adminUsername);
+//            if (adminUser == null) {
+//                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin user not found!!!");
+//            }
+//            for (Announcement announcement : announcementsToDelete) {
+//                announcement.setAnnouncementOwner(adminUser);
+//            }
+//
+//            // Save the updated announcements
+//            announcementRepository.saveAll(announcementsToDelete);
+//
+//            // Delete the user
+//            userRepository.deleteById(id);
+//        } else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This USER does not exist!!!");
+//        }
+//    }
+
+    public void deleteUser(Integer userId, User user){
+        User userToDelete = userRepository.findById(userId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "This User does not exist!!"));
+
+        // Retrieve announcements owned by the user being deleted
+        List<Announcement> announcementsToDelete = announcementRepository.findAllByAnnouncementOwner(userToDelete);
+
+        // Set the admin user as the new owner for these announcements
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "THIS USER DOES NOT EXIST!!");
         }
+        for (Announcement announcement : announcementsToDelete) {
+            announcement.setAnnouncementOwner(user);
+        }
+
+        // Save the updated announcements
+        announcementRepository.saveAll(announcementsToDelete);
+
+        // Delete the user
+        userRepository.deleteById(userId);
     }
+
 
     public User updateUser(Integer id, User user) {
         User usr = userRepository.findById(id).orElseThrow(
@@ -79,5 +143,14 @@ public class UserService {
 //            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
             throw new ResourceNotFoundException("Username not found");
         }
+    }
+    public User getUserFromToken(Authentication authentication) {
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String username = userDetails.getUsername();
+            User user = userRepository.findByUsername(username);
+            return user;
+        }
+        return null;
     }
 }

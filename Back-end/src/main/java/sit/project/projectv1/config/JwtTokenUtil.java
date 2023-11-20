@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import sit.project.projectv1.entities.User;
 import sit.project.projectv1.properties.JwtProperties;
 
 import java.io.Serializable;
@@ -45,10 +46,21 @@ public class JwtTokenUtil implements Serializable {
     }
 
     //generate token for user
-    public String generateToken(UserDetails userDetails) {
+//    public String generateToken(UserDetails userDetails) {
+//        Map<String, Object> claims = new HashMap<>();
+//        return doGenerateToken(claims, userDetails.getUsername());
+//    }
+
+    public String generateToken(UserDetails userDetails, String role) {
         Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userDetails.getUsername());
+        return doGenerateToken(claims, userDetails.getUsername(), role);
     }
+
+//    public String generateToken(UserDetails userDetails) {
+//        String role = ((User) userDetails).getRole().toString();
+//        Map<String, Object> claims = new HashMap<>();
+//        return doGenerateToken(claims, userDetails.getUsername(), role);
+//    }
 
     public String generateRefreshToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -60,12 +72,29 @@ public class JwtTokenUtil implements Serializable {
     //2. Sign the JWT using the HS512 algorithm and secret key.
     //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
     //   compaction of the JWT to a URL-safe string
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
 
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+//    private String doGenerateToken(Map<String, Object> claims, String subject) {
+//
+//        return Jwts.builder()
+//                .setClaims(claims)
+//                .setSubject(subject)
+//                .setIssuedAt(new Date(System.currentTimeMillis()))
+//                .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getTokenIntervalInHour() * 30 * 60 * 1000))
+//                .signWith(SignatureAlgorithm.HS512, jwtProperties.getSecretKey()).compact();
+//    }
+
+    private String doGenerateToken(Map<String, Object> claims, String subject, String role) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .claim("role", role) // Add the role claim
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getTokenIntervalInHour() * 30 * 60 * 1000))
-                .signWith(SignatureAlgorithm.HS512, jwtProperties.getSecretKey()).compact();
+                .signWith(SignatureAlgorithm.HS512, jwtProperties.getSecretKey())
+                .compact();
     }
+
+
 
     private String doGenerateRefreshToken(Map<String, Object> claims, String subject) {
 
@@ -79,5 +108,9 @@ public class JwtTokenUtil implements Serializable {
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public String getAdminUsernameFromToken(String token) {
+        return getUsernameFromToken(token);
     }
 }

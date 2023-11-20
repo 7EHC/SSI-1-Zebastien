@@ -58,5 +58,10 @@ public class User {
     @Column(name ="updatedOn", insertable = false , updatable = false )
     private ZonedDateTime updatedOn;
 
+    public String getUsername() {
+        return username;
+    }
+
+
 
 }

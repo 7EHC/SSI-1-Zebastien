@@ -2,6 +2,8 @@ package sit.project.projectv1.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,6 +14,8 @@ import sit.project.projectv1.entities.User;
 import sit.project.projectv1.repositories.UserRepository;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
@@ -26,7 +30,13 @@ public class JwtUserDetailsService implements UserDetailsService {
         if (userRepository.existsByUsername(username)) {
             User user = userRepository.findByUsername(username);
 
-            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
+            Collection<? extends GrantedAuthority> roles;
+            Collection<String> myrole = new ArrayList<>();
+            myrole.add(user.getRole().name());
+            roles = myrole.stream()
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+                    .collect(Collectors.toList());
+            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), roles);
         }
         else {
             throw new UsernameNotFoundException("User " + username + " Does not EXIST!!");
