@@ -30,6 +30,10 @@ public class Announcement {
     @JoinColumn(name = "categoryId")
     private Category announcementCategory;
 
+    @ManyToOne
+    @JoinColumn(name = "users_id")
+    private User announcementOwner;
+
     public ZonedDateTime getPublishDate() {
         return publishDate;
     }

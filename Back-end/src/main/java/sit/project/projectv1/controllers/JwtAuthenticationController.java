@@ -16,6 +16,7 @@ import sit.project.projectv1.config.JwtTokenUtil;
 import sit.project.projectv1.dtos.JwtRefreshResponse;
 import sit.project.projectv1.dtos.JwtRequest;
 import sit.project.projectv1.dtos.JwtResponse;
+import sit.project.projectv1.entities.User;
 import sit.project.projectv1.repositories.UserRepository;
 import sit.project.projectv1.services.JwtUserDetailsService;
 
@@ -31,13 +32,6 @@ public class JwtAuthenticationController {
     private Argon2PasswordEncoder argon2;
     @Autowired
     private UserRepository userRepository;
-//    @Value("${jwt.expiration.access}")
-//    private int accessTokenExpiration;  // In seconds
-//
-//    @Value("${jwt.expiration.refresh}")
-//    private int refreshTokenExpiration;  // In seconds
-//    @Value("${jwt.secret}")
-//    private String jwtSecret;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -49,12 +43,17 @@ public class JwtAuthenticationController {
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
         if (userRepository.existsByUsername(authenticationRequest.getUsername())) {
             if (userDetailsService.checkPassword(authenticationRequest.getUsername(), authenticationRequest.getPassword())) {
+                // Authenticate the user
                 authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
-                final UserDetails userDetails = userDetailsService
-                        .loadUserByUsername(authenticationRequest.getUsername());
+                // Load user details
+                final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
-                final String token = jwtTokenUtil.generateToken(userDetails);
+                // Fetch the user from the database to get the role
+                User user = userRepository.findByUsername(authenticationRequest.getUsername());
+
+                // Generate token with role
+                final String token = jwtTokenUtil.generateToken(userDetails, user.getRole().toString());
 
                 final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
 
@@ -62,9 +61,9 @@ public class JwtAuthenticationController {
             }
 
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-        } else
-           return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 
@@ -83,8 +82,9 @@ public class JwtAuthenticationController {
         String requestHeaderToken = request.getHeader("Authorization");
         String refreshToken = requestHeaderToken.substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(refreshToken);
+        User user = userRepository.findByUsername(username);
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        final String token = jwtTokenUtil.generateToken(userDetails);
+        final String token = jwtTokenUtil.generateToken(userDetails, user.getRole().toString());
         return ResponseEntity.ok(new JwtRefreshResponse(token));
     }
 

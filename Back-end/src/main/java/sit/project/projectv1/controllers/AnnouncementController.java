@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +14,9 @@ import org.springframework.web.context.request.WebRequest;
 import sit.project.projectv1.advice.ErrorResponse;
 import sit.project.projectv1.dtos.*;
 import sit.project.projectv1.entities.Announcement;
+import sit.project.projectv1.entities.User;
 import sit.project.projectv1.enums.Mode;
+import sit.project.projectv1.repositories.UserRepository;
 import sit.project.projectv1.services.AnnouncementService;
 import sit.project.projectv1.services.CategoryService;
 import sit.project.projectv1.utils.ListMapper;
@@ -32,14 +36,27 @@ public class AnnouncementController {
     private ModelMapper modelMapper;
     @Autowired
     private ListMapper listMapper;
+    @Autowired
+    private UserRepository userRepository;
+
+//    @GetMapping
+//    public List<AnnouncementDTO> getAnnouncementList(@RequestParam(defaultValue = "admin") Mode mode,
+//                                                     @RequestParam(defaultValue = "0") int category) {
+//        List<Announcement> announcementList = announcementService.getAnnouncementList(mode, category);
+//        List<AnnouncementDTO> announcementDTOList = announcementList.stream()
+//                .map(announcement -> modelMapper.map(announcement, AnnouncementDTO.class))
+//                .collect(Collectors.toList());
+//        return announcementDTOList;
+//    }
 
     @GetMapping
-    public List<AnnouncementDTO> getAnnouncementList(@RequestParam(defaultValue = "admin") Mode mode,
-                                                     @RequestParam(defaultValue = "0") int category) {
-        List<Announcement> announcementList = announcementService.getAnnouncementList(mode, category);
-        List<AnnouncementDTO> announcementDTOList = announcementList.stream()
-                .map(announcement -> modelMapper.map(announcement, AnnouncementDTO.class))
-                .collect(Collectors.toList());
+    public List<AnnouncementDTO> getAnnouncementList(@RequestParam(defaultValue = "admin") Mode mode, @RequestParam(defaultValue = "0") int category) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = this.announcementService.getUserFromToken(authentication);
+        List<Announcement> announcementList = this.announcementService.getAnnouncementList(mode, category, user);
+        List<AnnouncementDTO> announcementDTOList = (List)announcementList.stream().map((announcement) -> {
+            return (AnnouncementDTO)this.modelMapper.map(announcement, AnnouncementDTO.class);
+        }).collect(Collectors.toList());
         return announcementDTOList;
     }
 
@@ -65,6 +82,7 @@ public class AnnouncementController {
     @PostMapping
     public OutputAnnouncementDTO createAnnouncement(@RequestBody AddAnnouncementDTO announcementDTO) {
         Announcement announcement = modelMapper.map(announcementDTO, Announcement.class);
+        announcement.setAnnouncementOwner(userRepository.findByUsername(announcementDTO.getUsername()));
         announcement.setId(null);
         announcement.setAnnouncementCategory(categoryService.getCategory(announcementDTO.getCategoryId()));
         announcementService.createAnnouncement(announcement);

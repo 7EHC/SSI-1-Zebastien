@@ -8,6 +8,7 @@ import navBar from "./nav.vue";
 import { useTokenStore } from "../stores/tokenStore.js";
 
 const { accessToken } = useTokenStore()
+const router = useRouter()
 const modeStore = useModeStore()
 const checkActiveClose = ref(modeStore.AcCloseBut)
 const { params } = useRoute();
@@ -27,7 +28,7 @@ onMounted(async () => {
 <template>
   <div class="big1" v-if="accessToken">
     <div class="nav">
-    <navBar v-if=accessToken />
+    <navBar />
     <h2>Announcement Detail ::</h2>
     <div class="ann-item">
       <div class="head">

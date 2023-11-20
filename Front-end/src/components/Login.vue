@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useTokenStore } from "../stores/tokenStore.js";
 import { getAllUsers } from "../composable/fetch";
+import { CheckCircleIcon,XCircleIcon } from '@heroicons/vue/24/solid'
 import jwt_decode from "jwt-decode";
 
 const loginStatus = ref("default");
@@ -54,6 +55,7 @@ const login = async (input) => {
 };
 
 const submit = () => {
+  loginStatus.value = "loading"
   loginObj.value = {
     username: username.value,
     password: password.value,
@@ -77,14 +79,19 @@ onMounted(async () => {
         Please Login
       </p>
     </div>
+    <div class="matchText" v-else-if="loginStatus === 'loading'">
+      <p style="text-align: center; margin-left: -30px;" class="ann-message">
+        Please wait ...
+      </p>
+    </div>
     <div class="matchTextGreen" v-else-if="loginStatus === 'green'">
-      <p class="ann-message">Login Successful</p>
+      <p class="ann-message">Login Successful <CheckCircleIcon style="height: 25px;float: right;margin-right: 10px; color: #00d107;" /> </p>
     </div>
     <div class="matchTextRed" v-else-if="loginStatus === 'red'">
-      <p class="ann-message">Password Incorrect</p>
+      <p class="ann-message">Password Incorrect <XCircleIcon style="height: 25px;float: right;margin-right: 10px; color: #ff4040;" /></p>
     </div>
     <div class="matchTextNo" v-else>
-      <p class="ann-message">Username DOES NOT exist</p>
+      <p class="ann-message">Username DOES NOT exist <XCircleIcon style="height: 25px;float: right;margin-right: 10px; color: #ff4040;" /></p>
     </div>
     <div class="form" style="background-color: #1a1a1d;">
       <h2 style="color: #45a29e;">Login to SIT Announcement system (SAS)</h2>
@@ -95,6 +102,7 @@ onMounted(async () => {
           v-model="username"
           type="text"
           maxlength="45"
+          @keydown.enter="submit"
         />
       </div>
       <div class="div-form">
@@ -105,6 +113,7 @@ onMounted(async () => {
           type="password"
           minlength="8"
           maxlength="14"
+          @keydown.enter="submit"
         />
       </div>
       <div class="ann-div-button">
@@ -128,9 +137,9 @@ onMounted(async () => {
 .matchTextGreen {
   margin-left: 37%;
   margin-top: 5%;
-  border: 2px solid #0cd321;
-  color: #0cd321;
-  background-color: #c5ffcb;
+  border: 2px solid #00D107;
+  color: #00D107;
+  background-color: #DBFFDC;
   border-radius: 8px;
   /* justify-content: center;
     justify-items: center; */

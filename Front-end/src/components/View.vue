@@ -4,6 +4,7 @@ import { onMounted, ref } from "vue";
 import { changeTime } from "../composable/changeTime";
 import { useRoute, useRouter,RouterLink} from "vue-router";
 import navBar from "./nav.vue";
+import { useTokenStore } from "../stores/tokenStore";
 
 const { params } = useRoute();
 const AnnDetail = ref([]);
@@ -44,6 +45,7 @@ onMounted(async () => {
     announcementDisplay: AnnDetail.value.announcementDisplay
   }
 });
+
 </script>
 
 <template>

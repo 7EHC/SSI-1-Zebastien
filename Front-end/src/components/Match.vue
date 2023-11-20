@@ -11,6 +11,7 @@ const username = ref("");
 const password = ref("");
 
 const submit = () => {
+  matchedShow.value = "loading"
   usernamePassword.value = {
     username: username.value,
     password: password.value,
@@ -68,6 +69,11 @@ onMounted(async () => {
     <div class="matchText" v-if="matchedShow === 'default'">
       <p class="ann-message">Match Password</p>
     </div>
+    <div class="matchText" v-else-if="matchedShow === 'loading'">
+      <p style="text-align: center; margin-left: -30px;" class="ann-message">
+        Please wait ...
+      </p>
+    </div>
     <div class="matchTextGreen" v-else-if="matchedShow === 'green'">
       <p class="ann-message">Password Matched</p>
     </div>
@@ -86,6 +92,7 @@ onMounted(async () => {
           v-model="username"
           type="text"
           maxlength="45"
+          @keydown.enter="submit"
         />
       </div>
       <div class="div-form">
@@ -96,6 +103,7 @@ onMounted(async () => {
           type="password"
           minlength="8"
           maxlength="14"
+          @keydown.enter="submit"
         />
       </div>
       <div class="ann-div-button">

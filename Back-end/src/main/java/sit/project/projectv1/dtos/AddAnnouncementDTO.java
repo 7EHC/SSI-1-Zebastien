@@ -25,5 +25,7 @@ public class AddAnnouncementDTO {
 
     @NotNull
     private Integer categoryId;
+    @NotNull
+    private String username;
 }
 
