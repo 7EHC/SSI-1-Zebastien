@@ -75,6 +75,9 @@ onMounted(async () => {
     alert("Session has expried, please try again.");
     router.push("/login");
   }
+
+  console.log(userRole)
+  console.log(announcement.value)
 });
 </script>
 

@@ -1,8 +1,15 @@
 <script setup>
-import { RouterLink,useRouter } from "vue-router";
+import { RouterLink,useRouter,useRoute  } from "vue-router";
 import { UserCircleIcon, UserIcon, MegaphoneIcon,ArrowRightOnRectangleIcon, CheckCircleIcon, RectangleStackIcon } from '@heroicons/vue/24/solid'
 import { useTokenStore } from "../stores/tokenStore.js";
 import jwt_decode from "jwt-decode";
+import { getAnnouncement } from "../composable/fetch";
+
+const route = useRoute();
+
+const isActive = (routeName) => {
+  return route.name === routeName;
+};
 
 const { accessToken } = useTokenStore()
 const decodedUsername = jwt_decode(accessToken)
@@ -12,11 +19,13 @@ const { userRole } = useTokenStore()
 // console.log(accessToken)
 const tokenStore = useTokenStore();
 const router = useRouter()
+
 const signout = () => {
   tokenStore.setAccessToken('')
   tokenStore.setRefreshToken('')
   tokenStore.setRole('')
   tokenStore.setUserLogin('')
+  window.location.reload()
   router.push("/announcement");
 }
 </script>
@@ -33,28 +42,28 @@ const signout = () => {
         <!-- <RouterLink :to="{ name: 'Announcement' }"
           ><button class="ann-menu">Announcement</button></RouterLink
         > --><div class="menu-parent">
-        <RouterLink :to="{name: 'User'}" class="ann-menu">All Announcements</RouterLink><RectangleStackIcon style="
+        <RouterLink :to="{name: 'User'}" class="ann-menu" :class="{ 'active': isActive('User') }">All Announcements</RouterLink><RectangleStackIcon style="
         height: 25px;margin-right: 10px;float: right;"/>
         </div>
         <hr />
         <!-- <RouterLink :to="{ name: 'Announcement' }"
           ><button class="ann-menu">Announcement</button></RouterLink
         > --><div class="menu-parent">
-        <RouterLink :to="{name: 'Announcement'}" class="ann-menu">Announcement</RouterLink><MegaphoneIcon style="
+        <RouterLink :to="{name: 'Announcement'}" class="ann-menu" :class="{ 'active': isActive('Announcement') }">Announcement</RouterLink><MegaphoneIcon style="
         height: 25px;margin-right: 10px;float: right;"/>
         </div>
         <hr />
         <!-- <RouterLink :to="{ name: 'SasUser' }"
           ><button class="ann-menu">User</button></RouterLink
         > --><div class="menu-parent" v-if="userRole === 'admin'">
-        <RouterLink :to="{name: 'SasUser'}" class="ann-menu">User</RouterLink><UserIcon style="
+        <RouterLink :to="{name: 'SasUser'}" class="ann-menu" :class="{ 'active': isActive('SasUser') }">User</RouterLink><UserIcon style="
         height: 25px;margin-right: 10px;float: right;"/>
         </div>
         <hr v-if="userRole === 'admin'"/>
         <!-- <RouterLink :to="{ name: 'Match' }"
           ><button class="ann-menu">Match Password</button></RouterLink
         > --><div class="menu-parent" v-if="userRole === 'admin'">
-        <RouterLink :to="{name: 'Match'}" class="ann-menu">Match Password</RouterLink><CheckCircleIcon style="
+        <RouterLink :to="{name: 'Match'}" class="ann-menu" :class="{ 'active': isActive('Match') }">Match Password</RouterLink><CheckCircleIcon style="
         height: 25px;margin-right: 10px;float: right;" />
         </div>
         <hr v-if="userRole === 'admin'"/>
@@ -133,4 +142,9 @@ hr {
     transition: background-color 0.3s;
     padding-left: 10px;}
 /* SIGN OUT BUTTON-------------------------------------------------- */
+.active {
+  font-weight: bold;
+  color: #45a29e;
+  /* Add any other styling for active links here */
+}
 </style>

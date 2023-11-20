@@ -4,6 +4,10 @@ import { ref, onMounted } from "vue";
 import { getAnnouncement, reqAccessToken, targetId } from "../composable/fetch";
 import navBar from "./nav.vue";
 import { useTokenStore } from "../stores/tokenStore.js";
+import jwt_decode from "jwt-decode";
+
+const { accessToken } = useTokenStore()
+const decodedUsername = jwt_decode(accessToken)
 
 const API_ROOT = import.meta.env.VITE_ROOT_API;
 const router = useRouter();
@@ -17,6 +21,9 @@ const closeDate = ref("");
 const closeTime = ref("");
 const newDisplay = ref();
 const newCateID = ref();
+const newUsername = decodedUsername.sub
+
+const { userRole } = useTokenStore()
 
 const addNewAnnouncement = async (newAnn) => {
   if (newTitle.value.length === 0 || newDesc.value.length === 0) {
@@ -58,9 +65,22 @@ const addNewAnnouncement = async (newAnn) => {
 };
 onMounted(async () => {
   const check = await getAnnouncement();
+  // console.log(userRole)
+  // Announcement.value = await getAnnouncement()
+  // console.log(Announcement.value)
+  newAnn.value = {
+      announcementTitle: "",
+      announcementDescription: "",
+      publishDate: null,
+      closeDate: null,
+      announcementDisplay: "N",
+      categoryId: 1,
+      username: newUsername
+    }
   if (typeof check === "object" || check === "new token success") {
     // AnnDetail.value = await targetId(params.id);
     Announcement.value = await getAnnouncement();
+    if(Announcement.value.length != 0){
     let runID = Announcement.value[0].id;
     runID++;
     newAnn.value = {
@@ -70,7 +90,9 @@ onMounted(async () => {
       closeDate: null,
       announcementDisplay: "N",
       categoryId: 1,
+      username: newUsername
     };
+  }
   } else if (check === "refresh expried") {
     alert("Session has expried, please try again.");
     router.push("/login");
@@ -111,11 +133,14 @@ const submit = () => {
   newAnn.value.announcementDisplay = newDisplay.value ? "Y" : "N";
   addNewAnnouncement(newAnn.value);
   // console.log(newDesc.value);
+  console.log(newAnn.value)
 };
 
 const updateTestEditor = (event) => {
   newDesc.value = event.target.innerHTML;
 };
+
+console.log(newUsername)
 </script>
 
 <template>

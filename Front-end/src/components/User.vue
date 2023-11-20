@@ -470,6 +470,7 @@ button{
   border: 0px;
   transition-duration: 0.4s;
 }
+#titleClick{transition: background-color 0.3s;}
 #titleClick:hover{
     color: black;
     background-color: lightgray;

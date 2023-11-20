@@ -20,14 +20,48 @@ const user = ref([]);
 const confirmDelete = ref(false);
 const idToDelete = ref();
 const API_ROOT = import.meta.env.VITE_ROOT_API;
+const { userLogin } = useTokenStore()
+// const usernameOfAdmin = ref()
 
+// const deleteUser = async (id) => {
+//   try {
+//     const tokenStore = useTokenStore();
+//     const accessToken = ref(tokenStore.accessToken);
+//     const res = await fetch(
+//       `${API_ROOT}/users/${id}`,
+//       // const res = await fetch(`http://localhost:8080/api/users/${id}`, { method: 'DELETE' })
+//       {
+//         method: "DELETE",
+//         headers: {
+//           Authorization: `Bearer ${accessToken.value}`,
+//         },
+//       }
+//     );
+//     if (res.ok) {
+//       changeConfirm();
+//       user.value = user.value.filter((usr) => usr.id !== id); //Delete frontend
+//       // console.log(announcement.value)
+//       router.push("/admin/user");
+//     } else if (res.status === 401) {
+//       const chekky = await reqAccessToken();
+//       // console.log(chekky);
+//       if (chekky === "refresh expried") {
+//         alert("Session has expried, please try again.");
+//         router.push("/login");
+//       }
+//     } else {
+//       throw new Error(`Cannot delete`);
+//     }
+//   } catch (err) {
+//     alert(`Error: ${err}`);
+//   }
+// };
 const deleteUser = async (id) => {
   try {
     const tokenStore = useTokenStore();
     const accessToken = ref(tokenStore.accessToken);
     const res = await fetch(
-      `${API_ROOT}/users/${id}`,
-      // const res = await fetch(`http://localhost:8080/api/users/${id}`, { method: 'DELETE' })
+      `${API_ROOT}/users/${id}`, // Include adminUsername as a query parameter
       {
         method: "DELETE",
         headers: {
@@ -37,14 +71,12 @@ const deleteUser = async (id) => {
     );
     if (res.ok) {
       changeConfirm();
-      user.value = user.value.filter((usr) => usr.id !== id); //Delete frontend
-      // console.log(announcement.value)
+      user.value = user.value.filter((usr) => usr.id !== id);
       router.push("/admin/user");
     } else if (res.status === 401) {
       const chekky = await reqAccessToken();
-      // console.log(chekky);
-      if (chekky === "refresh expried") {
-        alert("Session has expried, please try again.");
+      if (chekky === "refresh expired") {
+        alert("Session has expired, please try again.");
         router.push("/login");
       }
     } else {
@@ -54,6 +86,7 @@ const deleteUser = async (id) => {
     alert(`Error: ${err}`);
   }
 };
+
 
 const changeConfirm = (id) => {
   confirmDelete.value = !confirmDelete.value;
@@ -93,6 +126,7 @@ onMounted(async () => {
     alert("Session has expried, please try again.");
     router.push("/login");
   }
+  // console.log(userLogin)
 });
 </script>
 

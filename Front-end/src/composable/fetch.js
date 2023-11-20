@@ -2,12 +2,90 @@ import { useTokenStore } from '../stores/tokenStore.js'
 
 const API_ROOT = import.meta.env.VITE_ROOT_API;
 
+// const getAnnouncement = async () => {
+//   try {
+//     const tokenStore = useTokenStore()
+//     const accessToken = tokenStore.accessToken
+//     const { userRole } = useTokenStore()
+//     const { userLogin } = useTokenStore()
+//     const res = await fetch(
+//       `${API_ROOT}/announcements`,
+//       // const res = await fetch("http://localhost:8080/api/announcements");
+//       {
+//         method: "GET",
+//         headers: {
+//           Authorization: `Bearer ${accessToken}`,
+//         },
+//       }
+//     );
+//     if (res.ok) {
+//       const ann = await res.json();
+//       if(userRole === 'announcer') {
+//         const filteredAnnouncementsByOwner = [];
+//         for (let i = 0; i < ann.length; i++) {
+//           if (ann[i].announcementOwner === userLogin) {
+//             filteredAnnouncementsByOwner.push(ann[i])
+//           }
+//         }
+//         console.log(filteredAnnouncementsByOwner);
+//         return filteredAnnouncementsByOwner
+//       } else {
+//         return ann;
+//       }
+//     } else if (res.status === 401) {
+//       const chekky = await reqAccessToken()
+//       return chekky
+//     }
+//   } catch (error) {
+//     console.log(`ERROR cannot read data: ${error}`);
+//   }
+// }
+
+// const getAnnouncement = async () => {
+//   try {
+//     const tokenStore = useTokenStore()
+//     const accessToken = tokenStore.accessToken
+//     const { userRole } = useTokenStore()
+//     const { userLogin } = useTokenStore()
+//     const res = await fetch(
+//       `${API_ROOT}/announcements`,
+//       // const res = await fetch("http://localhost:8080/api/announcements");
+//       {
+//         method: "GET",
+//         headers: {
+//           Authorization: `Bearer ${accessToken}`,
+//         },
+//       }
+//     );
+//     if (res.ok) {
+//       const ann = await res.json();
+//       if(userRole === 'announcer') {
+//         const filteredAnnouncementsByOwner = [];
+//         for (let i = 0; i < ann.length; i++) {
+//           if (ann[i].announcementOwner === userLogin) {
+//             filteredAnnouncementsByOwner.push(ann[i])
+//           }
+//         }
+//         console.log(filteredAnnouncementsByOwner);
+//         return filteredAnnouncementsByOwner
+//       } else {
+//         return ann;
+//       }
+//     } else if (res.status === 401) {
+//       const chekky = await reqAccessToken()
+//       return chekky
+//     }
+//   } catch (error) {
+//     console.log(`ERROR cannot read data: ${error}`);
+//   }
+// }
+
 const getAnnouncement = async () => {
   try {
     const tokenStore = useTokenStore()
     const accessToken = tokenStore.accessToken
-    const { userRole } = useTokenStore()
-    const { userLogin } = useTokenStore()
+    // const { userRole } = useTokenStore()
+    // const { userLogin } = useTokenStore()
     const res = await fetch(
       `${API_ROOT}/announcements`,
       // const res = await fetch("http://localhost:8080/api/announcements");
@@ -18,28 +96,26 @@ const getAnnouncement = async () => {
         },
       }
     );
-    if (res.ok) {
+    if(res.ok) {
       const ann = await res.json();
-      if(userRole === 'announcer') {
-        const filteredAnnouncementsByOwner = [];
-        for (let i = 0; i < ann.length; i++) {
-          if (ann[i].announcementOwner === userLogin) {
-            filteredAnnouncementsByOwner.push(ann[i])
-          }
-        }
-        console.log(filteredAnnouncementsByOwner);
-        return filteredAnnouncementsByOwner
-      } else {
-        return ann;
+      return ann;
       }
-    } else if (res.status === 401) {
-      const chekky = await reqAccessToken()
-      return chekky
-    }
   } catch (error) {
     console.log(`ERROR cannot read data: ${error}`);
   }
 }
+// const getAnnouncement = async () => {
+//   try {
+//     const res = await fetch(`${API_ROOT}/announcements`);
+//     // const res = await fetch("http://localhost:8080/api/announcements");
+//     if(res.ok) {
+//     const ann = await res.json();
+//     return ann;
+//     }
+//   } catch (error) {
+//     console.log(`ERROR cannot read data: ${error}`);
+//   }
+// };
 
 const getPageAnn = async (page, category) => {
   if (category === undefined || null) {
