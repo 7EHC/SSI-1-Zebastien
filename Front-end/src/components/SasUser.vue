@@ -78,6 +78,9 @@ const deleteUser = async (id) => {
       if (chekky === "refresh expired") {
         alert("Session has expired, please try again.");
         router.push("/login");
+      } else {
+        alert(`[ERROR] Cannot delete your own account.`)
+        window.location.reload()
       }
     } else {
       throw new Error(`Cannot delete`);
