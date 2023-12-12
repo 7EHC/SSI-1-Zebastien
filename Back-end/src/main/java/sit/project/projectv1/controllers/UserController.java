@@ -48,6 +48,7 @@ public class UserController {
         userDTO.setUsername(userDTO.getUsername().trim());
         userDTO.setName(userDTO.getName().trim());
         userDTO.setEmail(userDTO.getEmail().trim());
+        userDTO.setRole(userDTO.getRole().toString().trim());
         User user = modelMapper.map(userDTO, User.class);
         user.setId(null);
         return userService.createNewUser(user);
@@ -83,6 +84,7 @@ public void deleteUser(@PathVariable Integer userId) {
 
     @PutMapping("/{id}")
     public User update(@PathVariable Integer id, @RequestBody @Valid putUserDTO updateUser) {
+        updateUser.setRole(updateUser.getRole().toString().trim());
         User user = modelMapper.map(updateUser, User.class);
         return userService.updateUser(id, user);
     }

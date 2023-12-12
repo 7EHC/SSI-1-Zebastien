@@ -36,4 +36,8 @@ public class putUserDTO {
         }
         return Role.valueOf(role.trim());
     }
+
+    public void setRole(String role) {
+        this.role = role.trim();
+    }
 }

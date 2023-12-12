@@ -31,5 +31,6 @@ public class ApplicationConfig {
     @Bean
     public UserUniqueValidator userUniqueValidator(){
     return new UserUniqueValidator(userRepository);
+//        return new UserUniqueValidator();
     }
 }

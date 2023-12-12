@@ -3,6 +3,7 @@ package sit.project.projectv1.controllers;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,8 @@ import sit.project.projectv1.utils.ListMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 
 @CrossOrigin
 @RestController
@@ -80,20 +83,42 @@ public class AnnouncementController {
     }
 
     @PostMapping
-    public OutputAnnouncementDTO createAnnouncement(@RequestBody AddAnnouncementDTO announcementDTO) {
+    public OutputAnnouncementDTO createAnnouncement(@RequestBody AddAnnouncementDTO announcementDTO,
+                                                    @RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader) {
+        // Assuming you have a method to extract the username from the JWT token
+        String username = extractUsernameFromToken(authorizationHeader);
+
         Announcement announcement = modelMapper.map(announcementDTO, Announcement.class);
-        announcement.setAnnouncementOwner(userRepository.findByUsername(announcementDTO.getUsername()));
+//        announcement.setAnnouncementOwner(userRepository.findByUsername(announcementDTO.getUsername()));
         announcement.setId(null);
         announcement.setAnnouncementCategory(categoryService.getCategory(announcementDTO.getCategoryId()));
+
+        // Set AnnouncementOwner using the extracted username
+        announcement.setAnnouncementOwner(userRepository.findByUsername(username));
+
         announcementService.createAnnouncement(announcement);
         return modelMapper.map(announcement, OutputAnnouncementDTO.class);
     }
 
+    private String extractUsernameFromToken(String authorizationHeader) {
+        // Assuming the token is in the format "Bearer <token>"
+        String token = authorizationHeader.substring("Bearer ".length()).trim();
+
+        // Replace with the actual secret key used to sign the JWT
+        String secretKey = "ssi1-bronze-shell-bast";
+
+        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        return claims.getSubject();
+    }
+
     @PutMapping("/{announcementID}")
     public OutputAnnouncementDTO update(@PathVariable Integer announcementID, @RequestBody AddAnnouncementDTO updateAnnouncement) {
+        Announcement existingAnnouncement = announcementService.getAnnouncementById(announcementID);
+        User existingOwner = existingAnnouncement.getAnnouncementOwner();
         Announcement announcement = modelMapper.map(updateAnnouncement, Announcement.class);
         announcement.setId(announcementID);
         announcement.setAnnouncementCategory(categoryService.getCategory(updateAnnouncement.getCategoryId()));
+        announcement.setAnnouncementOwner(existingOwner);
         announcementService.updateAnnouncement(announcementID, announcement);
         return modelMapper.map(announcement, OutputAnnouncementDTO.class);
     }
