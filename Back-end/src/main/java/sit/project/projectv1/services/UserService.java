@@ -12,6 +12,7 @@ import sit.project.projectv1.config.JwtTokenUtil;
 import sit.project.projectv1.dtos.InputUserLoginDTO;
 import sit.project.projectv1.entities.Announcement;
 import sit.project.projectv1.entities.User;
+import sit.project.projectv1.enums.Role;
 import sit.project.projectv1.exceptions.ResourceNotFoundException;
 import sit.project.projectv1.repositories.AnnouncementRepository;
 import sit.project.projectv1.repositories.UserRepository;
@@ -118,13 +119,35 @@ public class UserService {
 
 
     public User updateUser(Integer id, User user) {
+//        User usr = userRepository.findById(id).orElseThrow(
+//                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User id " + id + " does not exist"));
+//        usr.setName(user.getName().trim());
+//        usr.setUsername(user.getUsername().trim());
+//        usr.setEmail(user.getEmail().trim());
+//        usr.setRole(user.getRole());
+//        User updateUsr =  userRepository.saveAndFlush(usr);
+//        userRepository.refresh(updateUsr);
+//        return updateUsr;
+
         User usr = userRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User id " + id + " does not exist"));
+
         usr.setName(user.getName().trim());
         usr.setUsername(user.getUsername().trim());
         usr.setEmail(user.getEmail().trim());
-        usr.setRole(user.getRole());
-        User updateUsr =  userRepository.saveAndFlush(usr);
+
+        // Assuming getRole() returns a String, perform case-sensitive comparison
+        String newRole = user.getRole().toString();
+
+        // Check if the role exists in a case-sensitive manner
+        if (Role.contains(newRole)) {
+            usr.setRole(Role.valueOf(newRole));
+        } else {
+            // Handle the case where the role is not valid
+            throw new IllegalArgumentException("Invalid role: " + newRole);
+        }
+
+        User updateUsr = userRepository.saveAndFlush(usr);
         userRepository.refresh(updateUsr);
         return updateUsr;
     }

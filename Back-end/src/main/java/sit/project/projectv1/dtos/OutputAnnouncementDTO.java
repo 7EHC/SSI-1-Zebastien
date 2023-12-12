@@ -3,6 +3,7 @@ package sit.project.projectv1.dtos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import sit.project.projectv1.entities.User;
 import sit.project.projectv1.enums.Display;
 
 import java.time.ZonedDateTime;
@@ -22,4 +23,11 @@ public class OutputAnnouncementDTO {
 
     @JsonProperty("announcementCategory")
     private String announcementCategoryCategoryName;
+
+    private User announcementOwner;
+
+    public String getAnnouncementOwner() {
+        return announcementOwner == null? null : announcementOwner.getUsername();
+    }
+
 }

@@ -41,4 +41,8 @@ public class Announcement {
     public ZonedDateTime getCloseDate() {
         return closeDate;
     }
+
+    public User getAnnouncementOwner() {
+        return announcementOwner;
+    }
 }
