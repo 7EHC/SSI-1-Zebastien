@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.FieldError;
@@ -17,9 +18,11 @@ import sit.project.projectv1.dtos.*;
 import sit.project.projectv1.entities.Announcement;
 import sit.project.projectv1.entities.User;
 import sit.project.projectv1.enums.Mode;
+import sit.project.projectv1.enums.Role;
 import sit.project.projectv1.repositories.UserRepository;
 import sit.project.projectv1.services.AnnouncementService;
 import sit.project.projectv1.services.CategoryService;
+import sit.project.projectv1.services.UserService;
 import sit.project.projectv1.utils.ListMapper;
 
 import java.util.List;
@@ -41,6 +44,8 @@ public class AnnouncementController {
     private ListMapper listMapper;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
 //    @GetMapping
 //    public List<AnnouncementDTO> getAnnouncementList(@RequestParam(defaultValue = "admin") Mode mode,
@@ -74,12 +79,35 @@ public class AnnouncementController {
 
     @GetMapping("/{announcementId}")
     public AnnouncementDetailDTO getAnnouncementById(@PathVariable Integer announcementId) {
-        return modelMapper.map(announcementService.getAnnouncementById(announcementId), AnnouncementDetailDTO.class);
+//        return modelMapper.map(announcementService.getAnnouncementById(announcementId), AnnouncementDetailDTO.class);
+        Announcement storedAnnouncement = announcementService.getAnnouncementById(announcementId);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getUserFromToken(authentication);
+
+        // Guest, admin, owner announcement can access
+        if (user == null || user.getRole() == Role.admin || user.getUsername().equals(storedAnnouncement.getAnnouncementOwner().getUsername())) {
+            return modelMapper.map(announcementService.getAnnouncementById(announcementId), AnnouncementDetailDTO.class);
+        }
+
+        throw new AccessDeniedException("Access denied!!!");
     }
 
     @DeleteMapping("/{announcementId}")
     public void deleteAnnouncementById(@PathVariable Integer announcementId) {
-        announcementService.deleteAnnouncementById(announcementId);
+//        announcementService.deleteAnnouncementById(announcementId);
+        Announcement storedAnnouncement = announcementService.getAnnouncementById(announcementId);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getUserFromToken(authentication);
+
+        // Guest, admin, owner announcement can access
+        if (user.getRole() == Role.admin || user.getUsername().equals(storedAnnouncement.getAnnouncementOwner().getUsername())) {
+            announcementService.deleteAnnouncementById(announcementId);
+            return;
+        }
+
+        throw new AccessDeniedException("Access denied!!!");
     }
 
     @PostMapping
@@ -112,15 +140,34 @@ public class AnnouncementController {
     }
 
     @PutMapping("/{announcementID}")
+//    public OutputAnnouncementDTO update(@PathVariable Integer announcementID, @RequestBody AddAnnouncementDTO updateAnnouncement) {
+//        Announcement existingAnnouncement = announcementService.getAnnouncementById(announcementID);
+//        User existingOwner = existingAnnouncement.getAnnouncementOwner();
+//        Announcement announcement = modelMapper.map(updateAnnouncement, Announcement.class);
+//        announcement.setId(announcementID);
+//        announcement.setAnnouncementCategory(categoryService.getCategory(updateAnnouncement.getCategoryId()));
+//        announcement.setAnnouncementOwner(existingOwner);
+//        announcementService.updateAnnouncement(announcementID, announcement);
+//        return modelMapper.map(announcement, OutputAnnouncementDTO.class);
+//    }
     public OutputAnnouncementDTO update(@PathVariable Integer announcementID, @RequestBody AddAnnouncementDTO updateAnnouncement) {
+        Announcement storedAnnouncement = announcementService.getAnnouncementById(announcementID);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getUserFromToken(authentication);
         Announcement existingAnnouncement = announcementService.getAnnouncementById(announcementID);
         User existingOwner = existingAnnouncement.getAnnouncementOwner();
-        Announcement announcement = modelMapper.map(updateAnnouncement, Announcement.class);
-        announcement.setId(announcementID);
-        announcement.setAnnouncementCategory(categoryService.getCategory(updateAnnouncement.getCategoryId()));
-        announcement.setAnnouncementOwner(existingOwner);
-        announcementService.updateAnnouncement(announcementID, announcement);
-        return modelMapper.map(announcement, OutputAnnouncementDTO.class);
+
+        // Guest, admin, owner announcement can access
+        if (user.getRole() == Role.admin || user.getUsername().equals(storedAnnouncement.getAnnouncementOwner().getUsername())) {Announcement announcement = modelMapper.map(updateAnnouncement, Announcement.class);
+            announcement.setId(announcementID);
+            announcement.setAnnouncementOwner(existingOwner);
+            announcement.setAnnouncementCategory(categoryService.getCategory(updateAnnouncement.getCategoryId()));
+            announcementService.updateAnnouncement(announcementID, announcement);
+            return modelMapper.map(announcement, OutputAnnouncementDTO.class);
+        }
+
+        throw new AccessDeniedException("Access denied!!!");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
