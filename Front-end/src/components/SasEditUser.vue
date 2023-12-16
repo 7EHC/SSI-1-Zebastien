@@ -141,6 +141,9 @@ onMounted(async () => {
   } else if (check === "refresh expried") {
     alert("Session has expried, please try again.");
     router.push("/login");
+  } else if (check === "Access Denied") {
+    alert("Access Denied!");
+    router.push("/");
   }
 });
 </script>

@@ -76,8 +76,8 @@ onMounted(async () => {
     router.push("/login");
   }
 
-  console.log(userRole)
-  console.log(announcement.value)
+  // console.log(userRole)
+  // console.log(announcement.value)
 });
 </script>
 
