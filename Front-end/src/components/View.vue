@@ -78,6 +78,10 @@ onMounted(async () => {
         <th>Display</th>
         <td class="ann-display">{{ AnnDetail.announcementDisplay }}</td>
       </tr>
+      <tr>
+        <th>Owner</th>
+        <td class="ann-display">{{ AnnDetail.announcementOwner }}</td>
+      </tr>
     </table>
     <div class="butClass">
     <RouterLink :to="{ name: 'Announcement' }"><button class="ann-button">Back</button></RouterLink> 

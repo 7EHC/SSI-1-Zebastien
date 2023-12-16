@@ -21,6 +21,7 @@ const confirmDelete = ref(false);
 const idToDelete = ref();
 const API_ROOT = import.meta.env.VITE_ROOT_API;
 const { userLogin } = useTokenStore()
+const { userRole } = useTokenStore()
 // const usernameOfAdmin = ref()
 
 // const deleteUser = async (id) => {
@@ -78,15 +79,15 @@ const deleteUser = async (id) => {
       if (chekky === "refresh expired") {
         alert("Session has expired, please try again.");
         router.push("/login");
-      } else {
+      } 
+    } else if (res.status === 403){
         alert(`[ERROR] Cannot delete your own account.`)
         window.location.reload()
-      }
     } else {
       throw new Error(`Cannot delete`);
     }
   } catch (err) {
-    alert(`Error: ${err}`);
+    alert(`${err}`);
   }
 };
 
@@ -128,9 +129,20 @@ onMounted(async () => {
   } else if (check === "refresh expried") {
     alert("Session has expried, please try again.");
     router.push("/login");
+  } else if (check === "Access Denied") {
+    alert("Access Denied!");
+    router.push("/");
   }
-  // console.log(userLogin)
 });
+
+const checkRole = (role) => {
+  if(role === 'Admin'){
+    return true
+  } else {
+    router.push('/announcement')
+    return false
+  }
+}
 </script>
 
 <template>

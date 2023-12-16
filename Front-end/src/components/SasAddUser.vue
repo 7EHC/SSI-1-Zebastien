@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, onBeforeMount } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getAllUsers, reqAccessToken } from "../composable/fetch";
 import { useTokenStore } from "../stores/tokenStore.js";
@@ -180,6 +180,9 @@ onMounted(async () => {
   } else if (check === 'refresh expried'){
     alert("Session has expried, please try again.");
     router.push('/login')
+  } else if (check === "Access Denied") {
+    alert("Access Denied!");
+    router.push("/");
   }
 });
 </script>

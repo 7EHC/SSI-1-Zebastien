@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 // import { hash } from "argon2";
 import navBar from "./nav.vue";
+import { routerKey, useRouter } from "vue-router";
 
 const accessToken = localStorage.getItem("accessToken");
 const API_ROOT = import.meta.env.VITE_ROOT_API;
@@ -9,6 +10,7 @@ const matchedShow = ref("default");
 const usernamePassword = ref({});
 const username = ref("");
 const password = ref("");
+const router = useRouter();
 
 const submit = () => {
   matchedShow.value = "loading"
@@ -60,6 +62,10 @@ onMounted(async () => {
     username: username.value,
     password: password.value,
   };
+  if(localStorage.getItem("role") === "announcer") {
+    alert("Access Denied!")
+    router.push("/")
+  }
 });
 </script>
 
