@@ -108,6 +108,9 @@ const targetId = async (id) => {
     } else if (res.status === 401 || res.status === 500) {
       const chekky = await reqAccessToken()
       return chekky
+    } else if (res.status === 403) {
+      const accDenined = 'Access Denied'
+      return accDenined
     }
   } catch (error) {
     console.log(`ERROR cannot read data: ${error}`);

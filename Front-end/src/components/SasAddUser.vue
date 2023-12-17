@@ -278,13 +278,15 @@ onMounted(async () => {
         <button
           class="ann-button"
           type="submit"
+          id="submit"
           @click="submit"
           :disabled="disSave"
+          :style="{ cursor: disSave ? 'not-allowed':'pointer', backgroundColor: disSave ? 'lightgray':'', fontWeight: disSave ? 'normal':''}"
         >
           Save
         </button>
         <RouterLink :to="{ name: 'SasUser' }">
-          <button class="ann-button">Cancel</button>
+          <button class="ann-button" id="cancel">Cancel</button>
         </RouterLink>
       </div>
     </div>
@@ -347,9 +349,20 @@ select {
   height: 36px;
   border-radius: 7px;
   border: 0px;
+  transition-duration: 0.3s;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .ann-button:hover {
+  font-weight: bold;
   background-color: lightgrey;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+#cancel:hover {
+  background-color: #ffbaba;
+}
+#submit:hover {
+  background-color: lightgreen;
 }
 .ann-menu {
   color: black;

@@ -260,6 +260,9 @@ textarea {
   width: 99%;
   height: 200px;
 }
+button {
+  cursor: pointer;
+}
 
 .ann-publish-date,
 .ann-publish-time,
@@ -279,13 +282,14 @@ textarea {
   height: 36px;
   border-radius: 7px;
   border: 0px;
+  transition-duration: 0.3s;
 }
 .ann-button-back:hover {
   background-color: lightgreen;
   font-weight: bold;
 }
 .ann-button-cancel:hover {
-  background-color: salmon;
+  background-color: #ffbaba;
   font-weight: bold;
 }
 </style>

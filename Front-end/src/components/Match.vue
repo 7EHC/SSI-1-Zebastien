@@ -13,7 +13,7 @@ const password = ref("");
 const router = useRouter();
 
 const submit = () => {
-  matchedShow.value = "loading"
+  matchedShow.value = "loading";
   usernamePassword.value = {
     username: username.value,
     password: password.value,
@@ -62,9 +62,9 @@ onMounted(async () => {
     username: username.value,
     password: password.value,
   };
-  if(localStorage.getItem("role") === "announcer") {
-    alert("Access Denied!")
-    router.push("/")
+  if (localStorage.getItem("role") === "announcer") {
+    alert("Access Denied!");
+    router.push("/");
   }
 });
 </script>
@@ -72,11 +72,14 @@ onMounted(async () => {
 <template>
   <div class="all">
     <navBar />
+    <div class="divHead">
+      <h1 class="Header">SIT Announcement System (SAS)</h1>
+    </div>
     <div class="matchText" v-if="matchedShow === 'default'">
       <p class="ann-message">Match Password</p>
     </div>
     <div class="matchText" v-else-if="matchedShow === 'loading'">
-      <p style="text-align: center; margin-left: -30px;" class="ann-message">
+      <p style="text-align: center; margin-left: -30px" class="ann-message">
         Please wait ...
       </p>
     </div>
@@ -90,7 +93,7 @@ onMounted(async () => {
       <p class="ann-message">The specified username DOES NOT exist</p>
     </div>
     <div class="form">
-      <h2>Match password</h2>
+      <h2>Match Password</h2>
       <div class="div-form">
         <b>Username</b>
         <input
@@ -120,15 +123,30 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.divHead {
+  margin-left: -10px;
+  margin-right: -8px;
+}
+.Header {
+  background-color: #ffff;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  padding-bottom: 20px;
+  padding-left: 103px;
+  display: flex;
+  justify-items: center;
+  justify-content: center;
+}
 .matchText {
   margin-left: 43%;
   margin-top: 5%;
+  font-weight: bold;
   border: 1px solid lightgray;
   border-radius: 8px;
-  /* justify-content: center;
-    justify-items: center; */
-  padding-left: 30px;
-  width: 30%;
+  display: flex;
+  justify-content: center;
+  width: 32%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 .matchTextGreen {
   margin-left: 43%;
@@ -137,10 +155,9 @@ onMounted(async () => {
   color: #0cd321;
   background-color: #c5ffcb;
   border-radius: 8px;
-  /* justify-content: center;
-    justify-items: center; */
   padding-left: 30px;
   width: 30%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 .matchTextRed {
   margin-left: 43%;
@@ -149,10 +166,9 @@ onMounted(async () => {
   color: #ff4040;
   background-color: #ffbaba;
   border-radius: 8px;
-  /* justify-content: center;
-    justify-items: center; */
   padding-left: 30px;
   width: 30%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 .matchTextNo {
   margin-left: 43%;
@@ -161,10 +177,9 @@ onMounted(async () => {
   color: #ff4040;
   background-color: #ffbaba;
   border-radius: 8px;
-  /* justify-content: center;
-    justify-items: center; */
   padding-left: 30px;
   width: 30%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 .all {
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
@@ -181,6 +196,7 @@ onMounted(async () => {
   padding: 15px;
   width: 30%;
   font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 input {
   width: 99%;
@@ -203,8 +219,12 @@ input {
   border: 0px;
   font-size: 14px;
   font-weight: bold;
+  cursor: pointer;
+  transition-duration: 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .ann-button:hover {
-  background-color: lightgrey;
+  background-color: khaki;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 </style>

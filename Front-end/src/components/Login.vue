@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, RouterLink } from "vue-router";
 import { useTokenStore } from "../stores/tokenStore.js";
 import { getAllUsers } from "../composable/fetch";
 import { CheckCircleIcon,XCircleIcon } from '@heroicons/vue/24/solid'
@@ -74,6 +74,9 @@ onMounted(async () => {
 
 <template>
   <div class="all">
+    <div class="divHead">
+    <h1 class="Header"><RouterLink :to="{ name: 'User' }" style="text-decoration: none; display: flex; width: 10px; float: left;"><img src="../assets/BackArrow.svg" alt="back" style="float: left; opacity: 0.8; display: flex;"/></RouterLink> &nbsp;&nbsp;&nbsp;&nbsp;SIT Announcement System (SAS)</h1>
+    </div>
     <div class="matchText" v-if="loginStatus === 'default'">
       <p style="text-align: center; margin-left: -30px;" class="ann-message">
         Please Login
@@ -124,15 +127,40 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+img:hover {
+  animation: shake 0.5s ease-in-out;
+} 
+@keyframes shake {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-2px, 0); }
+  40% { transform: translate(2px, 0); }
+  60% { transform: translate(-2px, 0); }
+  80% { transform: translate(2px, 0); }
+  100% { transform: translate(0, 0); }
+}
+.divHead {
+  margin-left: -10px;
+  margin-right: -8px;
+}
+.Header {
+  background-color: #ffff;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  padding-bottom: 20px;
+  display: flex;
+  justify-items: center;
+  justify-content: center;
+}
 .matchText {
+  color: black;
   margin-left: 37%;
   margin-top: 5%;
-  border: 1px solid lightgray;
+  border: 2px solid #1a1a1d;
   border-radius: 8px;
-  /* justify-content: center;
-    justify-items: center; */
   padding-left: 30px;
   width: 30%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: lightgrey;
 }
 .matchTextGreen {
   margin-left: 37%;
@@ -141,10 +169,9 @@ onMounted(async () => {
   color: #00D107;
   background-color: #DBFFDC;
   border-radius: 8px;
-  /* justify-content: center;
-    justify-items: center; */
   padding-left: 30px;
   width: 30%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .matchTextRed {
   margin-left: 37%;
@@ -153,10 +180,9 @@ onMounted(async () => {
   color: #ff4040;
   background-color: #ffbaba;
   border-radius: 8px;
-  /* justify-content: center;
-    justify-items: center; */
   padding-left: 30px;
   width: 30%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .matchTextNo {
   margin-left: 37%;
@@ -165,10 +191,9 @@ onMounted(async () => {
   color: #ff4040;
   background-color: #ffbaba;
   border-radius: 8px;
-  /* justify-content: center;
-    justify-items: center; */
   padding-left: 30px;
   width: 30%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .all {
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
@@ -176,6 +201,7 @@ onMounted(async () => {
 }
 .ann-message {
   font-size: 20px;
+  font-weight: bold;
 }
 .form {
   margin-left: 37%;
@@ -199,17 +225,28 @@ input {
   margin-right: 10px;
   color: #45a29e;
 }
+.ann-div-button {
+  display: flex;
+  justify-content: center;
+}
 .ann-button {
   margin-top: 25px;
   margin-right: 10px;
-  width: 180px;
+  width: 20%;
   height: 36px;
   border-radius: 7px;
   border: 0px;
   font-size: 14px;
   font-weight: bold;
+  transition-duration: 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  background-color: #45a29e;
+  color: white;
 }
 .ann-button:hover {
-  background-color: lightgrey;
+  background-color: white;
+  color: #45a29e;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 </style>

@@ -129,12 +129,12 @@ const activeBut = (acc)=>{
     pageStore.setPage(defaultPage.value)
     disablePrev.value = defaultPage.value === 0;
     disableNext.value = defaultPage.value === filterAnnActive.value.totalPages - 1 ;
-    return 'Closed Announcements'
+    return 'Active Announcements'
   } else {
     pageStore.setClosePage(defaultPageClose.value)
     disablePrev.value = defaultPageClose.value === 0;
     disableNextClose.value = defaultPageClose.value === filterAnnClose.value.totalPages - 1;
-    return 'Active Announcements'
+    return 'Closed Announcements'
   }
 }   
 
@@ -178,7 +178,7 @@ if((filterAnnActive.value.totalPages) === defaultPage.value){
 <div class="allContents1" v-if="accessToken">
   <div class="nav">
     <navBar v-if=accessToken />
-  <div>
+  <div class="divHead">
     <h1 class="Header">SIT Announcement System (SAS)</h1>
   </div>
     <h4 class="timeZone">Date/Time shown in Timezone: {{ timeZone }}<br><br>
@@ -202,7 +202,7 @@ if((filterAnnActive.value.totalPages) === defaultPage.value){
     </b>
     </h4>
     <div class="ann-button" id="addDiv" >
-        <button id="addBut" style="float: inline-end;" @click="activeClose =! activeClose;" >{{ activeBut(activeClose) }}</button>
+        <button id="addBut" style="float: inline-end;" :style="{ backgroundColor: activeClose ? '#ffbaba':'lightgreen'}" @click="activeClose =! activeClose;" >{{ activeBut(activeClose) }}</button>
     </div>
    
     <div>
@@ -238,18 +238,18 @@ if((filterAnnActive.value.totalPages) === defaultPage.value){
 
 <!-- Button---------------------------------------------------------------------------------------------------- -->
 <div class="allButtons1">
-<div v-if="filterAnnActive.totalPages > 1 && activeClose === false && arrPageNum !== undefined">
+  <div v-if="filterAnnActive.totalPages > 1 && activeClose === false && arrPageNum !== undefined">
     <div class="butAcDiv">
-    <button class="ann-page-prev" @click="prevPage" :disabled="disablePrev">Prev</button>
-    <button v-for="(page,index) in visibleButton" :key="index" :style="[page === defaultPage + 1 ? 'background-color: lightgray':'' ]" :class="['ann-page-'+ index]" @click="changePage(page)" class="butPage">{{ page }}</button>
-    <button class="ann-page-next" @click="nextPage" :disabled="disableNext">Next</button>
+    <button class="ann-page-prev" :style="{ cursor: disablePrev ? 'not-allowed':'pointer', backgroundColor: disablePrev ? 'lightgray':''}" @click="prevPage" :disabled="disablePrev">Prev</button>
+    <button v-for="(page,index) in visibleButton" :key="index" :style="[page === defaultPage + 1 ? 'background-color: black':'', page === defaultPage + 1 ? 'color: white':'' ]" :class="['ann-page-'+ index]" @click="changePage(page)" class="butPage">{{ page }}</button>
+    <button class="ann-page-next" :style="{ cursor: disableNext ? 'not-allowed':'pointer', backgroundColor: disableNext ? 'lightgray':''}" @click="nextPage" :disabled="disableNext">Next</button>
     </div>
 </div>
 <div v-if="filterAnnClose.totalPages > 1 && activeClose === true && arrClosePageNum !== undefined">
     <div class="butCloseDiv">
-    <button class="ann-page-prev" @click="prevClosePage" :disabled="disablePrev">Prev</button>
-    <button v-for="(page,index) in visibleCloseButton" :key="index" :style="[page === defaultPageClose + 1 ? 'background-color: lightgray':'' ]" :class="['ann-page-'+ index]" @click="changeClosePage(page)" class="butPage">{{ page }}</button>
-    <button class="ann-page-next" @click="nextClosePage" :disabled="disableNextClose">Next</button>
+    <button class="ann-page-prev" :style="{ cursor: disablePrev ? 'not-allowed':'pointer', backgroundColor: disablePrev ? 'lightgray':''}" @click="prevClosePage" :disabled="disablePrev">Prev</button>
+    <button v-for="(page,index) in visibleCloseButton" :key="index" :style="[page === defaultPageClose + 1 ? 'background-color: black':'', page === defaultPageClose + 1 ? 'color: white':'' ]" :class="['ann-page-'+ index]" @click="changeClosePage(page)" class="butPage">{{ page }}</button>
+    <button class="ann-page-next" :style="{ cursor: disableNextClose ? 'not-allowed':'pointer', backgroundColor: disableNextClose ? 'lightgray':''}" @click="nextClosePage" :disabled="disableNextClose">Next</button>
     </div>
   </div>
 </div>
@@ -264,7 +264,7 @@ if((filterAnnActive.value.totalPages) === defaultPage.value){
 </div>
 
 <div class="allContents2" v-if="!accessToken">
-  <div>
+  <div class="divHead">
     <h1 class="Header">SIT Announcement System (SAS)</h1>
     <div style="position: absolute; top: 0; right: 0;">
     <RouterLink :to="{ name: 'Login' }"
@@ -292,7 +292,7 @@ if((filterAnnActive.value.totalPages) === defaultPage.value){
     </b>
     </h4>
     <div class="ann-button" id="addDiv" >
-        <button id="addBut" style="float: inline-end;" @click="activeClose =! activeClose;" >{{ activeBut(activeClose) }}</button>
+        <button id="addBut" style="float: inline-end;" :style="{ backgroundColor: activeClose ? '#ffbaba':'lightgreen'}" @click="activeClose =! activeClose;" >{{ activeBut(activeClose) }}</button>
     </div>
    
     <div>
@@ -328,18 +328,18 @@ if((filterAnnActive.value.totalPages) === defaultPage.value){
 
 <!-- Button---------------------------------------------------------------------------------------------------- -->
 <div class="allButtons2">
-<div v-if="filterAnnActive.totalPages > 1 && activeClose === false && arrPageNum !== undefined">
+  <div v-if="filterAnnActive.totalPages > 1 && activeClose === false && arrPageNum !== undefined">
     <div class="butAcDiv">
-    <button class="ann-page-prev" @click="prevPage" :disabled="disablePrev">Prev</button>
-    <button v-for="(page,index) in visibleButton" :key="index" :style="[page === defaultPage + 1 ? 'background-color: lightgray':'' ]" :class="['ann-page-'+ index]" @click="changePage(page)" class="butPage">{{ page }}</button>
-    <button class="ann-page-next" @click="nextPage" :disabled="disableNext">Next</button>
+    <button class="ann-page-prev" :style="{ cursor: disablePrev ? 'not-allowed':'pointer', backgroundColor: disablePrev ? 'lightgray':''}" @click="prevPage" :disabled="disablePrev">Prev</button>
+    <button v-for="(page,index) in visibleButton" :key="index" :style="[page === defaultPage + 1 ? 'background-color: black':'', page === defaultPage + 1 ? 'color: white':'' ]" :class="['ann-page-'+ index]" @click="changePage(page)" class="butPage">{{ page }}</button>
+    <button class="ann-page-next" :style="{ cursor: disableNext ? 'not-allowed':'pointer', backgroundColor: disableNext ? 'lightgray':''}" @click="nextPage" :disabled="disableNext">Next</button>
     </div>
 </div>
 <div v-if="filterAnnClose.totalPages > 1 && activeClose === true && arrClosePageNum !== undefined">
     <div class="butCloseDiv">
-    <button class="ann-page-prev" @click="prevClosePage" :disabled="disablePrev">Prev</button>
-    <button v-for="(page,index) in visibleCloseButton" :key="index" :style="[page === defaultPageClose + 1 ? 'background-color: lightgray':'' ]" :class="['ann-page-'+ index]" @click="changeClosePage(page)" class="butPage">{{ page }}</button>
-    <button class="ann-page-next" @click="nextClosePage" :disabled="disableNextClose">Next</button>
+    <button class="ann-page-prev" :style="{ cursor: disablePrev ? 'not-allowed':'pointer', backgroundColor: disablePrev ? 'lightgray':''}" @click="prevClosePage" :disabled="disablePrev">Prev</button>
+    <button v-for="(page,index) in visibleCloseButton" :key="index" :style="[page === defaultPageClose + 1 ? 'background-color: black':'', page === defaultPageClose + 1 ? 'color: white':'' ]" :class="['ann-page-'+ index]" @click="changeClosePage(page)" class="butPage">{{ page }}</button>
+    <button class="ann-page-next" :style="{ cursor: disableNextClose ? 'not-allowed':'pointer', backgroundColor: disableNextClose ? 'lightgray':''}" @click="nextClosePage" :disabled="disableNextClose">Next</button>
     </div>
   </div>
 </div>
@@ -355,6 +355,21 @@ if((filterAnnActive.value.totalPages) === defaultPage.value){
 </template>
  
 <style scoped>
+.divHead {
+  margin-left: -10px;
+  margin-right: -8px;
+}
+.Header {
+  background-color: #ffff; /* Set your desired background color */
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1); /* Adjust the values as needed */
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+.ann-category-filter {
+  cursor: pointer;
+}
+
 .allContents1 {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   /* margin-left: 13.5%; */
@@ -381,18 +396,23 @@ if((filterAnnActive.value.totalPages) === defaultPage.value){
   margin-top: 10%;
 }
 .butPage{
-  margin: 20px 0 0 0 ;
-  border-radius: 0;
+  margin: 20px 1;
+  border-radius: 5px;
+  height: 30px;
+  padding-top: 9px;
+  width: 70px;
 }
 
 table {
   margin-top: 100px;
   border-collapse: collapse;
   width: 100%;
+  border: 1px solid lightgray;
 }
 .trHead{
   background-color: #1a1a1d;
   color: #45a29e;
+  /* border: transparent; */
 }
 
 th {
@@ -405,6 +425,8 @@ th {
 td {
   padding: 15px;
   border: 1px solid lightgray;
+  border-radius: 5px;
+  /* border: transparent; */
 }
 
 button{
@@ -420,7 +442,8 @@ button{
   position: fixed;
   justify-content: center;
   margin-left: 13.5%;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
+  height: 70px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -430,7 +453,8 @@ button{
   display: flex;
   position: fixed;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
+  height: 70px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -451,15 +475,20 @@ select {
 #addBut{
   /* background-color: lightgreen; */
   /* margin-top: 5px; */
+  font-weight: bold;
+  transition-duration: 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 190px;
 }
 #addBut:hover{
   /* background-color: mediumseagreen; */
-  font-weight: bold;
+  /* font-weight: bold; */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 .ann-button{
   text-align: center;
   width: 200px;
+  cursor: pointer;
 }
 button{
   border-radius: 8px;
@@ -469,11 +498,13 @@ button{
   padding: 15px;
   border: 0px;
   transition-duration: 0.4s;
+  cursor: pointer;
 }
 #titleClick{transition: background-color 0.3s;}
 #titleClick:hover{
     color: black;
     background-color: lightgray;
+    cursor: pointer;
 }
 .butPage:hover{
 background-color: lightgray;
@@ -483,6 +514,14 @@ transition-duration: 0.4s;
 .ann-page-prev:hover {
   background-color: lightgray;
 }
+.ann-page-next,
+.ann-page-prev {
+  width: 70px;
+  margin: 20px 1;
+  border-radius: 5px;
+  height: 30px;
+  padding-top: 9px;
+}
 .Header {
   display: flex;
   justify-content: center;
@@ -491,13 +530,19 @@ transition-duration: 0.4s;
 .login {
   margin-right: 10px;
   margin-top: 20px;
-  border: 1px solid transparent;
-  transition-duration: 0.4s;
+  border: 1px solid #45a29e;
+  transition-duration: 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #ffff;
+  color: #45a29e;
+  font-weight: bold;
 }
 .login:hover {
   font-weight: bold;
+  border: 1px solid #45a29e;
   background-color: #45a29e;
   color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 </style>

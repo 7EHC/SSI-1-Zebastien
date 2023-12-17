@@ -11,6 +11,14 @@ import SasEditUser from "../components/SasEditUser.vue"
 import Match from "../components/Match.vue"
 import Login from "../components/Login.vue"
 
+const requireAccessToken = (to, from, next) => {
+  if (localStorage.getItem('accessToken')) {
+    next();
+  } else {
+    next('/login');
+  }
+};
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -19,73 +27,10 @@ const router = createRouter({
       redirect: '/announcement',
     },
     {
-      path: '/admin/announcement',
-      beforeEnter: (to, from, next) => {
-        if (!localStorage.getItem('accessToken')) {
-          // Redirect to the login page if accessToken is empty
-          next('/announcement');
-        } else {
-          // Allow access to the admin page if accessToken is not empty
-          next();
-        }
-      },
-      component: Announcement, // Replace with your actual admin component
-      children: [
-        {
-          path: '/admin/announcement',
-          component: Announcement, // Replace with your announcement component
-        }, 
-        {
-          path: '/admin/announcement/:id/edit',
-          component: EditAnnouncement,
-        },
-        {
-          path: '/admin/announcement/:id',
-          component: EditAnnouncement,
-        },
-        {
-          path: '/admin/announcement/add',
-          component: AddAnnouncement,
-        }]
-      },
-      {
-        path: '/admin/user',
-        beforeEnter: (to, from, next) => {
-          if (!localStorage.getItem('accessToken')) {
-            // Redirect to the login page if accessToken is empty
-            next('/announcement');
-          } else {
-            // Allow access to the admin page if accessToken is not empty
-            next();
-          }
-        },
-        // component: SasUser, // Replace with your actual admin component
-        children: [
-          {
-            path: '/admin/user',
-            component: SasUser, // Replace with your announcement component
-          }, 
-          {
-            path: '/admin/user/match',
-            component: Match
-          },
-          {
-            path: '/admin/user/add',
-            component: SasAddUser
-          },
-          {
-            path: '/admin/user/:id/edit',
-            component: SasEditUser
-          },
-          {
-            path: '/admin/user/:id',
-            component: SasEditUser
-          }],
-        },
-    {
       path: '/admin/announcement/:id',
       name: 'View',
       component: View,
+      beforeEnter: requireAccessToken
     },
     {
       path: '/announcement/:id',
@@ -96,16 +41,19 @@ const router = createRouter({
       path: '/admin/announcement/:id/edit',
       name: 'Edit',
       component: EditAnnouncement,
+      beforeEnter: requireAccessToken
     },
     {
       path: '/admin/announcement',
       name: 'Announcement',
       component: Announcement,
+      beforeEnter: requireAccessToken
     },
     {
       path: '/admin/announcement/add',
       name: 'AddAnnouncement',
       component: AddAnnouncement,
+      beforeEnter: requireAccessToken
     },
     {
       path: '/announcement',
@@ -115,22 +63,26 @@ const router = createRouter({
     {
       path: '/admin/user',
       name: 'SasUser',
-      component: SasUser
+      component: SasUser,
+      beforeEnter: requireAccessToken
     },
     {
       path: '/admin/user/add',
       name: 'SasAddUser',
-      component: SasAddUser
+      component: SasAddUser,
+      beforeEnter: requireAccessToken
     },
     {
       path: '/admin/user/:id/edit',
       name: 'SasEditUser',
-      component: SasEditUser
+      component: SasEditUser,
+      beforeEnter: requireAccessToken
     },
     {
       path: '/admin/user/match',
       name: 'Match',
-      component: Match
+      component: Match,
+      beforeEnter: requireAccessToken
     },
     {
       path: '/login',
