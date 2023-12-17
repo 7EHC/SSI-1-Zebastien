@@ -131,7 +131,7 @@ onMounted(async () => {
   background-color: #ffff;
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
   padding-bottom: 20px;
-  padding-left: 103px;
+  padding-left: 13.3%;
   display: flex;
   justify-items: center;
   justify-content: center;
