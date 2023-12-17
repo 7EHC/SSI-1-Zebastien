@@ -99,8 +99,10 @@ onMounted(async () => {
         <p style="font-size: 48px;">Delete</p>
         <hr>
         <p style="font-size: 24px; margin-top: 30px;">Do you want to delete these records ?</p>
-        <button class="cancleBut" @click="changeConfirm">Cancel</button><RouterLink :to="{ name: 'Announcement' }">
+        <div class="modalBut">
+          <button class="cancleBut" @click="changeConfirm">Cancel</button><RouterLink :to="{ name: 'Announcement' }">
         <button @click="deleteAnn(idToDelete)" class="deleteButPopup">Delete</button></RouterLink>
+      </div>
       </div>
     </div>
   </Teleport>
@@ -151,6 +153,9 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.modalBut {
+  margin-top: -20px;
+}
 .divHead {
   margin-top: -8px;
   margin-left: -10px;
@@ -275,10 +280,22 @@ button{
 button:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+.cancleBut {
+  width: 100px;
+  height: 30px;
+  border: 0px;
+  border-radius: 6px;
+  background-color: #e6e6e6;
+  padding-bottom: 25px;
+}
 
 .deleteButPopup{
   background-color: salmon;
-  width: 90px;
+  width: 100px;
+  height: 30px;
+  border: 0px;
+  border-radius: 6px;
+  padding-bottom: 25px;
 }
 .deleteButPopup:hover{
   background-color: indianred;

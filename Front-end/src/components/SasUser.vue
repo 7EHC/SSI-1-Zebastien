@@ -387,6 +387,9 @@ td {
   height: 30px;
   border: 0px;
   border-radius: 6px;
+  padding-top: 15px;
+  padding-bottom: 27px;
+  margin-left: 10px;
 }
 .deleteButPopup:hover {
   background-color: indianred;
@@ -423,6 +426,8 @@ td {
   border: 0px;
   border-radius: 6px;
   background-color: #e6e6e6;
+  padding-top: 15px;
+  padding-bottom: 27px;
 }
 .viewBut:hover {
   background-color: lightgray;
