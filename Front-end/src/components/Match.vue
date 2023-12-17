@@ -140,12 +140,13 @@ onMounted(async () => {
   margin-left: 43%;
   margin-top: 5%;
   font-weight: bold;
-  border: 1px solid lightgray;
+  border: 2px solid #1a1a1d;
   border-radius: 8px;
   display: flex;
   justify-content: center;
   width: 32%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: lightgrey;
 }
 .matchTextGreen {
   margin-left: 43%;
@@ -184,10 +185,15 @@ onMounted(async () => {
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
 }
+.ann-div-button {
+  display: flex;
+  justify-content: center;
+}
 .ann-message {
   font-size: 20px;
 }
 .form {
+  color: #45a29e;
   margin-left: 43%;
   border: lightgray solid 1px;
   border-radius: 8px;
@@ -196,6 +202,7 @@ onMounted(async () => {
   width: 30%;
   font-weight: bold;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #1a1a1d;
 }
 input {
   width: 99%;
@@ -212,7 +219,7 @@ input {
 .ann-button {
   margin-top: 25px;
   margin-right: 10px;
-  width: 180px;
+  width: 120px;
   height: 36px;
   border-radius: 7px;
   border: 0px;
@@ -221,9 +228,14 @@ input {
   cursor: pointer;
   transition-duration: 0.3s;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #45a29e;
+  color: white;
 }
 .ann-button:hover {
-  background-color: khaki;
+  /* background-color: darkkhaki; */
+  /* background-color: #c5ffcb; */
+  background-color: white;
+  color: #45a29e;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 </style>

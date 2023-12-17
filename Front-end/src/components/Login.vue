@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import { useRouter, RouterLink } from "vue-router";
 import { useTokenStore } from "../stores/tokenStore.js";
 import { getAllUsers } from "../composable/fetch";
-import { CheckCircleIcon,XCircleIcon } from '@heroicons/vue/24/solid'
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/vue/24/solid";
 import jwt_decode from "jwt-decode";
 
 const loginStatus = ref("default");
@@ -29,8 +29,8 @@ const login = async (input) => {
       tokenStore.setAccessToken(response.token);
       tokenStore.setRefreshToken(response.refreshToken);
 
-      const decodedToken = jwt_decode(response.token)
-      tokenStore.setUserLogin(decodedToken.sub)
+      const decodedToken = jwt_decode(response.token);
+      tokenStore.setUserLogin(decodedToken.sub);
       tokenStore.setRole(decodedToken.role);
 
       loginStatus.value = "green";
@@ -48,7 +48,7 @@ const login = async (input) => {
 };
 
 const submit = () => {
-  loginStatus.value = "loading"
+  loginStatus.value = "loading";
   loginObj.value = {
     username: username.value,
     password: password.value,
@@ -68,29 +68,57 @@ onMounted(async () => {
 <template>
   <div class="all">
     <div class="divHead">
-    <h1 class="Header"><RouterLink :to="{ name: 'User' }" style="text-decoration: none; display: flex; width: 10px; float: left;"><img src="../assets/BackArrow.svg" alt="back" style="float: left; opacity: 0.8; display: flex;"/></RouterLink> &nbsp;&nbsp;&nbsp;&nbsp;SIT Announcement System (SAS)</h1>
+      <RouterLink
+        :to="{ name: 'User' }"
+        style="
+          text-decoration: none;
+          display: flex;
+          width: 10px;
+          height: 100%;
+          margin-bottom: -3.55%;
+          margin-left: 3%;
+          margin-top: 1.5%;
+        "
+        ><img src="../assets/BackArrow.svg" alt="back" style="opacity: 0.8"
+      /></RouterLink>
+      <h1 class="Header">SIT Announcement System (SAS)</h1>
     </div>
     <div class="matchText" v-if="loginStatus === 'default'">
-      <p style="text-align: center; margin-left: -30px;" class="ann-message">
+      <p style="text-align: center; margin-left: -30px" class="ann-message">
         Please Login
       </p>
     </div>
     <div class="matchText" v-else-if="loginStatus === 'loading'">
-      <p style="text-align: center; margin-left: -30px;" class="ann-message">
+      <p style="text-align: center; margin-left: -30px" class="ann-message">
         Please wait ...
       </p>
     </div>
     <div class="matchTextGreen" v-else-if="loginStatus === 'green'">
-      <p class="ann-message">Login Successful <CheckCircleIcon style="height: 25px;float: right;margin-right: 10px; color: #00d107;" /> </p>
+      <p class="ann-message">
+        Login Successful
+        <CheckCircleIcon
+          style="height: 25px; float: right; margin-right: 10px; color: #00d107"
+        />
+      </p>
     </div>
     <div class="matchTextRed" v-else-if="loginStatus === 'red'">
-      <p class="ann-message">Password Incorrect <XCircleIcon style="height: 25px;float: right;margin-right: 10px; color: #ff4040;" /></p>
+      <p class="ann-message">
+        Password Incorrect
+        <XCircleIcon
+          style="height: 25px; float: right; margin-right: 10px; color: #ff4040"
+        />
+      </p>
     </div>
     <div class="matchTextNo" v-else>
-      <p class="ann-message">Username DOES NOT exist <XCircleIcon style="height: 25px;float: right;margin-right: 10px; color: #ff4040;" /></p>
+      <p class="ann-message">
+        Username DOES NOT exist
+        <XCircleIcon
+          style="height: 25px; float: right; margin-right: 10px; color: #ff4040"
+        />
+      </p>
     </div>
-    <div class="form" style="background-color: #1a1a1d;">
-      <h2 style="color: #45a29e;">Login to SIT Announcement system (SAS)</h2>
+    <div class="form" style="background-color: #1a1a1d">
+      <h2 style="color: #45a29e">Login to SIT Announcement system (SAS)</h2>
       <div class="div-form">
         <b>Username</b>
         <input
@@ -122,14 +150,26 @@ onMounted(async () => {
 <style scoped>
 img:hover {
   animation: shake 0.5s ease-in-out;
-} 
+}
 @keyframes shake {
-  0% { transform: translate(0, 0); }
-  20% { transform: translate(-2px, 0); }
-  40% { transform: translate(2px, 0); }
-  60% { transform: translate(-2px, 0); }
-  80% { transform: translate(2px, 0); }
-  100% { transform: translate(0, 0); }
+  0% {
+    transform: translate(0, 0);
+  }
+  20% {
+    transform: translate(-2px, 0);
+  }
+  40% {
+    transform: translate(2px, 0);
+  }
+  60% {
+    transform: translate(-2px, 0);
+  }
+  80% {
+    transform: translate(2px, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
 }
 .divHead {
   margin-left: -10px;
@@ -145,7 +185,6 @@ img:hover {
   justify-content: center;
 }
 .matchText {
-  color: black;
   margin-left: 37%;
   margin-top: 5%;
   border: 2px solid #1a1a1d;
@@ -158,9 +197,9 @@ img:hover {
 .matchTextGreen {
   margin-left: 37%;
   margin-top: 5%;
-  border: 2px solid #00D107;
-  color: #00D107;
-  background-color: #DBFFDC;
+  border: 2px solid #00d107;
+  color: #00d107;
+  background-color: #dbffdc;
   border-radius: 8px;
   padding-left: 30px;
   width: 30%;
