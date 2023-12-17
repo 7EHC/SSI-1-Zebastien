@@ -201,6 +201,7 @@ th {
 
 td {
   padding: 15px;
+  padding-top: 0px;
   /* border: 1px solid lightgray; */
   border-bottom: 1px solid lightgray;
 }
