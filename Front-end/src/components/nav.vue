@@ -181,8 +181,8 @@ hr {
 
 /* SIGN OUT BUTTON-------------------------------------------------- */
 .signout:hover {
-  color: white;
-  background-color: red;
+  color: black;
+  background-color: #ffbaba;
   /* border: 0; */
   border-radius: 10px;
   font-weight: bold;
