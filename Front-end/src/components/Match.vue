@@ -130,7 +130,6 @@ onMounted(async () => {
 .Header {
   background-color: #ffff;
   box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
-  width: 100%;
   padding-bottom: 20px;
   padding-left: 103px;
   display: flex;

@@ -24,9 +24,8 @@ const login = async (input) => {
     });
 
     if (res.status === 200) {
-      const response = await res.json(); // Parse the response as JSON
+      const response = await res.json();
 
-      // Store the access token and refresh token in local storage
       tokenStore.setAccessToken(response.token);
       tokenStore.setRefreshToken(response.refreshToken);
 
@@ -34,13 +33,7 @@ const login = async (input) => {
       tokenStore.setUserLogin(decodedToken.sub)
       tokenStore.setRole(decodedToken.role);
 
-      // console.log(accessToken);
-      // localStorage.setItem('accessToken', response.token);
-      // localStorage.setItem('refreshToken', response.refreshToken);
-
       loginStatus.value = "green";
-
-      // Redirect after 1.5 seconds
       setTimeout(function () {
         router.push("/announcement");
       }, 1500);
