@@ -180,7 +180,7 @@ const checkRole = (role) => {
         </div> -->
 
     <div class="parent-container">
-      <h1 class="user-man" style="padding: 10px; border-radius: 10px">
+      <h1 class="user-man" style="border-radius: 10px; height: 10px; padding-bottom: 25px; margin-top: 15px;">
         User Management
       </h1>
     </div>
@@ -239,6 +239,14 @@ const checkRole = (role) => {
 </template>
 
 <style scoped>
+button {
+  transition-duration: 0.3s;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 body {
   background-color: #1a1a1d;
 }
@@ -259,8 +267,12 @@ body {
   padding-left: 14.5%;
 }
 .parent-container {
+  margin-left: -10px;
+  margin-right: -8px;
+  margin-bottom: 10px;
   display: flex;
   padding-left: 50%;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
   /* align-items: center; */
 }
 .all {
@@ -276,6 +288,7 @@ table {
   /* margin-top: 30px; */
   border-collapse: collapse;
   width: 100%;
+  border: 1px solid lightgray;
 }
 
 th {
@@ -287,7 +300,9 @@ th {
 
 td {
   padding: 15px;
-  border: 1px solid lightgray;
+  /* border: 1px solid lightgray; */
+  border: transparent;
+  border-bottom: 1px solid lightgray;
 }
 .ann-button-td {
   width: 220px;
@@ -311,7 +326,7 @@ td {
   padding-top: 3px;
 }
 #edit-button:hover {
-  background-color: #45a29e;
+  background-color: khaki;
   font-weight: bold;
 }
 #edit-button::after {

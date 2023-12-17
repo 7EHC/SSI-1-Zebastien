@@ -83,9 +83,11 @@ onMounted(async () => {
 
 <template>
   <navBar/>
+  <div class="divHead">
 <div class="Header">
     <h1>SIT Announcement System (SAS)</h1>
   </div>
+</div>
   <!-- <RouterLink :to="{name : 'SasUser'}"><button class="admin-back">Back to admin page</button></RouterLink>
   <RouterLink :to="{name: 'User'}"><button class="admin-back">User</button></RouterLink> -->
   <!-- Delete Confirmation---------------------------------------------------------------------------- -->
@@ -132,7 +134,7 @@ onMounted(async () => {
         <td class="ann-category">{{ ann.announcementCategory }}</td>
         <td class="ann-publish-date">{{ changeTime(ann.publishDate) }}</td>
         <td class="ann-close-date">{{ changeTime(ann.closeDate) }}</td>
-        <td class="ann-display"><p class="disBack" :style="{ backgroundColor: ann.announcementDisplay === 'Y' ? '#45a29e' : 'lightgray' }">{{ ann.announcementDisplay }}</p></td>
+        <td class="ann-display"><p class="disBack" :style="{ backgroundColor: ann.announcementDisplay === 'Y' ? 'lightgreen' : 'lightgray' }">{{ ann.announcementDisplay }}</p></td>
         <td v-if="userRole === 'admin'">{{ ann.announcementOwner }}</td>
         <td class="ann-button">
         <button class="viewBut" @click="gotoView(ann.id)"><MagnifyingGlassPlusIcon style="height: 15px;" /></button>
@@ -149,6 +151,17 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.divHead {
+  margin-top: -8px;
+  margin-left: -10px;
+  margin-right: -8px;
+  margin-bottom: 20px;
+}
+.Header {
+  background-color: #ffff;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.1);
+  padding-left: 5px;
+}
 .allContents {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   margin-left: 13.5%;
@@ -171,6 +184,7 @@ table {
   margin-top: 30px;
   border-collapse: collapse;
   width: 100%;
+  border: 1px solid lightgray;
 }
 
 th {
@@ -182,15 +196,8 @@ th {
 
 td {
   padding: 15px;
-  border: 1px solid lightgray;
-}
-
-button{
-  padding: 8px;
-  /* width: 90px; */
-  border-radius: 8px;
-  margin: 4px;
-  border: 0px;
+  /* border: 1px solid lightgray; */
+  border-bottom: 1px solid lightgray;
 }
 
 .viewBut{
@@ -203,7 +210,6 @@ button{
 }
 
 .deleteBut{
-  /* background-color: coral; */
   width: 90px;
   transition: background-color 0.3s;
 }
@@ -220,7 +226,6 @@ button{
   margin-bottom: 5px;
 }
 #addBut{
-  /* background-color: lightgreen; */
   width: 200px;
   transition: background-color 0.3s;
 }
@@ -244,7 +249,6 @@ button{
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* background-color: #0000; */
   width: 100%;
   height: 100%;
   display: flex;
@@ -252,11 +256,8 @@ button{
   align-items: center;
 }
 .modal>div {
-  /* background-color: rgb(250 204 21); */
   padding: 10px;
   border-radius: 10px;
-  /* width: 50%;
-  height: 30%; */
   border: 0px;
 }
 
@@ -267,10 +268,15 @@ button{
   margin-top: 30px;
   padding: 15px;
   border: 0px;
+  transition-duration: 0.3s;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+button:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .deleteButPopup{
-  /* background-color: coral; */
   background-color: salmon;
   width: 90px;
 }
@@ -314,7 +320,6 @@ button{
   display: block;
   float: right;
   padding-top: 4px;
-  /* opacity: 1; */
 }
 .deleteBut::after{
   content: "delete";
@@ -326,7 +331,6 @@ button{
   display: block;
   float: right;
   padding-top: 1px;
-  /* padding-left: 4px; */
 }
 .viewBut::after{
   content: "view";
@@ -338,6 +342,5 @@ button{
   display: block;
   float: right;
   padding-top: 1px;
-  /* padding-left: 4px; */
 }
 </style>

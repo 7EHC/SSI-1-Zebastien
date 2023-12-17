@@ -173,6 +173,9 @@ onMounted(async () => {
   } else if (check === 'refresh expried'){
     alert("Session has expried, please try again.");
     router.push("/login");
+  }  else if (check === "Access Denied") {
+    alert("Access Denied!");
+    router.push("/");
   }
 });
 </script>
@@ -287,7 +290,7 @@ onMounted(async () => {
       <RouterLink :to="{ name: 'View' }"
         ><button class="cancelBut">Cancel</button></RouterLink
       >
-      <button class="submitBut" :disabled="disBut" @click="submit">
+      <button class="submitBut" :style="{ cursor: disBut ? 'not-allowed':'pointer', backgroundColor: disBut ? 'lightgray':'', fontWeight: disBut ? 'normal':''}" :disabled="disBut" @click="submit">
         submit
       </button>
     </div>
@@ -327,13 +330,16 @@ button {
   height: 36px;
   border-radius: 7px;
   border: 0px;
+  cursor: pointer;
+  transition-duration: 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 button:hover {
-  background-color: lightgray;
   font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 .cancelBut:hover {
-  background-color: salmon;
+  background-color: #ffbaba;
 }
 .submitBut:hover {
   background-color: lightgreen;

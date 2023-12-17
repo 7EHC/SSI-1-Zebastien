@@ -216,15 +216,17 @@ onMounted(async () => {
       </div>
       <div class="ann-div-button">
         <button
+        id="submit"
           class="ann-button"
           type="submit"
           @click="submit"
           :disabled="disSave"
+          :style="{ cursor: disSave ? 'not-allowed':'pointer', backgroundColor: disSave ? '#787878':'', fontWeight: disSave ? 'normal':''}"
         >
           Save
         </button>
         <RouterLink :to="{ name: 'SasUser' }">
-          <button class="ann-button">Cancel</button>
+          <button class="ann-button" id="cancel">Cancel</button>
         </RouterLink>
       </div>
     </div>
@@ -232,6 +234,9 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+button {
+  cursor: pointer;
+}
 .ann-error-username,
 .ann-error-name,
 .ann-error-email {
@@ -285,11 +290,16 @@ select {
   height: 36px;
   border-radius: 7px;
   border: 0px;
-  transition: background-color 0.3s;
+  transition-duration: 0.3s;
+}
+#cancel:hover {
+  background-color: #ffbaba;
+}
+#submit:hover {
+  background-color: lightgreen;
 }
 .ann-button:hover {
   background-color: #787878;
-  color: white;
   font-weight: bold;
 }
 .ann-menu {

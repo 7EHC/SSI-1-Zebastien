@@ -32,7 +32,10 @@ onMounted(async () => {
 } else if(check === "refresh expried"){
   alert("Session has expried, please try again.");
   router.push('/login')
-}
+}  else if (check === "Access Denied") {
+    alert("Access Denied!");
+    router.push("/");
+  }
 
   // console.log(AnnDetail.value.announcementTitle)
 
@@ -85,7 +88,7 @@ onMounted(async () => {
     </table>
     <div class="butClass">
     <RouterLink :to="{ name: 'Announcement' }"><button class="ann-button">Back</button></RouterLink> 
-    <button @click="changeEdit(AnnDetail.id)">edit</button>
+    <button @click="changeEdit(AnnDetail.id)" class="ann-edit">edit</button>
     </div>
   </div>
 
@@ -130,10 +133,21 @@ button {
   height: 36px;
   border-radius: 7px;
   border: 0px;
+  cursor: pointer;
+  transition-duration: 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 button:hover{
   background-color: lightgray;
   font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.ann-button:hover {
+  background-color: #ffbaba;
+}
+.ann-edit:hover {
+  background-color: khaki;
 }
 
 input{
