@@ -20,43 +20,10 @@ const user = ref([]);
 const confirmDelete = ref(false);
 const idToDelete = ref();
 const API_ROOT = import.meta.env.VITE_ROOT_API;
-const { userLogin } = useTokenStore()
-const { userRole } = useTokenStore()
-// const usernameOfAdmin = ref()
+const { userLogin } = useTokenStore();
+const { userRole } = useTokenStore();
+const usertoDelete = ref([]);
 
-// const deleteUser = async (id) => {
-//   try {
-//     const tokenStore = useTokenStore();
-//     const accessToken = ref(tokenStore.accessToken);
-//     const res = await fetch(
-//       `${API_ROOT}/users/${id}`,
-//       // const res = await fetch(`http://localhost:8080/api/users/${id}`, { method: 'DELETE' })
-//       {
-//         method: "DELETE",
-//         headers: {
-//           Authorization: `Bearer ${accessToken.value}`,
-//         },
-//       }
-//     );
-//     if (res.ok) {
-//       changeConfirm();
-//       user.value = user.value.filter((usr) => usr.id !== id); //Delete frontend
-//       // console.log(announcement.value)
-//       router.push("/admin/user");
-//     } else if (res.status === 401) {
-//       const chekky = await reqAccessToken();
-//       // console.log(chekky);
-//       if (chekky === "refresh expried") {
-//         alert("Session has expried, please try again.");
-//         router.push("/login");
-//       }
-//     } else {
-//       throw new Error(`Cannot delete`);
-//     }
-//   } catch (err) {
-//     alert(`Error: ${err}`);
-//   }
-// };
 const deleteUser = async (id) => {
   try {
     const tokenStore = useTokenStore();
@@ -79,10 +46,10 @@ const deleteUser = async (id) => {
       if (chekky === "refresh expired") {
         alert("Session has expired, please try again.");
         router.push("/login");
-      } 
-    } else if (res.status === 403){
-        alert(`[ERROR] Cannot delete your own account.`)
-        window.location.reload()
+      }
+    } else if (res.status === 403) {
+      alert(`[ERROR] Cannot delete your own account.`);
+      window.location.reload();
     } else {
       throw new Error(`Cannot delete`);
     }
@@ -91,12 +58,25 @@ const deleteUser = async (id) => {
   }
 };
 
-
 const changeConfirm = (id) => {
   confirmDelete.value = !confirmDelete.value;
   idToDelete.value = id;
-  // console.log(confirmDelete.value)
-  // console.log(idToDelete.value)
+};
+const deleteWarning = (id) => {
+  let warning;
+  usertoDelete.value = user.value.filter((usr) => usr.id == id);
+  usertoDelete.value.forEach((usr) => {
+    if (usr.username !== userLogin) {
+      warning = window.confirm("The announcements owned by this user will be transfered to you. Do you still want to delete this user?");
+      if (warning) {
+        deleteUser(id)
+      } else {
+        window.location.reload() 
+      }
+    } else {
+      deleteUser(id);
+    }
+  });
 };
 
 const goToEdit = (id) => {
@@ -114,8 +94,7 @@ onMounted(async () => {
     if (!user.value) {
       user.value = [];
     }
-  }
-  else if (check === "new token success") {
+  } else if (check === "new token success") {
     user.value = await getAllUsers();
     // console.log(user.value);
     user.value.sort(
@@ -136,13 +115,13 @@ onMounted(async () => {
 });
 
 const checkRole = (role) => {
-  if(role === 'Admin'){
-    return true
+  if (role === "Admin") {
+    return true;
   } else {
-    router.push('/announcement')
-    return false
+    router.push("/announcement");
+    return false;
   }
-}
+};
 </script>
 
 <template>
@@ -167,7 +146,7 @@ const checkRole = (role) => {
             </p>
             <button class="viewBut" @click="changeConfirm">Cancel</button
             ><RouterLink :to="{ name: 'SasUser' }">
-              <button @click="deleteUser(idToDelete)" class="deleteButPopup">
+              <button @click="deleteWarning(idToDelete)" class="deleteButPopup">
                 Delete
               </button></RouterLink
             >
@@ -180,7 +159,15 @@ const checkRole = (role) => {
         </div> -->
 
     <div class="parent-container">
-      <h1 class="user-man" style="border-radius: 10px; height: 10px; padding-bottom: 25px; margin-top: 15px;">
+      <h1
+        class="user-man"
+        style="
+          border-radius: 10px;
+          height: 10px;
+          padding-bottom: 25px;
+          margin-top: 15px;
+        "
+      >
         User Management
       </h1>
     </div>
